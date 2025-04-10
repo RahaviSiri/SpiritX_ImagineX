@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const coachSchema = new mongoose.Schema({
     personalInfo : {
         fullName : {type:String,required:true },
-        profile : {type:String, },
+        profile : {type:String,required:true },
         DOB : {type:Date, required:true},
         gender : {type:String, required:true},
         NIC : {type:String, required:true},
-        NIC_photo : {type:String, },
+        NIC_photo : {type:String,required:true },
     },
     contactDetails : {
         contactNo : {type:String, required:true},
@@ -26,7 +26,7 @@ const coachSchema = new mongoose.Schema({
         school_Academics : {type:String},
         sport : {type:String,required:true},
         qualifications : {type:String,required:true},
-        qualifications_photo : {type:String,},
+        qualifications_photo : {type:String,required:true},
     }
 
 })
