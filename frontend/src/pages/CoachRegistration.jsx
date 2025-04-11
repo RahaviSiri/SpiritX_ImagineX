@@ -3,6 +3,7 @@ import { UploadCloud, File, Upload } from "lucide-react";
 import { CoachContext } from "../context/Coachcontext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const CoachRegistration = () => {
   const navigate = useNavigate();
@@ -57,6 +58,9 @@ const CoachRegistration = () => {
     // setQualificaions_photoState
   } = useContext(CoachContext);
 
+  const [NIC_photo_name,setNIC_photoName] = useState("");
+    const [qualifications_photo_name,setQualifications_photo_name] = useState("");
+
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -64,34 +68,42 @@ const CoachRegistration = () => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+    
 
   useEffect(() => {
     const savedProfile = localStorage.getItem("coachProfile");
+    const savedProfileName = localStorage.getItem("coachProfile_name");
     const savedNIC = localStorage.getItem("coachNIC");
     const savedNICName = localStorage.getItem("NIC_name");
     const savedQual = localStorage.getItem("coachQual");
     const savedQualName = localStorage.getItem("quali_name");
 
+    
+
     if (savedProfile) {
       setProfile(savedProfile);
+
     }
     if (savedNIC) {
-      setNIC_photo({
-        data: savedNIC,
-        name: savedNICName,
-      });
+      setNIC_photo(savedNIC);
+      setNIC_photoName(savedNICName)
     }
     if (savedQual)
-      setQualifications_photo({ data: savedQual, name: savedQualName });
+      setQualifications_photo( savedQual);
+    setQualifications_photo_name(savedQualName);
   }, []);
 
   useEffect(() => {
     if (profile instanceof window.File) {
-      fileToBase64(profile).then((base64) =>
+      fileToBase64(profile).then((base64) =>{
         localStorage.setItem("coachProfile", base64)
+        localStorage.setItem("coachProfile_name", profile.name);
+      }
+        
       );
     } else if (profile) {
       localStorage.setItem("coachProfile", profile);
+      localStorage.setItem("coachProfile_name", profile.name);
     }
   }, [profile]);
 
@@ -103,7 +115,7 @@ const CoachRegistration = () => {
       });
     } else if (NIC_photo) {
       localStorage.setItem("coachNIC", NIC_photo);
-      localStorage.setItem("NIC_name", NIC_photo.name);
+      // localStorage.setItem("NIC_name", NIC_photo.name);
     }
   }, [NIC_photo]);
 
@@ -114,7 +126,7 @@ const CoachRegistration = () => {
         localStorage.setItem("quali_name", qualifications_photo.name);
       });
     } else if (qualifications_photo) {
-      localStorage.setItem("qualification_photo", qualifications_photo);
+      localStorage.setItem("coachQual", qualifications_photo);
       localStorage.setItem("quali_name", qualifications_photo.name);
     }
   }, [qualifications_photo]);
@@ -178,6 +190,7 @@ const CoachRegistration = () => {
                   <UploadCloud size={16} /> Upload profile photo*
                   <input
                     type="file"
+                    name="profile"
                     id="photo"
                     accept=".png, .jpg, .jpeg"
                     onChange={(e) => {
@@ -239,13 +252,14 @@ const CoachRegistration = () => {
                   className="flex items-center gap-2 border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
                 >
                   <Upload size={20} className="text-blue-500" />
-                  <span>{NIC_photo?.name}</span>
+                  <span>{NIC_photo_name}</span>
                 </div>
               ) : (
                 <label className="flex items-center gap-2 text-blue-600 hover:underline cursor-pointer text-sm font-medium border border-dashed border-blue-400 p-2 rounded-md">
                   <UploadCloud size={16} /> Upload NIC frontpage*
                   <input
                     required
+                    name="NIC_photo"
                     type="file"
                     accept=".png, .jpg, .jpeg, .docx, .doc, .pdf"
                     id="NIC"
@@ -408,7 +422,7 @@ const CoachRegistration = () => {
                 className="flex items-center gap-2 border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
               >
                 <File size={16} className="text-blue-500" />
-                <span>{qualifications_photo?.name}</span>
+                <span>{qualifications_photo_name}</span>
               </div>
             ) : (
               <label className="flex items-center gap-2 text-blue-600 hover:underline cursor-pointer text-sm font-medium border border-dashed border-blue-400 p-2 rounded-md">
@@ -418,6 +432,7 @@ const CoachRegistration = () => {
                   accept=".png, .jpg, .jpeg, .docx, .pdf, .doc"
                   id="evidence"
                   hidden
+                  name="qualifications_photo"
                   onChange={(e) => {
                     setQualifications_photo(e.target.files[0]);
                   }}

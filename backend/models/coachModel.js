@@ -27,7 +27,9 @@ const coachSchema = new mongoose.Schema({
         sport : {type:String,required:true},
         qualifications : {type:String,required:true},
         qualifications_photo : {type:String,required:true},
-    }
+        
+    },
+    isApprove : {type:Boolean,default : false}
 
 })
 

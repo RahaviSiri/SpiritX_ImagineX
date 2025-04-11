@@ -10,15 +10,14 @@ import {v2 as cloudinary} from 'cloudinary'
 
 const app = express();
 const port = process.env.port || 3000;
-
-const allowedURL = process.env.frontendURL;
 dotenv.config();
+
 
 connectDB();
 connectCloudinary();
 
 app.use(express.json());
-app.use(cors({ origin: allowedURL, credentials: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 // Routes 
 app.use('/api/coach',coachRouter)
