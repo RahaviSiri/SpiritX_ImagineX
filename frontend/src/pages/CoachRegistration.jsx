@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { UploadCloud, File, Upload } from "lucide-react";
 import { CoachContext } from "../context/Coachcontext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CoachRegistration = () => {
   const navigate = useNavigate();
@@ -56,14 +57,89 @@ const CoachRegistration = () => {
     // setQualificaions_photoState
   } = useContext(CoachContext);
 
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result); // base64 string
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("coachProfile");
+    const savedNIC = localStorage.getItem("coachNIC");
+    const savedNICName = localStorage.getItem("NIC_name");
+    const savedQual = localStorage.getItem("coachQual");
+    const savedQualName = localStorage.getItem("quali_name");
+
+    if (savedProfile) {
+      setProfile(savedProfile);
+    }
+    if (savedNIC) {
+      setNIC_photo({
+        data: savedNIC,
+        name: savedNICName,
+      });
+    }
+    if (savedQual)
+      setQualifications_photo({ data: savedQual, name: savedQualName });
+  }, []);
+
+  useEffect(() => {
+    if (profile instanceof window.File) {
+      fileToBase64(profile).then((base64) =>
+        localStorage.setItem("coachProfile", base64)
+      );
+    } else if (profile) {
+      localStorage.setItem("coachProfile", profile);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (NIC_photo instanceof window.File) {
+      fileToBase64(NIC_photo).then((base64) => {
+        localStorage.setItem("coachNIC", base64);
+        localStorage.setItem("NIC_name", NIC_photo.name);
+      });
+    } else if (NIC_photo) {
+      localStorage.setItem("coachNIC", NIC_photo);
+      localStorage.setItem("NIC_name", NIC_photo.name);
+    }
+  }, [NIC_photo]);
+
+  useEffect(() => {
+    if (qualifications_photo instanceof window.File) {
+      fileToBase64(qualifications_photo).then((base64) => {
+        localStorage.setItem("coachQual", base64);
+        localStorage.setItem("quali_name", qualifications_photo.name);
+      });
+    } else if (qualifications_photo) {
+      localStorage.setItem("qualification_photo", qualifications_photo);
+      localStorage.setItem("quali_name", qualifications_photo.name);
+    }
+  }, [qualifications_photo]);
+
   useEffect(() => {
     console.log(gender);
   }, [gender]);
 
+  const imagePrevent = (e) => {
+    try {
+      e.preventDefault();
+    } catch (error) {}
+  };
+  const handleSubmit = (e) => {
+    try {
+      e.preventDefault();
+      navigate("/coach-details");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans">
       <div className="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-lg space-y-6">
-        <form>
+        <form onSubmit={handleSubmit}>
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
             Register to Become a Coach
           </h1>
@@ -278,12 +354,11 @@ const CoachRegistration = () => {
                   className="inline-flex items-center space-x-2 text-gray-700"
                 >
                   <input
-                  value={type}   
-                  checked={selectionType === type}
-                  onChange={(e) => setSelectionType(e.target.value)}
+                    value={type}
+                    checked={selectionType === type}
+                    onChange={(e) => setSelectionType(e.target.value)}
                     type="radio"
                     name="type"
-                    
                     className="form-radio text-blue-500"
                   />
                   <span>{type}</span>
@@ -329,7 +404,7 @@ const CoachRegistration = () => {
 
             {qualifications_photo ? (
               <div
-                onClick={() => setNIC_photo(null)}
+                onClick={() => setQualifications_photo(null)}
                 className="flex items-center gap-2 border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
               >
                 <File size={16} className="text-blue-500" />
@@ -351,7 +426,7 @@ const CoachRegistration = () => {
             )}
           </div>
 
-          <button onClick={() => navigate('/coach-details')}
+          <button
             type="submit"
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
           >

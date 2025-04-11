@@ -48,7 +48,7 @@ const CoachDetails = () => {
         </h3>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
           <p>
-            <strong>Full Name:</strong>
+            <strong>Full Name: </strong>
             {fullName}
           </p>
           <p>
