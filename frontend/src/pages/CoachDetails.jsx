@@ -100,7 +100,7 @@ const CoachDetails = () => {
       formData.append("school_Academics", school_Academics);
       formData.append("sport", sport);
       formData.append("qualifications", qualifications);
-      console.log(formData)
+      
 
       const { data: response } = await axios.post(
         `${backend_url}/api/coach/register`,
@@ -112,7 +112,7 @@ const CoachDetails = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
+      
       if(response.success){
         localStorage.removeItem("coachProfile");
         localStorage.removeItem("coachProfile_name");

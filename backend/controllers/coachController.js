@@ -2,7 +2,8 @@ import coachModel from "../models/coachModel.js";
 import { v2 as cloudinary } from 'cloudinary';
 import upload from "../middleware/multer.js";
 import moment from 'moment';
-import transporter from "../config/nodemailer.js";
+import { transporter } from "../config/nodemailer.js";
+
 
 const getAge = (dob) => {
   return moment().diff(moment(dob));
@@ -85,13 +86,15 @@ export const registerCoach = async (req, res) => {
     await user.save();
 
     const mailOptions = {
-        from : process.env.SENDER_EMAIL,
-        to:process.env.RECEIVER_EMAIL,
+        from : user.contactDetails.email,
+        to:process.env.ADMIN_EMAIL,
         subject:'A coach Registered ',
         text:'Approving his/her application'
     }
-    console.log(process.env.RECEIVER_EMAIL);
+    
     await transporter.sendMail(mailOptions);
+
+
     return res.json({ 
       success: true, 
       message: "Registration successfully completed. Waiting for approval message!" 

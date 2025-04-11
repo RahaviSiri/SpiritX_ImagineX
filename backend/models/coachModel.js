@@ -29,7 +29,8 @@ const coachSchema = new mongoose.Schema({
         qualifications_photo : {type:String,required:true},
         
     },
-    isApprove : {type:Boolean,default : false}
+    isApprove : {type:Boolean,default : false},
+    otp:{type:String,default:''}
 
 })
 
