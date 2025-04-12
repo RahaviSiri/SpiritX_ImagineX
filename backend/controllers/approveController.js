@@ -33,3 +33,16 @@ export const approveByAdmin = async (req,res) => {
         return res.json({success:false,message:error.message})
     }
 }
+
+// export const rejectByAdmin = async (req,res) => {
+//     try {
+//         const {email} = req.body;
+//         if(!email){
+//             return res.json({success:false,message:"Email is required to reject the coach!"})
+//         }
+//         await coachModel.findOneAndDelete({"contactDetails.email":email})
+//         return res.json({success:false,message:})
+//     } catch (error) {
+        
+//     }
+// }

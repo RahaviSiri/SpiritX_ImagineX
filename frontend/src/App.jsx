@@ -1,8 +1,9 @@
 import { ToastContainer} from 'react-toastify';
 import { Routes , Route} from 'react-router-dom';
-import CoachRegistration from './pages/CoachRegistration';
-import CoachDetails from './pages/CoachDetails';
-import CoachWaitForApproval from './pages/CoachWaitForApproval';
+import CoachRegistration from './components/CoachRegistration';
+import CoachDetails from './components/CoachDetails';
+import CoachWaitForApproval from './components/CoachWaitForApproval';
+
 
 function App() {
   return (
