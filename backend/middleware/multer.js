@@ -12,6 +12,6 @@ const storage = multer.diskStorage({destination: function (req, file, cb) {
     cb(null, uniqueName);
   },});
 const upload = multer({storage})
-console.log(storage)
+
 
 export default upload;
