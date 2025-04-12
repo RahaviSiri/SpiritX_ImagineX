@@ -1,6 +1,7 @@
 import  {transporters} from "../config/nodemailer.js";
 import coachModel from "../models/coachModel.js";
 
+
 export const approveByAdmin = async (req,res) => {
     try {
         const {email} = req.body;
@@ -17,8 +18,7 @@ export const approveByAdmin = async (req,res) => {
         user.isApprove = true;
         await user.save();
 
-        console.log(user.otp);
-        console.log(user.isApprove);
+        
          
         const mailOptions = {
             from:process.env.ADMIN_EMAIL,
@@ -26,14 +26,9 @@ export const approveByAdmin = async (req,res) => {
             subject:'You are approving by admin!',
             text:`Welcome to our web.Hope to become a great coach through our website. Your otp is ${otp}`
         }
-        // const mailOptions = {
-        //     from : user.contactDetails.email,
-        //     to:process.env.RECEIVER_EMAIL,
-        //     subject:'A coach Registered ',
-        //     text:'Approving his/her application'
-        // }
+        
         await transporters.sendMail(mailOptions);
-        return res.json({success:true,message: `Approved `});
+        return res.json({success:true,message: `Approved `},otp);
     } catch (error) {
         return res.json({success:false,message:error.message})
     }

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { CoachContext } from "../context/Coachcontext";
+import { useNavigate } from "react-router-dom";
 
 const CoachWaitForApproval = () => {
   const inputRefs = React.useRef([]);
-  const [email, setEmail] = React.useState("");
-  const [check, setCheck] = React.useState(false);
-  const backend_url = "https://your-backend-url.com"; // Replace this with your actual backend URL
+  const [email, setEmail] = useState("");
+  const { backend_url } = useContext(CoachContext);
+  const navigate = useNavigate();
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -39,23 +41,28 @@ const CoachWaitForApproval = () => {
         email: email,
         otp: otp,
       };
+      
       const { data: response } = await axios.post(
-        `${backend_url}/api/user/check-reset-otp`,
+        `${backend_url}/api/coach/check-otp`,
         data,
         { withCredentials: true }
       );
-
-      if (response.success) {
-        setCheck(true);
+      
+      console.log("Full response:", response);
+      
+      if (response.success && response.session_url) {
+        console.log("Redirecting to:", response.session_url);
+        window.location.replace(response.session_url);
         toast.success(response.message);
       } else {
-        toast.error(response.message);
+        console.log("Response without session URL:", response);
+        toast.error(response.message || "Failed to create payment session");
       }
     } catch (error) {
-      toast.error(error.message);
+      console.log("Error:", error);
+      toast.error(error.message || "An error occurred");
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">

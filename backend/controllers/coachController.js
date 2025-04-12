@@ -3,6 +3,9 @@ import { v2 as cloudinary } from 'cloudinary';
 import upload from "../middleware/multer.js";
 import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 const getAge = (dob) => {
@@ -13,28 +16,28 @@ export const registerCoach = async (req, res) => {
   try {
     const { body, files } = req;
 
-    
+
     if (!body) {
       return res.json({ success: false, message: "Form data is required!" });
     }
 
-   
+
     if (!files || !files.profile || !files.NIC_photo || !files.qualifications_photo) {
-      return res.json({ 
-        success: false, 
-        message: "All required files (profile, NIC_photo, qualifications_photo) must be uploaded!" 
+      return res.json({
+        success: false,
+        message: "All required files (profile, NIC_photo, qualifications_photo) must be uploaded!"
       });
     }
 
-    
+
     if (!files.profile[0] || !files.NIC_photo[0] || !files.qualifications_photo[0]) {
-      return res.json({ 
+      return res.json({
         success: false,
         message: "One or more required files are missing"
       });
     }
 
-    
+
     const profile = await cloudinary.uploader.upload(files.profile[0].path, {
       resource_type: "image"
     });
@@ -47,12 +50,12 @@ export const registerCoach = async (req, res) => {
       resource_type: "image"
     });
 
-    
+
     if (body.DOB > '2005-01-01') {
       return res.json({ success: false, message: 'You are not qualified for applying as a coach.' });
     }
 
-    
+
     const user = await new coachModel({
       personalInfo: {
         fullName: body.fullName,
@@ -86,18 +89,18 @@ export const registerCoach = async (req, res) => {
     await user.save();
 
     const mailOptions = {
-        from : user.contactDetails.email,
-        to:process.env.ADMIN_EMAIL,
-        subject:'A coach Registered ',
-        text:'Approving his/her application'
+      from: user.contactDetails.email,
+      to: process.env.ADMIN_EMAIL,
+      subject: 'A coach Registered ',
+      text: 'Approving his/her application'
     }
-    
+
     await transporter.sendMail(mailOptions);
 
 
-    return res.json({ 
-      success: true, 
-      message: "Registration successfully completed. Waiting for approval message!" 
+    return res.json({
+      success: true,
+      message: "Registration successfully completed. Waiting for approval message!"
     });
   } catch (error) {
     console.log(error);
@@ -109,14 +112,14 @@ export const editDetails = async (req, res) => {
   try {
     const { id } = req.params;
     const { body, files } = req;
-    
-    
+
+
     const existingCoach = await coachModel.findById(id);
     if (!existingCoach) {
       return res.json({ success: false, message: "Coach not found" });
     }
-    
-    
+
+
     const updateData = {
       personalInfo: {
         ...existingCoach.personalInfo,
@@ -147,26 +150,26 @@ export const editDetails = async (req, res) => {
         qualifications: body.qualifications || existingCoach.coachSelection.qualifications,
       }
     };
-    
-    
+
+
     if (files) {
-      
+
       if (files.profile && files.profile[0]) {
         const profileResult = await cloudinary.uploader.upload(files.profile[0].path, {
           resource_type: "image"
         });
         updateData.personalInfo.profile = profileResult.secure_url;
       }
-      
-     
+
+
       if (files.NIC_photo && files.NIC_photo[0]) {
         const nicResult = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
           resource_type: "image"
         });
         updateData.personalInfo.NIC_photo = nicResult.secure_url;
       }
-      
-      
+
+
       if (files.qualifications_photo && files.qualifications_photo[0]) {
         const qualResult = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
           resource_type: "image"
@@ -174,16 +177,16 @@ export const editDetails = async (req, res) => {
         updateData.coachSelection.qualifications_photo = qualResult.secure_url;
       }
     }
-    
-    
+
+
     const updatedCoach = await coachModel.findByIdAndUpdate(
       id,
       updateData,
       { new: true }
     );
-    
-    return res.json({ 
-      success: true, 
+
+    return res.json({
+      success: true,
       message: "Coach details updated successfully",
       data: updatedCoach
     });
@@ -193,3 +196,54 @@ export const editDetails = async (req, res) => {
   }
 
 };
+
+
+export const checkOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    console.log(otp)
+    if (!email || !otp) {
+      return res.json({ success: false, message: "Email and OTP are required!" })
+    }
+    const user = await coachModel.findOne({ "contactDetails.email": email })
+    if (!user) {
+      return res.json({ success: false, message: "This email is not registered! Enter the registered email." })
+    }
+    if (otp === '' || user.otp !== (String)(otp)) {
+      return res.json({ success: false, message: "OTP is invalid! Enter the valid OTP." })
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Coach Registration Fee',
+              description: 'One-time registration payment'
+            },
+            unit_amount: 5000, // $50.00 in cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      
+      success_url: `http://localhost:5173/verify?success=true&user._id=${user._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&user._id=${user._id}`,
+      metadata: {
+        orderType: "registration",
+        userId: user._id.toString(),
+      },
+    });
+    console.log("Stripe session created:", {
+      id: session.id,
+      url: session.url
+    });
+    console.log(user._id)
+    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url })
+  } catch (error) {
+    res.json({ success: false, message: error.message })
+  }
+}
