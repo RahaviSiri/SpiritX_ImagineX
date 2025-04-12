@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { CoachContextProvider } from "./context/Coachcontext.jsx";
 import { GroundContextProvider } from "./context/GroundContext.jsx";
+import { AppContextProvider } from "./context/AppContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <CoachContextProvider>
-      <GroundContextProvider>
-        <App />
-      </GroundContextProvider>
-    </CoachContextProvider>
+    <AppContextProvider>
+      <CoachContextProvider>
+        <GroundContextProvider>
+          <App />
+        </GroundContextProvider>
+      </CoachContextProvider>
+    </AppContextProvider>
   </BrowserRouter>
 );

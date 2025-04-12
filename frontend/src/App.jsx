@@ -10,10 +10,10 @@ import GroundDetails from './components/GroundDetails';
 
 function App() {
   return (
-    <div className='min-h-screen m-5'>
+    <div className='min-h-screen'>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<AllGrounds/>} />
+        <Route path='/' element={<AddGround/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
