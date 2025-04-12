@@ -8,11 +8,11 @@ import connectCloudinary from './config/cloudinary.js';
 import upload from './middleware/multer.js';
 import {v2 as cloudinary} from 'cloudinary'
 import approveRouter from './routers/approveRouter.js';
+import groundRouter from './routers/groundRouter.js';
 
 const app = express();
 const port = process.env.port || 3000;
 dotenv.config();
-
 
 connectDB();
 connectCloudinary();
@@ -23,14 +23,16 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 // Routes 
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
+app.use('/api/ground',groundRouter);
+
+app.get('/', (req, res) => {
+    res.json('API is working')
+})
 
 app.listen(port, () => {
     console.log(`API is running on ${port}`)
 })
 
-app.get('/', (req, res) => {
-    res.json('API is working')
-})
 
 // app.post('/test-upload', upload.single('testImg'), async (req, res) => {
 //     try {
