@@ -13,7 +13,7 @@ function App() {
     <div className='min-h-screen'>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<AddGround/>} />
+        <Route path='/' element={<AllGrounds/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />

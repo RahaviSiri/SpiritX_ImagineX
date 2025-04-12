@@ -16,7 +16,9 @@ const getAllGrounds = async (req, res) => {
 const getGround = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const ground = await groundModel.findById(id);
+    console.log(ground);
     if (!ground) {
       return res
         .status(404)
