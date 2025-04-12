@@ -131,9 +131,7 @@ const CoachRegistration = () => {
     }
   }, [qualifications_photo]);
 
-  useEffect(() => {
-    console.log(gender);
-  }, [gender]);
+ 
 
   const imagePrevent = (e) => {
     try {

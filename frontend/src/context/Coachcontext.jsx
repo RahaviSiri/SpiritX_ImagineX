@@ -1,4 +1,6 @@
-import { createContext, useState } from "react";
+import axios from "axios";
+import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const CoachContext = createContext();
 
@@ -30,13 +32,71 @@ export const CoachContextProvider = (props) => {
   const [qualifications, setQualifications] = useState("");
   const [qualifications_photo, setQualifications_photo] = useState(null); // file/image
 
-//   const [profileState,setProfileState] = useState(true);
-//   const [NIC_photoState,setNIC_photoState] = useState(false);
-//   const [qualificaions_photoState,setQualificaions_photoState] = useState(false);
+  //   const [profileState,setProfileState] = useState(true);
+  //   const [NIC_photoState,setNIC_photoState] = useState(false);
+  //   const [qualificaions_photoState,setQualificaions_photoState] = useState(false);
 
-// comment
+  const [approve, setApprove] = useState();
+  const [token,setToken] = useState('');
 
-  const backend_url = 'http://localhost:3000';
+  // comment
+
+  const backend_url = "http://localhost:3000";
+  const [userData,setUserData] = useState(null);
+  const [userDatas,setUserDatas] = useState(null);
+
+  const fetchCoaches = async () => {
+    try {
+      const {data:response} = await axios.get(`http://localhost:3000/api/coach/getCoaches`,{
+        withCredentials:true
+      })
+      if(response.success){
+        setUserDatas(response.users)
+        toast.success(response.message)
+      }
+      else{
+        toast.error(response.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+  
+  const fetchCoach = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const { data :response} = await axios.get(`${backend_url}/api/coach/getCoach`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add space after Bearer
+        },
+        withCredentials :true
+      });
+      
+      if (response.success) {
+        
+        setUserData(response.coach);
+        
+      } else {
+        toast.error("Error in fetching user");
+      }
+    } catch (error) {
+      
+      toast.error("An error occurred while fetching user data");
+      
+    }
+  };
+ 
+
+  useEffect(() => {
+    const storedtoken = localStorage.getItem('token')
+    if(storedtoken){
+     
+      fetchCoach();
+        
+        
+    }
+  },[])
 
   const value = {
     fullName,
@@ -51,7 +111,7 @@ export const CoachContextProvider = (props) => {
     setNIC,
     NIC_photo,
     setNIC_photo,
-  
+
     contactNo,
     setContactNo,
     HomeTP,
@@ -60,7 +120,7 @@ export const CoachContextProvider = (props) => {
     setWhatsapp,
     email,
     setEmail,
-  
+
     Line1,
     setLine1,
     Line2,
@@ -69,7 +129,7 @@ export const CoachContextProvider = (props) => {
     setCity,
     district,
     setDistrict,
-  
+
     selectionType,
     setSelectionType,
     school_Academics,
@@ -88,9 +148,18 @@ export const CoachContextProvider = (props) => {
     // qualificaions_photoState,
     // setQualificaions_photoState
 
-    backend_url
+    fetchCoach,
+    fetchCoaches,
+
+    backend_url,
+    userData,
+    setUserData,
+    userDatas,
+    setUserDatas,
+    token,
+    setToken
   };
-  
+
   return (
     <CoachContext.Provider value={value}>
       {props.children}

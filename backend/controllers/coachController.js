@@ -4,17 +4,18 @@ import upload from "../middleware/multer.js";
 import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
-const getAge = (dob) => {
-  return moment().diff(moment(dob));
-};
+
 
 export const registerCoach = async (req, res) => {
   try {
     const { body, files } = req;
+    dotenv.config();
 
 
     if (!body) {
@@ -97,13 +98,23 @@ export const registerCoach = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite:  "None" ,
+      maxAge: 7 * 24 * 3600 * 1000
+    })
 
     return res.json({
       success: true,
-      message: "Registration successfully completed. Waiting for approval message!"
+      message: "Registration successfully completed. Waiting for approval message!",
+      token
     });
   } catch (error) {
-    console.log(error);
+   
     return res.json({ success: false, message: error.message });
   }
 };
@@ -191,7 +202,7 @@ export const editDetails = async (req, res) => {
       data: updatedCoach
     });
   } catch (error) {
-    console.log(error);
+    
     return res.json({ success: false, message: error.message });
   }
 
@@ -200,16 +211,15 @@ export const editDetails = async (req, res) => {
 
 export const checkOTP = async (req, res) => {
   try {
-    const { email, otp } = req.body;
-    console.log(otp)
-    if (!email || !otp) {
+    
+    if (!req.body.email || !req.body.otp) {
       return res.json({ success: false, message: "Email and OTP are required!" })
     }
-    const user = await coachModel.findOne({ "contactDetails.email": email })
+    const user = await coachModel.findById(req.body.userId);
     if (!user) {
       return res.json({ success: false, message: "This email is not registered! Enter the registered email." })
     }
-    if (otp === '' || user.otp !== (String)(otp)) {
+    if (req.body.otp === '' || user.otp !== (String)(req.body.otp)) {
       return res.json({ success: false, message: "OTP is invalid! Enter the valid OTP." })
     }
 
@@ -230,20 +240,66 @@ export const checkOTP = async (req, res) => {
       ],
       mode: 'payment',
       
-      success_url: `http://localhost:5173/verify?success=true&user._id=${user._id}`,
-      cancel_url: `http://localhost:5173/verify?success=false&user._id=${user._id}`,
+      success_url: `http://localhost:5173/verify?success=true&userId=${user._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&userId=${user._id}`,
       metadata: {
         orderType: "registration",
         userId: user._id.toString(),
       },
     });
-    console.log("Stripe session created:", {
-      id: session.id,
-      url: session.url
-    });
-    console.log(user._id)
-    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url })
+    
+    
+    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url,success })
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
+}
+
+export const getCoaches = async (req,res) => {
+  try {
+    const users = await coachModel.find({});
+    if(!users){
+      return res.json({success:false,message:"Users not found!"})
+    }
+    
+    return res.json({success:true,message:"Fetch coaches successfully!",users})
+  } catch (error) {
+    return res.json({success:false,message:error.message})
+    
+  }
+}
+
+export const getCoach = async (req,res) => {
+  try {
+    const coach = await coachModel.findById(req.body.userId)
+    
+    if(!coach){
+      return res.json({success:false,message:"User not found!"})
+    }
+    
+    return res.json({success:true,message:"Fetch coaches successfully!",coach})
+  } catch (error) {
+    return res.json({success:false,message:error.message})
+    
+  }
+}
+
+export const verifyPayment = async (req,res) => {
+  try {
+    const {success,userId} = req.body;
+  
+  if(success === 'true'){
+    await coachModel.findByIdAndUpdate(userId, {isPayment:true})
+    return res.json({success:true,message:"Paid successfully"})
+  }
+  else{
+    await coachModel.findByIdAndDelete(userId)
+    return res.json({success:false,message:"Not paid yet."})
+
+  }
+  } catch (error) {
+    return res.json({success:false,message:error.message})
+    
+  }
+  
 }
