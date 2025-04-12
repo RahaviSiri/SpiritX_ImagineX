@@ -72,29 +72,31 @@ export const CoachContextProvider = (props) => {
         },
         withCredentials :true
       });
-      console.log(response)
+      
       if (response.success) {
-        console.log(response.coach)
+        
         setUserData(response.coach);
         
       } else {
         toast.error("Error in fetching user");
       }
     } catch (error) {
-      console.log(error);
+      
       toast.error("An error occurred while fetching user data");
       
     }
   };
-  useEffect(()=>
-  {
-    fetchCoach();
-    fetchCoaches();
-  },[])
+ 
 
   useEffect(() => {
-    console.log(userData);
-  }, [userData]);
+    const storedtoken = localStorage.getItem('token')
+    if(storedtoken){
+     
+      fetchCoach();
+        
+        
+    }
+  },[])
 
   const value = {
     fullName,

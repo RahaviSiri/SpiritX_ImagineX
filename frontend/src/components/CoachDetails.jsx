@@ -31,7 +31,7 @@ const CoachDetails = () => {
     setToken,
     userData,
     fetchCoach,
-    fetchCoaches
+    fetchCoaches,
   } = useContext(CoachContext);
 
   // In CoachDetails.js, update the handleSubmit function:
@@ -105,7 +105,6 @@ const CoachDetails = () => {
       formData.append("school_Academics", school_Academics);
       formData.append("sport", sport);
       formData.append("qualifications", qualifications);
-      
 
       const { data: response } = await axios.post(
         `${backend_url}/api/coach/register`,
@@ -117,34 +116,29 @@ const CoachDetails = () => {
           withCredentials: true,
         }
       );
-      
-      if(response.success){
+
+      if (response.success) {
         localStorage.removeItem("coachProfile");
         localStorage.removeItem("coachProfile_name");
         localStorage.removeItem("coachNIC");
         localStorage.removeItem("NIC_name");
         localStorage.removeItem("coachQual");
         localStorage.removeItem("quali_name");
-        toast.success(response.message)
-        navigate('/coach-wait-for-approval')
-        localStorage.setItem("token",response.token);
-        setToken(response.token)
+        toast.success(response.message);
+        navigate("/coach-wait-for-approval");
+        localStorage.setItem("token", response.token);
+        setToken(response.token);
         
+      } else {
+        toast.error(response.message);
       }
-
-      else{
-        toast.error(response.message)
-      }
-
-      
-      
     } catch (error) {
-      console.error(error);
+      
       toast.error(error.message);
     }
   };
 
- 
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 space-y-6">

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CoachContext } from "../context/Coachcontext";
@@ -8,7 +8,7 @@ import { Loader } from "lucide-react";
 const CoachWaitForApproval = () => {
   const inputRefs = React.useRef([]);
   const [email, setEmail] = useState("");
-  const { backend_url, userData } = useContext(CoachContext);
+  const { backend_url, userData,fetchCoach,fetchCoaches } = useContext(CoachContext);
   const navigate = useNavigate();
 
   const handleLength = (e, index) => {
@@ -32,6 +32,7 @@ const CoachWaitForApproval = () => {
       }
     });
   };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const CoachWaitForApproval = () => {
         otp: otp,
         userId: userData._id,
       };
-      console.log(data);
+      
       const token = localStorage.getItem("token");
       const { data: response } = await axios.post(
         `${backend_url}/api/coach/check-otp`,

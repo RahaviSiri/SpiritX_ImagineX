@@ -24,7 +24,7 @@ export const approveByAdmin = async (req,res) => {
         }
         
         await transporter.sendMail(mailOptions);
-        return res.json({success:true,message: `Approved `},otp);
+        return res.json({success:true,message: `Approved `},user.otp);
     } catch (error) {
         return res.json({success:false,message:error.message})
     }

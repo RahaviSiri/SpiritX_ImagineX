@@ -99,7 +99,7 @@ export const registerCoach = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
-    // console.log(token)
+    
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -114,7 +114,7 @@ export const registerCoach = async (req, res) => {
       token
     });
   } catch (error) {
-    console.log(error);
+   
     return res.json({ success: false, message: error.message });
   }
 };
@@ -202,7 +202,7 @@ export const editDetails = async (req, res) => {
       data: updatedCoach
     });
   } catch (error) {
-    console.log(error);
+    
     return res.json({ success: false, message: error.message });
   }
 
@@ -240,8 +240,8 @@ export const checkOTP = async (req, res) => {
       ],
       mode: 'payment',
       
-      success_url: `http://localhost:5173/verify?success=true&user._id=${user._id}`,
-      cancel_url: `http://localhost:5173/verify?success=false&user._id=${user._id}`,
+      success_url: `http://localhost:5173/verify?success=true&userId=${user._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&userId=${user._id}`,
       metadata: {
         orderType: "registration",
         userId: user._id.toString(),
@@ -249,7 +249,7 @@ export const checkOTP = async (req, res) => {
     });
     
     
-    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url })
+    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url,success })
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
@@ -258,6 +258,9 @@ export const checkOTP = async (req, res) => {
 export const getCoaches = async (req,res) => {
   try {
     const users = await coachModel.find({});
+    if(!users){
+      return res.json({success:false,message:"Users not found!"})
+    }
     
     return res.json({success:true,message:"Fetch coaches successfully!",users})
   } catch (error) {
@@ -273,10 +276,30 @@ export const getCoach = async (req,res) => {
     if(!coach){
       return res.json({success:false,message:"User not found!"})
     }
-    console.log(coach)
+    
     return res.json({success:true,message:"Fetch coaches successfully!",coach})
   } catch (error) {
     return res.json({success:false,message:error.message})
     
   }
+}
+
+export const verifyPayment = async (req,res) => {
+  try {
+    const {success,userId} = req.body;
+  
+  if(success === 'true'){
+    await coachModel.findByIdAndUpdate(userId, {isPayment:true})
+    return res.json({success:true,message:"Paid successfully"})
+  }
+  else{
+    await coachModel.findByIdAndDelete(userId)
+    return res.json({success:false,message:"Not paid yet."})
+
+  }
+  } catch (error) {
+    return res.json({success:false,message:error.message})
+    
+  }
+  
 }

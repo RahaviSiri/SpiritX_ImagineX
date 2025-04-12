@@ -8,6 +8,7 @@ import { Routes , Route} from 'react-router-dom';
 import CoachRegistration from './components/CoachRegistration';
 import CoachDetails from './components/CoachDetails';
 import CoachWaitForApproval from './components/CoachWaitForApproval';
+import Verify from './components/Verify';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
+        <Route path='/verify' element={<Verify />} />
       </Routes>
     </div>
     

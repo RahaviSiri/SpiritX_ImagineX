@@ -1,5 +1,5 @@
 import express from 'express'
-import { checkOTP, editDetails, getCoach, getCoaches, registerCoach } from '../controllers/coachController.js';
+import { checkOTP, editDetails, getCoach, getCoaches, registerCoach, verifyPayment } from '../controllers/coachController.js';
 import upload from '../middleware/multer.js';
 import authCoach from '../middleware/authCoach.js';
 
@@ -16,6 +16,7 @@ coachRouter.put('/edit/:id',upload.fields([
 coachRouter.post('/check-otp',checkOTP)
 coachRouter.get('/getCoaches',getCoaches)
 coachRouter.get('/getCoach',authCoach, getCoach)
+coachRouter.post('/verify', verifyPayment)
 
 
 export default coachRouter;
