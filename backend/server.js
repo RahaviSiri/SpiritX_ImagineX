@@ -13,7 +13,6 @@ const app = express();
 const port = process.env.port || 3000;
 dotenv.config();
 
-
 connectDB();
 connectCloudinary();
 
@@ -24,13 +23,14 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
 
+app.get('/', (req, res) => {
+    res.json('API is working')
+})
+
 app.listen(port, () => {
     console.log(`API is running on ${port}`)
 })
 
-app.get('/', (req, res) => {
-    res.json('API is working')
-})
 
 // app.post('/test-upload', upload.single('testImg'), async (req, res) => {
 //     try {
