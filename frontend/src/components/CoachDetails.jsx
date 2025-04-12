@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { CoachContext } from "../context/Coachcontext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -27,6 +27,11 @@ const CoachDetails = () => {
     qualifications,
     qualifications_photo,
     backend_url,
+    token,
+    setToken,
+    userData,
+    fetchCoach,
+    fetchCoaches
   } = useContext(CoachContext);
 
   // In CoachDetails.js, update the handleSubmit function:
@@ -122,17 +127,24 @@ const CoachDetails = () => {
         localStorage.removeItem("quali_name");
         toast.success(response.message)
         navigate('/coach-wait-for-approval')
+        localStorage.setItem("token",response.token);
+        setToken(response.token)
+        
       }
+
       else{
         toast.error(response.message)
       }
 
+      
       
     } catch (error) {
       console.error(error);
       toast.error(error.message);
     }
   };
+
+ 
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 space-y-6">

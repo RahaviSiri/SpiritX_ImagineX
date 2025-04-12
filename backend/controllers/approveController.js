@@ -1,15 +1,11 @@
-import  {transporters} from "../config/nodemailer.js";
+import  {transporter} from "../config/nodemailer.js";
 import coachModel from "../models/coachModel.js";
 
 
 export const approveByAdmin = async (req,res) => {
     try {
-        const {email} = req.body;
-        console.log(email);
-        if(!email){
-            return res.json({success:false,message:"Email is required!"})
-        }
-        const user = await coachModel.findOne({ "contactDetails.email": email});
+        
+        const user = await coachModel.findById(req.body.userId);
         if(!user){
             return res.json({success:false,message:"User not found!"})
         }
@@ -27,22 +23,30 @@ export const approveByAdmin = async (req,res) => {
             text:`Welcome to our web.Hope to become a great coach through our website. Your otp is ${otp}`
         }
         
-        await transporters.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
         return res.json({success:true,message: `Approved `},otp);
     } catch (error) {
         return res.json({success:false,message:error.message})
     }
 }
 
-// export const rejectByAdmin = async (req,res) => {
-//     try {
-//         const {email} = req.body;
-//         if(!email){
-//             return res.json({success:false,message:"Email is required to reject the coach!"})
-//         }
-//         await coachModel.findOneAndDelete({"contactDetails.email":email})
-//         return res.json({success:false,message:})
-//     } catch (error) {
+export const rejectByAdmin = async (req,res) => {
+    try {
+    
         
-//     }
-// }
+        await coachModel.findByIdAndDelete(req.body.userId)
+        
+
+        const mailOptions = {
+            from:process.env.ADMIN_EMAIL,
+            to:email,
+            subject:"Rejected your application",
+            text:"Sorry for the inconvinence! We are expecting more qualifications to apply a coach through our web page. Please try again later! Thank your for approaching our website."
+        }
+        await transporter.sendMail(mailOptions) ; 
+        return res.json({success:true,message:"Rejected the coach successfully!"})
+
+    } catch (error) {
+        return res.json({success:false,message:error.message})
+    }
+}
