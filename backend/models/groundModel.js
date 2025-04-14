@@ -12,6 +12,9 @@ const groundSchema = new mongoose.Schema(
       image: { type: String, required: true, trim: true },
       address: { type: String, required: true, trim: true },
       freeTime: { type: [String], required: true }, 
+      ownerEmail : { type: String, required: true, trim: true },
+      ownerPassword : { type: String, required: true, trim: true },
+      groundType : { type: String, required: true, trim: true,  },
     },
     { timestamps: true }
 );
