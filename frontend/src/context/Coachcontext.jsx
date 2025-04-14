@@ -70,9 +70,9 @@ export const CoachContextProvider = (props) => {
         headers: {
           Authorization: `Bearer ${token}`, // Add space after Bearer
         },
-        withCredentials :true
+        // withCredentials :true
       });
-      
+      console.log(response)
       if (response.success) {
         
         setUserData(response.coach);

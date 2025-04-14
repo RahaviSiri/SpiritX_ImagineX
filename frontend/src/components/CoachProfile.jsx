@@ -9,7 +9,7 @@ const CoachProfile = () => {
   const { backend_url } = useContext(CoachContext);
 
   useEffect(() => {
-    const fetchCoach = async () => {
+    const fetchCoachById = async () => {
       try {
         const { data } = await axios.get(
           `${backend_url}/api/coach/getCoachById/${id}`,
@@ -26,7 +26,7 @@ const CoachProfile = () => {
     };
 
     if (id && id !== "undefined") {
-      fetchCoach();
+      fetchCoachById();
     }
   }, [id]);
 
@@ -96,19 +96,17 @@ const CoachProfile = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
           <p><span className="font-semibold">Qualifications:</span> {selection?.qualifications}</p>
           <p>
-            <span className="font-semibold">Evidence:</span>{" "}
+            <span className="font-semibold">Evidence:</span>
             {selection?.qualifications_photo ? (
-              <><img src = {
-                selection.qualifications_photo
-              }> </img>
               <a
               href={selection.qualifications_photo}
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 underline"
             >
-              
-            </a></>
+              {selection.qualifications_photo?.path}
+            </a>
+            
               
               
             ) : (

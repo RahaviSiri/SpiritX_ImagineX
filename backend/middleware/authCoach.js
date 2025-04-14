@@ -14,9 +14,11 @@ const authCoach = async (req, res, next) => {
 
        
         const token = authHeader.split(" ")[1];
+        console.log(token)
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log(decoded)
         } catch (error) {
             console.log(error)
         }
