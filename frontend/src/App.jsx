@@ -6,6 +6,8 @@ import CoachWaitForApproval from './components/CoachWaitForApproval';
 import AllGrounds from './components/AllGrounds';
 import AddGround from './components/AddGround';
 import GroundDetails from './components/GroundDetails';
+import CoachList from './components/CoachList';
+import CoachProfile from './components/CoachProfile';
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
         <Route path='/all-ground' element={<AllGrounds />} />
         <Route path='/add-ground' element={<AddGround />} />
         <Route path='/ground-details/:id' element={<GroundDetails />} />
+        <Route path='/coach-list' element={<CoachList />} />
+        <Route path='/coach-profile/:id' element={<CoachProfile />} />
       </Routes>
     </div>
     
