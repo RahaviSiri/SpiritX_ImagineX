@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 // Get all grounds
 const getAllGrounds = async (req, res) => {
   try {
-    const grounds = await groundModel.find({});
+    const grounds = await groundModel.find({}).select("-ownerPassword -ownerEmail");
     res.json({ success: true, grounds });
   } catch (error) {
     console.log("Error in getting all grounds", error);
@@ -12,12 +12,13 @@ const getAllGrounds = async (req, res) => {
   }
 };
 
+
 // Get one ground by ID
 const getGround = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const ground = await groundModel.findById(id);
+    const ground = await groundModel.findById(id).select("-ownerPassword -ownerEmail");
     console.log(ground);
     if (!ground) {
       return res
@@ -34,7 +35,7 @@ const getGround = async (req, res) => {
 // Add Ground
 const addGround = async (req, res) => {
   try {
-    const { name, address, category } = req.body;
+    const { name, address, category,ownerEmail,ownerPassword,groundType } = req.body;
     const image = req.file;
     let freeTime = req.body.freeTime;
 
@@ -66,6 +67,9 @@ const addGround = async (req, res) => {
       category,
       freeTime,
       image: imageUpload.secure_url,
+      ownerEmail,
+      ownerPassword,
+      groundType,
     });
     await ground.save();
     res.json({ success: true, ground });
@@ -75,4 +79,73 @@ const addGround = async (req, res) => {
   }
 };
 
-export { getAllGrounds, getGround, addGround };
+// Delete ground by ID
+const deleteGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await groundModel.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error in getting ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Update ground
+const updateGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, address, category, ownerEmail, ownerPassword, groundType } = req.body;
+    let freeTime = req.body.freeTime;
+
+    // Handle stringified array
+    if (typeof freeTime === "string") {
+      try {
+        freeTime = JSON.parse(freeTime);
+      } catch (err) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid freeTime format" });
+      }
+    }
+
+    // Get existing ground
+    const existingGround = await groundModel.findById(id);
+    if (!existingGround) {
+      return res.status(404).json({ success: false, message: "Ground not found" });
+    }
+
+    let imageUrl = existingGround.image;
+
+    // If a new image is uploaded
+    if (req.file) {
+      const imageUpload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
+      imageUrl = imageUpload.secure_url;
+    }
+
+    await groundModel.findByIdAndUpdate(
+      id,
+      {
+        name,
+        address,
+        category,
+        freeTime,
+        image: imageUrl,
+        ownerEmail,
+        ownerPassword,
+        groundType,
+      },
+      { new: true }
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error in updating ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export { getAllGrounds, getGround, addGround, deleteGround,updateGround };
