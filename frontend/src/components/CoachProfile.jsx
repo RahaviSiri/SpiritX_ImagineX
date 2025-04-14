@@ -30,7 +30,12 @@ const CoachProfile = () => {
     }
   }, [id]);
 
-  if (!coach) return <p className="text-center mt-10 text-gray-500">Loading coach details...</p>;
+  if (!coach)
+    return (
+      <p className="text-center mt-10 text-gray-500">
+        Loading coach details...
+      </p>
+    );
 
   const personal = coach.personalInfo || {};
   const address = coach.Address || {};
@@ -60,55 +65,82 @@ const CoachProfile = () => {
 
       {/* Section: Personal Info */}
       <div className="mt-10">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">Personal Info</h3>
+        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
+          Personal Info
+        </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p><span className="font-semibold">NIC:</span> {personal?.NIC}</p>
-          <p><span className="font-semibold">Gender:</span> {personal?.gender}</p>
+          <p>
+            <span className="font-semibold">NIC:</span> {personal?.NIC}
+          </p>
+          <p>
+            <span className="font-semibold">Gender:</span> {personal?.gender}
+          </p>
         </div>
       </div>
 
       {/* Section: Contact Details */}
       <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">Contact Details</h3>
+        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
+          Contact Details
+        </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p><span className="font-semibold">Email:</span> {contact?.email}</p>
-          <p><span className="font-semibold">WhatsApp:</span> {contact?.whatsapp}</p>
-          <p><span className="font-semibold">Contact No:</span> {contact?.contactNo}</p>
-          <p><span className="font-semibold">Home Telephone:</span> {contact?.HomeTP}</p>
+          <p>
+            <span className="font-semibold">Email:</span> {contact?.email}
+          </p>
+          <p>
+            <span className="font-semibold">WhatsApp:</span> {contact?.whatsapp}
+          </p>
+          <p>
+            <span className="font-semibold">Contact No:</span>{" "}
+            {contact?.contactNo}
+          </p>
+          <p>
+            <span className="font-semibold">Home Telephone:</span>{" "}
+            {contact?.HomeTP}
+          </p>
         </div>
       </div>
 
       {/* Section: Address */}
       <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">Address</h3>
+        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
+          Address
+        </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p><span className="font-semibold">Address:</span> {address?.Line1} {
-            address?.Line2? `, ${address?.Line2} `:`${address?.Line2}`
-          } </p>
-          <p><span className="font-semibold">City:</span> {address?.city}</p>
-          <p><span className="font-semibold">District:</span> {address?.district}</p>
+          <p>
+            <span className="font-semibold">Address:</span> {address?.Line1}{" "}
+            {address?.Line2 ? `, ${address?.Line2} ` : `${address?.Line2}`}{" "}
+          </p>
+          <p>
+            <span className="font-semibold">City:</span> {address?.city}
+          </p>
+          <p>
+            <span className="font-semibold">District:</span> {address?.district}
+          </p>
         </div>
       </div>
 
       {/* Section: Coach Selection Info */}
       <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">Coach Selection Info</h3>
+        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
+          Coach Selection Info
+        </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p><span className="font-semibold">Qualifications:</span> {selection?.qualifications}</p>
+          <p>
+            <span className="font-semibold">Qualifications:</span>{" "}
+            {selection?.qualifications}
+          </p>
           <p>
             <span className="font-semibold">Evidence:</span>
             {selection?.qualifications_photo ? (
               <a
-              href={selection.qualifications_photo}
-              target="_blank"
-              rel="noreferrer"
-              className="text-blue-600 underline"
-            >
-              {selection.qualifications_photo?.path}
-            </a>
-            
-              
-              
+                href={selection.qualifications_photo}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline"
+              >
+                View Document
+              </a>
             ) : (
               "Not uploaded"
             )}
