@@ -250,7 +250,7 @@ export const checkOTP = async (req, res) => {
     });
     
     
-    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url,success })
+    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url })
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
@@ -280,6 +280,7 @@ export const getCoach = async (req,res) => {
     
     return res.json({success:true,message:"Fetch coaches successfully!",coach})
   } catch (error) {
+    console.log(error)
     return res.json({success:false,message:error.message})
     
   }
