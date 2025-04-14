@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { CoachContext } from "../context/Coachcontext";
 
@@ -7,6 +7,7 @@ const CoachProfile = () => {
   const { id } = useParams();
   const [coach, setCoach] = useState(null);
   const { backend_url } = useContext(CoachContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCoachById = async () => {
@@ -150,7 +151,7 @@ const CoachProfile = () => {
 
       {/* Book Button */}
       <div className="mt-10 text-center">
-        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition duration-300">
+        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition duration-300" onClick={() => navigate('/client')}>
           Book Coach
         </button>
       </div>
