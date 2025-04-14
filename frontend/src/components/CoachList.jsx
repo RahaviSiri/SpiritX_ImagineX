@@ -109,9 +109,9 @@ const CoachList = () => {
                 </h3>
                 <p className="text-gray-600">Age: {calculateAge(personal.DOB)}</p>
                 <p className="text-gray-600">Gender: {personal.gender || "N/A"}</p>
-                <p className="text-gray-600">City: {address.city || "N/A"}</p>
+                {/* <p className="text-gray-600">City: {address.city || "N/A"}</p> */}
                 <p className="text-gray-600">
-                  Sport : {selection.sport} 
+                  {selection.sport} - {selection.selectionType}
                 </p>
               </div>
             );
