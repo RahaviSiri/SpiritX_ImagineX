@@ -6,6 +6,7 @@ import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -283,6 +284,39 @@ export const getCoach = async (req,res) => {
     
   }
 }
+
+export const getCoachById = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    console.log("Received ID:", id); // Log the ID
+    
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID is required" });
+    }
+    
+    // Just return something simple to test the route
+    // return res.json({ success: true, message: "Route works", receivedId: id });
+    
+    // Once that works, uncomment the below code
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json({ success: false, message: "Invalid coach ID format" });
+    }
+    
+    const coach = await coachModel.findById(id);
+    
+    if (!coach) {
+      return res.json({ success: false, message: "Coach not found!" });
+    }
+    
+    return res.json({ success: true, message: "Fetch coach successfully!", coach });
+    
+  } catch (error) {
+    console.error("Server error:", error); // Log the full error
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export const verifyPayment = async (req,res) => {
   try {
