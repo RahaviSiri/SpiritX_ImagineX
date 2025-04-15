@@ -25,7 +25,7 @@ function App() {
         <Route path='/ground-details/:id' element={<GroundDetails />} />
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
-        <Route path='/client' element={<Client />} />
+        <Route path='/client/:id' element={<Client />} />
       </Routes>
     </div>
     

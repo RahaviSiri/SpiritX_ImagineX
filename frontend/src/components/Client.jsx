@@ -15,6 +15,7 @@ const Client = () => {
     notes: "",
   });
   const { coachId } = useParams();
+  console.log(coachId)
 
 
   const handleChange = (e) => {
