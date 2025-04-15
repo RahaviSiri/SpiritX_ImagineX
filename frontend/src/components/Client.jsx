@@ -14,8 +14,8 @@ const Client = () => {
     preferredDateTime: "",
     notes: "",
   });
-  const { coachId } = useParams();
-  console.log(coachId)
+  const { id } = useParams();
+  console.log(id)
 
 
   const handleChange = (e) => {
@@ -32,14 +32,14 @@ const Client = () => {
 
     const payload = {
       ...formData,
-      coachId, // make sure this is passed from parent component
+       // make sure this is passed from parent component
     };
 
 
     try {
       const { data: response } = await axios.post(
-        "http://localhost:3000/api/client/book-coach",
-        {coachId,payload},
+        `http://localhost:3000/api/client/book-coach/${id}`,
+        payload,
         {
           // headers: {
           //   "Content-Type": "application/json",

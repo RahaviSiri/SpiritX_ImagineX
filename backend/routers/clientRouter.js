@@ -3,6 +3,6 @@ import { registerClient } from '../controllers/clientController.js';
 
 const clientRouter = express.Router();
 
-clientRouter.post('/book-coach/:coachId',registerClient)
+clientRouter.post('/book-coach/:id',registerClient)
 
 export default clientRouter;

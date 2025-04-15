@@ -4,13 +4,14 @@ import coachModel from "../models/coachModel.js";
 
 export const registerClient = async (req, res) => {
     try {
-        const {coachId} = req.params;
+        const {id} = req.params;
+        console.log(id)
         const body = req.body;
         if (!body) {
             res.json({ success: false, message: "Body is required" })
         }
         const client = await new clientModel({
-            coachId: coachId,
+            coachId: id,
             fullName: body.fullName,
             email: body.email,
             contactNumber: body.contactNumber,
@@ -24,7 +25,7 @@ export const registerClient = async (req, res) => {
 
         await client.save();
 
-        const coach = await coachModel.findById(body.coachId);
+        const coach = await coachModel.findById(id);
         if (!coach) {
             console.log("not coach")
             return res.status(404).json({ success: false, message: "Coach not found" });
