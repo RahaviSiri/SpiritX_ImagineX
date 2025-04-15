@@ -4,12 +4,13 @@ import coachModel from "../models/coachModel.js";
 
 export const registerClient = async (req, res) => {
     try {
+        const {coachId} = req.params;
         const body = req.body;
         if (!body) {
             res.json({ success: false, message: "Body is required" })
         }
         const client = await new clientModel({
-            coachId: body.coachId,
+            coachId: coachId,
             fullName: body.fullName,
             email: body.email,
             contactNumber: body.contactNumber,

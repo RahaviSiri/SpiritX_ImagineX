@@ -151,7 +151,7 @@ const CoachProfile = () => {
 
       {/* Book Button */}
       <div className="mt-10 text-center">
-        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition duration-300" onClick={() => navigate('/client')}>
+        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition duration-300" onClick={() => navigate(`/client/${id}`)}>
           Book Coach
         </button>
       </div>
