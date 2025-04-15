@@ -4,7 +4,7 @@ import coachModel from "../models/coachModel.js";
 
 export const registerClient = async (req, res) => {
     try {
-        const body  = req.body;
+        const body = req.body;
         if (!body) {
             res.json({ success: false, message: "Body is required" })
         }
@@ -27,11 +27,11 @@ export const registerClient = async (req, res) => {
         if (!coach) {
             console.log("not coach")
             return res.status(404).json({ success: false, message: "Coach not found" });
-          }
-          if (!coach.contactDetails.email) {
+        }
+        if (!coach.contactDetails.email) {
             console.log("not email")
             return res.status(400).json({ success: false, message: "Coach email not found" });
-          }
+        }
         // console.log(coach);
         // console.log(client._id)
 
@@ -64,6 +64,11 @@ export const registerClient = async (req, res) => {
             style="display:inline-block;padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
             Approve & Send OTP
         </a>
+        <a href="http://localhost:3000/api/admin/reject-by-coach/${client._id}" 
+        style="display:inline-block;padding:10px 20px;background:#dc3545;color:white;text-decoration:none;border-radius:5px;">
+            Reject
+        </a>
+
           
           Best regards,  
           Your Coaching Platform
@@ -71,15 +76,15 @@ export const registerClient = async (req, res) => {
         };
         try {
             await transporter.sendMail(mailOptions);
-          } catch (emailErr) {
+        } catch (emailErr) {
             console.log(emailErr)
             console.error("Email sending failed:", emailErr);
-          }
+        }
 
 
     } catch (error) {
         console.log(error)
-        return res.json({success:false,message:error.message})
+        return res.json({ success: false, message: error.message })
 
     }
 }

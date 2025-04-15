@@ -127,7 +127,7 @@ export const approveBycoach = async (req, res) => {
   export const rejectByCoach = async (req, res) => {
     try {
   
-      const clientId = req.params
+      const {clientId}= req.params
       const client = await clientModel.findById(clientId)
       console.log(client)
   

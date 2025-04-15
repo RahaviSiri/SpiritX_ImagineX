@@ -7,6 +7,6 @@ const approveRouter = express.Router();
 approveRouter.post('/approve',authCoach, approveByAdmin);
 approveRouter.post('/reject',authCoach, rejectByAdmin);
 approveRouter.get('/approve-by-coach/:clientId', approveBycoach)
-approveRouter.post('/reject-by-coach/:clientId', rejectByCoach)
+approveRouter.get('/reject-by-coach/:clientId', rejectByCoach)
 
 export default approveRouter;
