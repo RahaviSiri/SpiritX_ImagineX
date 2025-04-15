@@ -22,7 +22,7 @@ const CoachDetails = () => {
     city,
     district,
     selectionType,
-    school_Academics,
+    salary,
     sport,
     qualifications,
     qualifications_photo,
@@ -102,7 +102,7 @@ const CoachDetails = () => {
       formData.append("city", city);
       formData.append("district", district);
       formData.append("selectionType", selectionType);
-      formData.append("school_Academics", school_Academics);
+      formData.append("salary", salary);
       formData.append("sport", sport);
       formData.append("qualifications", qualifications);
 
@@ -245,7 +245,7 @@ const CoachDetails = () => {
             <strong>Selection Type:</strong> {selectionType}
           </p>
           <p>
-            <strong>School/Academic:</strong> {school_Academics}
+            <strong>Expected Salary:</strong> {salary}
           </p>
           <p>
             <strong>Sport:</strong> {sport}

@@ -23,7 +23,7 @@ const coachSchema = new mongoose.Schema({
     },
     coachSelection : {
         selectionType : {type:String,required:true},
-        school_Academics : {type:String},
+        expected_Salary:{type:String,requred:true},
         sport : {type:String,required:true},
         qualifications : {type:String,required:true},
         qualifications_photo : {type:String,required:true},
@@ -31,7 +31,8 @@ const coachSchema = new mongoose.Schema({
     },
     isApprove : {type:Boolean,default : false},
     otp:{type:String,default:''},
-    isPayment:{type:Boolean,default:false}
+    isPayment:{type:Boolean,default:false},
+    
 
 })
 

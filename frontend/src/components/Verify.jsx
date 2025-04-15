@@ -10,6 +10,7 @@ const Verify = async () => {
   const userId = searchParams.get("userId");
   const navigate = useNavigate();
   const { backend_url } = useContext(CoachContext);
+  console.log(success)
 
   try {
     const { data: response } = await axios.post(
@@ -19,9 +20,9 @@ const Verify = async () => {
         withCredentials: true,
       }
     );
-
+    console.log(response)
     if (response.success) {
-      navigate("/");
+      navigate("/coach-list");
       toast.success(response.message);
     } else {
       toast.error(response.messge);

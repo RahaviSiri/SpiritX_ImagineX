@@ -9,6 +9,7 @@ import upload from './middleware/multer.js';
 import {v2 as cloudinary} from 'cloudinary'
 import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
+import clientRouter from './routers/clientRouter.js';
 
 const app = express();
 const port = process.env.port || 3000;
@@ -18,11 +19,12 @@ connectDB();
 connectCloudinary();
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5174', credentials: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 // Routes 
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
+app.use('/api/client',clientRouter)
 app.use('/api/ground',groundRouter);
 
 app.get('/', (req, res) => {
@@ -34,13 +36,3 @@ app.listen(port, () => {
 })
 
 
-// app.post('/test-upload', upload.single('testImg'), async (req, res) => {
-//     try {
-//       console.log(req.file); // <-- See if multer worked
-//       const result = await cloudinary.uploader.upload(req.file.path);
-//       res.json({ url: result.secure_url });
-//     } catch (err) {
-//       console.log(err);
-//       res.status(500).json({ error: err.message });
-//     }
-//   });
