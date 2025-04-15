@@ -9,6 +9,9 @@ import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
 import Client from './components/Client';
+import ClientWaitForApproval from './components/clientWaitForApproval';
+
+
 
 
 function App() {
@@ -20,6 +23,7 @@ function App() {
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
+        <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
         <Route path='/all-ground' element={<AllGrounds />} />
         <Route path='/add-ground' element={<AddGround />} />
         <Route path='/ground-details/:id' element={<GroundDetails />} />

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Client = () => {
   const [formData, setFormData] = useState({
@@ -15,8 +16,8 @@ const Client = () => {
     notes: "",
   });
   const { id } = useParams();
-  console.log(id)
-
+  console.log(id);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -25,38 +26,37 @@ const Client = () => {
     }));
   };
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
       ...formData,
-       // make sure this is passed from parent component
+      id: id, // Fixed syntax: properly adding id to payload
     };
 
-
     try {
-      const { data: response } = await axios.post(
+      const { data } = await axios.post(
         `http://localhost:3000/api/client/book-coach/${id}`,
         payload,
         {
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
+          headers: {
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );
-
-      if (response.success) {
-        alert("Booking request submitted successfully!");
-      } else {
-        alert("Failed to submit: " + response.message);
-      }
+      console.log('hi');
+      console.log(data);
+      
+      // Navigation after successful API call
+      console.log("Navigation should happen now!");
+      navigate("/client-wait-for-approval");
+      
+      // Uncomment if you want to show a success message
+      // toast.success(data.message || "Request submitted successfully");
     } catch (err) {
-      console.log(err)
-      console.error(err);
-      // alert("Something went wrong while submitting.");
+      console.error("Error:", err);
+      toast.error(err.message || "An error occurred");
     }
   };
 
@@ -78,6 +78,7 @@ const Client = () => {
             value={formData.fullName}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
         </div>
 
@@ -92,6 +93,7 @@ const Client = () => {
             value={formData.email}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
         </div>
 
@@ -106,6 +108,7 @@ const Client = () => {
             value={formData.contactNumber}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
         </div>
 
@@ -120,6 +123,7 @@ const Client = () => {
             value={formData.addressLine1}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
         </div>
 
@@ -147,6 +151,7 @@ const Client = () => {
               value={formData.city}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
             />
           </div>
 
@@ -161,6 +166,7 @@ const Client = () => {
               value={formData.district}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
             />
           </div>
         </div>
@@ -175,6 +181,7 @@ const Client = () => {
             value={formData.preferredDateTime}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
         </div>
 
