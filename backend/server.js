@@ -7,7 +7,7 @@ import connectCloudinary from './config/cloudinary.js';
 import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
 import userRouter from './routers/userRouter.js';
-import clientRouter from './routers/clientRouter.js';
+
 
 const app = express();
 const port = process.env.port || 3000;
@@ -22,7 +22,6 @@ app.use(cors({ origin: true, credentials: true })); // Allow all origins
 // Routes 
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
-app.use('/api/client',clientRouter)
 app.use('/api/ground',groundRouter);
 app.use('/api/user',userRouter);
 

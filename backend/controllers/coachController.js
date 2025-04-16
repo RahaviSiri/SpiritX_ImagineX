@@ -7,7 +7,7 @@ import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import mongoose from "mongoose";
-import clientModel from "../models/clientModel.js";
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
