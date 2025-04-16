@@ -91,9 +91,32 @@ export const registerCoach = async (req, res) => {
     const mailOptions = {
       from: user.contactDetails.email,
       to: process.env.ADMIN_EMAIL,
-      subject: 'A coach Registered ',
-      text: 'Approving his/her application'
-    }
+      subject: 'New Coach Registration Request',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; color: #333;">
+          <h2 style="color: #2c3e50;">🎓 New Coach Registration</h2>
+          <p>Hello Admin,</p>
+    
+          <p>
+            A new coach has submitted a registration request and is awaiting your approval.
+          </p>
+    
+          <h3 style="color: #34495e;">Coach Details:</h3>
+          <ul style="line-height: 1.6;">
+            <li><strong>Name:</strong> ${user.personalInfo?.fullName || 'N/A'}</li>
+            <li><strong>Email:</strong> ${user.contactDetails.email}</li>
+            <li><strong>Phone:</strong> ${user.contactDetails.contactNo || 'N/A'}</li>
+            <li><strong>City:</strong> ${user.Address?.city || 'N/A'}</li>
+            <li><strong>District:</strong> ${user.Address?.district || 'N/A'}</li>
+          </ul>
+    
+          <p>Please review and approve or reject their application from the admin dashboard.</p>
+    
+          <p style="margin-top: 30px;">Thanks,<br/>Your Coaching Platform</p>
+        </div>
+      `
+    };
+    
 
     await transporter.sendMail(mailOptions);
 
@@ -330,6 +353,7 @@ export const verifyPayment = async (req, res) => {
       return res.json({ success: false, message: "Not paid yet." })
 
     }
+    // return res.json({success:true})
   } catch (error) {
     return res.json({ success: false, message: error.message })
 

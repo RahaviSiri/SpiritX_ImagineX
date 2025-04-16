@@ -72,7 +72,7 @@ const CoachWaitForApproval = () => {
           Waiting for Admin Approval
         </h1>
 
-        {userData?.isApprove}
+        {/* {userData?.isApprove} */}
         {userData?.isApprove ? (
           <>
             <p className="text-center text-gray-600 mb-6">
