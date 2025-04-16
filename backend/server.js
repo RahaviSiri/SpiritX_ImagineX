@@ -10,6 +10,7 @@ import {v2 as cloudinary} from 'cloudinary'
 import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
 import clientRouter from './routers/clientRouter.js';
+import userRouter from './routers/userRouter.js';
 
 const app = express();
 const port = process.env.port || 3000;
@@ -26,6 +27,8 @@ app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
 app.use('/api/client',clientRouter)
 app.use('/api/ground',groundRouter);
+app.use('/api/coach',coachRouter);
+app.use('/api/admin',approveRouter);
 
 app.get('/', (req, res) => {
     res.json('API is working')

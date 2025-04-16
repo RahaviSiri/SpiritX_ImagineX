@@ -10,6 +10,8 @@ import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/clientWaitForApproval';
+import ValidateGround from './components/validateGround';
+import Login from './pages/Login';
 
 
 
@@ -31,6 +33,7 @@ function App() {
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
         <Route path='/client/:id' element={<Client />} />
         <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
+        <Route path='/validate-ground' element={< ValidateGround/>} />
       </Routes>
     </div>
     
