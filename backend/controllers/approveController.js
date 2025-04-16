@@ -23,7 +23,7 @@ export const approveByAdmin = async (req, res) => {
       from: process.env.ADMIN_EMAIL,
       to: user.contactDetails.email,
       subject: 'Your Coaching Application Has Been Approved!',
-      text: `Dear ${user.fullName},
+      text: `Dear ${user.personalInfo.fullName},
           
           Congratulations! Your application has been approved by our admin team.
           
