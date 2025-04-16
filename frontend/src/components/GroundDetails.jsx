@@ -4,35 +4,38 @@ import axios from "axios";
 import { GroundContext } from "../context/GroundContext";
 import { toast } from "react-toastify";
 import { Trash2, Pencil } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const GroundDetails = () => {
-  const { getGround, ground } = useContext(GroundContext);
+  const { getGround, ground, backend_url } = useContext(GroundContext);
+  const { uToken } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleBooking = (timeSlot) => {
-    toast.success(`Booking requested for: ${timeSlot}`);
+  const handleBooking = async (timeSlot) => {
+    try {
+      const response = await axios.post(`${backend_url}/api/ground/handle-booking`, {
+        groundId: id,
+        timeSlot,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${uToken}`,
+        },
+      });
+  
+      if (response.data.success) {
+        toast.success("Booking successful!");
+        getGround(id);
+      } else {
+        toast.error(response.data.message || "Booking failed");
+      }
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error("Something went wrong");
+    }
   };
-
-  // const handleDelete = async () => {
-  //   try {
-  //     const { data } = await axios.delete(
-  //       `${backend_url}/api/ground/delete-ground/${id}`
-  //     );
-  //     if (data.success) {
-  //       toast.success("Ground deleted successfully");
-  //       navigate("/all-ground");
-  //     }
-  //   } catch (error) {
-  //     toast.error("Failed to delete ground");
-  //   }
-  // };
-
-  // const handleUpdate = (e) => {
-  //   e.preventDefault();
-  //   navigate(`/add-ground/${id}`);
-  // };
-
+  
   useEffect(() => {
     getGround(id);
   }, [id]);
