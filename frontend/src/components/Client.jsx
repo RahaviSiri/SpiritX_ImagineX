@@ -1,9 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { UserContext } from "../context/UserContext";
 
 const Client = () => {
+  const { uToken } = useContext(UserContext);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -36,12 +38,13 @@ const Client = () => {
       };
       // console.log('hi');
       const { data } = await axios.post(
-        `http://localhost:3000/api/client/book-coach/${id}`,
+        `http://localhost:3000/api/user/book-coach/${id}`,
         payload,
         {
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${uToken}`
+          },
           withCredentials: true,
         }
       );
@@ -52,8 +55,6 @@ const Client = () => {
         // Navigation after successful API call
         console.log("Navigation should happen now!");
         navigate("/client-wait-for-approval");
-
-        
       }
       else{
         console.log("error")

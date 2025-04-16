@@ -11,9 +11,6 @@ import clientModel from "../models/clientModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-
-
-
 export const registerCoach = async (req, res) => {
   try {
     const { body, files } = req;

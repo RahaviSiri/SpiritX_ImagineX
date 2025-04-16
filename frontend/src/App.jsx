@@ -11,19 +11,18 @@ import CoachProfile from './components/CoachProfile';
 import ValidateGround from './components/validateGround';
 import Login from './pages/Login';
 import Client from './components/Client';
-import ClientWaitForApproval from './components/clientWaitForApproval';
+import ClientWaitForApproval from './components/ClientWaitForApproval';
 
 function App() {
   return (
     <div className='min-h-screen'>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<AllGrounds/>} />
+        <Route path='/' element={<Client/>} />
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
-        
         <Route path='/all-ground' element={<AllGrounds />} />
         <Route path='/add-ground' element={<AddGround />} />
         <Route path='/add-ground/:id' element={<AddGround />} />
@@ -31,7 +30,7 @@ function App() {
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
         <Route path='/validate-ground' element={< ValidateGround/>} />
-         <Route path='/client/:id' element={<Client />} />
+        <Route path='/client/:id' element={<Client />} />
         <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
       </Routes>
     </div>

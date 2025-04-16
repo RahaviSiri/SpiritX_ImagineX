@@ -1,6 +1,8 @@
 import userModel from "../models/userModel.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import { transporter } from "../config/nodemailer.js";
+import coachModel from "../models/coachModel.js";
 
 const registerUser = async (req, res) => {
     try {
@@ -79,6 +81,7 @@ const getUserData = async (req, res) => {
     }
 };
 
+//  Get User by ID
 const getUserById = async (req, res) => {
     try {
       const userId = req.params.id;
@@ -94,7 +97,99 @@ const getUserById = async (req, res) => {
       return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Register Coach
+const registerCoach = async (req, res) => {
+    try {
+        const { id } = req.params; // This should be the coachId
+        const userId = req.user._id;
+        const {
+            fullName,
+            email,
+            contactNumber,
+            addressLine1,
+            addressLine2,
+            city,
+            district,
+            preferredDateTime,
+            notes,
+        } = req.body;
+
+        if (!userId || !id) {
+            return res.status(400).json({ success: false, message: "User ID and Coach ID are required" });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const newBooking = {
+            coachId: id,
+            fullName,
+            email,
+            contactNumber,
+            addressLine1,
+            addressLine2,
+            city,
+            district,
+            preferredDateTime,
+            notes,
+        };
+
+        user.coachBooking.push(newBooking);
+        await user.save();
+
+        const coach = await coachModel.findById(id);
+        if (!coach || !coach.contactDetails?.email) {
+            return res.status(404).json({ success: false, message: "Coach or coach email not found" });
+        }
+
+        const mailOptions = {
+            from: process.env.ADMIN_EMAIL,
+            to: coach.contactDetails.email,
+            subject: `New Coaching Request from ${fullName}`,
+            html: `
+                Hello ${coach.personalInfo?.fullName || "Coach"},
+                
+                You have received a new coaching request.
+
+                Client Details:
+                -------------------
+                Name: ${fullName}
+                Email: ${email}
+                Contact: ${contactNumber}
+                City: ${city}, District: ${district}
+                Preferred Date & Time: ${new Date(preferredDateTime).toLocaleString()}
+
+                Additional Notes:
+                ${notes || "No additional notes provided."}
+
+                <p>
+                    Click below to approve or reject:
+                </p>
+                <a href="http://localhost:3000/api/admin/approve-by-coach/${user._id}" 
+                    style="display:inline-block;padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
+                    Approve & Send OTP
+                </a>
+                <a href="http://localhost:3000/api/admin/reject-by-coach/${user._id}" 
+                    style="display:inline-block;padding:10px 20px;background:#dc3545;color:white;text-decoration:none;border-radius:5px;">
+                    Reject
+                </a>
+                
+                Best regards,<br/>
+                Your Coaching Platform
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({ success: true, message: "Coaching request submitted", booking: newBooking });
+    } catch (error) {
+        console.error("Register Coach Error:", error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
   
-
-
-export { registerUser, loginUser, getUserData,getUserById }
+export { registerUser, loginUser, getUserData,getUserById, registerCoach }
