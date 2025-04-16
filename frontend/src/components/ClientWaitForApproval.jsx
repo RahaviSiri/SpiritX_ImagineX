@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { CoachContext } from "../context/Coachcontext";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const ClientWaitForApproval = () => {
   const inputRefs = React.useRef([]);
-  const [email, setEmail] = useState("");
-  const { backend_url, userData,fetchCoach,fetchCoaches } = useContext(CoachContext);
+
+  const { backendURL, userData,uToken } = useContext(UserContext);
   const navigate = useNavigate();
+  console.log(userData);
+  const email = userData.coachBooking[userData.coachBooking.length - 1].email;
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -32,28 +34,33 @@ const ClientWaitForApproval = () => {
       }
     });
   };
- 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const bookingId =
+        userData.coachBooking[userData.coachBooking.length - 1]._id;
       const OTPArray = inputRefs.current.map((el) => el.value);
       const otp = OTPArray.join("");
       const data = {
+        bookingId: bookingId,
         email: email,
         otp: otp,
-        userId: userData._id,
       };
-      
-      const token = localStorage.getItem("token");
-      // const { data: response } = await axios.post(
-      //   `${backend_url}/api/coach/check-otp`,
-      //   data,
 
-      //   {
-      //     withCredentials: true,
-      //   }
-      // );
+      // const token = localStorage.getItem("token");
+      const { data: response } = await axios.post(
+        `${backendURL}/api/user/check-otp-by-user`,
+        data,
+
+        {
+          headers: {
+            Authorization: `Bearer ${uToken}`,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
 
       if (response.success && response.session_url) {
         window.location.replace(response.session_url);
@@ -72,8 +79,8 @@ const ClientWaitForApproval = () => {
           Waiting for Admin Approval
         </h1>
 
-        {userData?.isApprove}
-        {userData?.isApprove ? (
+        {userData?.coachBooking.isApprove}
+        {userData?.coachBooking[userData.coachBooking.length - 1].isApprove ? (
           <>
             <p className="text-center text-gray-600 mb-6">
               If you've been approved, enter the OTP sent to your email to

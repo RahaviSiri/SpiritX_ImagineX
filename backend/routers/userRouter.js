@@ -1,13 +1,15 @@
 import express from "express"
-import { getUserById, getUserData, loginUser, registerUser,registerCoach } from "../controllers/userController.js";
+import { getUserById, getUserData, loginUser, registerUser,registerCoach,  checkOTPByUser } from "../controllers/userController.js";
 import authUser from "../middleware/authUser.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/register",registerUser);
 userRouter.post("/login",loginUser);
+userRouter.post("/check-otp-by-user",authUser,checkOTPByUser);
 userRouter.get("/get-user-data",authUser,getUserData);
-userRouter.get("/get-user-byId/:id",getUserById);
+userRouter.get("/get-user-byId",authUser,getUserById);
+userRouter.get("/get-user-byId",authUser,getUserById);
 userRouter.post("/book-coach/:id",authUser,registerCoach);
 
 export default userRouter;
