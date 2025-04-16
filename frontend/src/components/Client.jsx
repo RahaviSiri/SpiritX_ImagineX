@@ -52,8 +52,7 @@ const Client = () => {
         console.log("Navigation should happen now!");
         navigate("/client-wait-for-approval");
 
-        // Uncomment if you want to show a success message
-        // toast.success(data.message || "Request submitted successfully");
+        
       }
       else{
         console.log("error")
