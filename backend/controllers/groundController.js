@@ -1,10 +1,14 @@
 import groundModel from "../models/groundModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import bcrypt from "bcrypt";
+import validator from "validator"
 
 // Get all grounds
 const getAllGrounds = async (req, res) => {
   try {
-    const grounds = await groundModel.find({}).select("-ownerPassword -ownerEmail");
+    const grounds = await groundModel
+      .find({})
+      .select("-ownerPassword -ownerEmail");
     res.json({ success: true, grounds });
   } catch (error) {
     console.log("Error in getting all grounds", error);
@@ -12,13 +16,14 @@ const getAllGrounds = async (req, res) => {
   }
 };
 
-
 // Get one ground by ID
 const getGround = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const ground = await groundModel.findById(id).select("-ownerPassword -ownerEmail");
+    const ground = await groundModel
+      .findById(id)
+      .select("-ownerPassword -ownerEmail");
     console.log(ground);
     if (!ground) {
       return res
@@ -35,7 +40,8 @@ const getGround = async (req, res) => {
 // Add Ground
 const addGround = async (req, res) => {
   try {
-    const { name, address, category,ownerEmail,ownerPassword,groundType } = req.body;
+    const { name, address, category, ownerEmail, ownerPassword, groundType } =
+      req.body;
     const image = req.file;
     let freeTime = req.body.freeTime;
 
@@ -55,12 +61,27 @@ const addGround = async (req, res) => {
         .json({ success: false, message: "Image is required" });
     }
     // Upload image to Cloudinary
-    const imageUpload = await cloudinary.uploader.upload(image.path, {
-      resource_type: "image",
-    }).catch((err) => {
-      console.log("Cloudinary upload error:", err);
-      throw err;  // Propagate the error to be caught by the outer try-catch
-    });    
+    const imageUpload = await cloudinary.uploader
+      .upload(image.path, {
+        resource_type: "image",
+      })
+      .catch((err) => {
+        console.log("Cloudinary upload error:", err);
+        throw err; // Propagate the error to be caught by the outer try-catch
+      });
+
+    if (!validator.isEmail(ownerEmail)) {
+      return res.json({ success: false, message: "Enter valid Email" });
+    }
+
+    if (ownerPassword.length < 8) {
+      return res.json({ success: false, message: "Enter 8 digit correct password" });
+    }
+
+    // Hashing the Password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(ownerPassword,salt);
+
     const ground = new groundModel({
       name,
       address,
@@ -68,7 +89,7 @@ const addGround = async (req, res) => {
       freeTime,
       image: imageUpload.secure_url,
       ownerEmail,
-      ownerPassword,
+      ownerPassword : hashPassword,
       groundType,
     });
     await ground.save();
@@ -95,7 +116,7 @@ const deleteGround = async (req, res) => {
 const updateGround = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, category, ownerEmail, ownerPassword, groundType } = req.body;
+    const { name, address, category, groundType } = req.body;
     let freeTime = req.body.freeTime;
 
     // Handle stringified array
@@ -112,7 +133,9 @@ const updateGround = async (req, res) => {
     // Get existing ground
     const existingGround = await groundModel.findById(id);
     if (!existingGround) {
-      return res.status(404).json({ success: false, message: "Ground not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground not found" });
     }
 
     let imageUrl = existingGround.image;
@@ -133,8 +156,6 @@ const updateGround = async (req, res) => {
         category,
         freeTime,
         image: imageUrl,
-        ownerEmail,
-        ownerPassword,
         groundType,
       },
       { new: true }
@@ -147,5 +168,33 @@ const updateGround = async (req, res) => {
   }
 };
 
+// Validate Ground
+const validateGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ownerPassword, ownerEmail } = req.body;
 
-export { getAllGrounds, getGround, addGround, deleteGround,updateGround };
+    const ground = await groundModel.findById(id);
+    if (!ground) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground not found" });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(ownerPassword, ground.ownerPassword);
+
+    if (ground.ownerEmail === ownerEmail && isPasswordCorrect) {
+      return res.json({ success: true });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Enter correct credentials" });
+    }
+  } catch (error) {
+    console.log("Error in validating ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export { getAllGrounds, getGround, addGround, deleteGround, updateGround,validateGround };

@@ -8,6 +8,7 @@ import AddGround from './components/AddGround';
 import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
+import ValidateGround from './components/validateGround';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path='/ground-details/:id' element={<GroundDetails />} />
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
+        <Route path='/validate-ground' element={< ValidateGround/>} />
       </Routes>
     </div>
     

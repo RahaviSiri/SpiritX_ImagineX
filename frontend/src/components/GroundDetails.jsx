@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { GroundContext } from '../context/GroundContext';
-import { toast } from 'react-toastify';
-import { Trash2, Pencil } from 'lucide-react';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { GroundContext } from "../context/GroundContext";
+import { toast } from "react-toastify";
+import { Trash2, Pencil } from "lucide-react";
 
 const GroundDetails = () => {
-  const { backend_url,getGround,ground } = useContext(GroundContext);
+  const { getGround, ground } = useContext(GroundContext);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -14,28 +14,33 @@ const GroundDetails = () => {
     toast.success(`Booking requested for: ${timeSlot}`);
   };
 
-  const handleDelete = async () => {
-    try {
-      const { data } = await axios.delete(`${backend_url}/api/ground/delete-ground/${id}`);
-      if (data.success) {
-        toast.success("Ground deleted successfully");
-        navigate("/all-ground");
-      }
-    } catch (error) {
-      toast.error("Failed to delete ground");
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     const { data } = await axios.delete(
+  //       `${backend_url}/api/ground/delete-ground/${id}`
+  //     );
+  //     if (data.success) {
+  //       toast.success("Ground deleted successfully");
+  //       navigate("/all-ground");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to delete ground");
+  //   }
+  // };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    navigate(`/add-ground/${id}`);
-  };
+  // const handleUpdate = (e) => {
+  //   e.preventDefault();
+  //   navigate(`/add-ground/${id}`);
+  // };
 
   useEffect(() => {
     getGround(id);
   }, [id]);
 
-  if (!ground) return <div className="text-center py-10 text-gray-600 text-lg">Loading...</div>;
+  if (!ground)
+    return (
+      <div className="text-center py-10 text-gray-600 text-lg">Loading...</div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 flex flex-col items-center font-sans">
@@ -56,11 +61,18 @@ const GroundDetails = () => {
 
           <div className="flex-1 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800">
-              {ground.name} <span className="text-sm text-gray-500">({ground.groundType})</span>
+              {ground.name}{" "}
+              <span className="text-sm text-gray-500">
+                ({ground.groundType})
+              </span>
             </h2>
 
-            <p className="text-gray-700"><strong>Category:</strong> {ground.category}</p>
-            <p className="text-gray-700"><strong>Address:</strong> {ground.address}</p>
+            <p className="text-gray-700">
+              <strong>Category:</strong> {ground.category}
+            </p>
+            <p className="text-gray-700">
+              <strong>Address:</strong> {ground.address}
+            </p>
 
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-4">
@@ -78,7 +90,9 @@ const GroundDetails = () => {
                     </button>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No slots available currently.</p>
+                  <p className="text-sm text-gray-500">
+                    No slots available currently.
+                  </p>
                 )}
               </div>
             </div>
@@ -88,13 +102,18 @@ const GroundDetails = () => {
         {/* Bottom Buttons */}
         <div className="mt-10 flex justify-end gap-4">
           <button
-            onClick={handleUpdate}
+            onClick={() =>
+              navigate("/validate-ground", { state: { id, action: "Update" } })
+            }
             className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition"
           >
             <Pencil size={18} /> Update
           </button>
+
           <button
-            onClick={handleDelete}
+            onClick={() =>
+              navigate("/validate-ground", { state: { id, action: "Delete" } })
+            }
             className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
           >
             <Trash2 size={18} /> Delete
