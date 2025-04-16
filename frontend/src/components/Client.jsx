@@ -35,6 +35,7 @@ const Client = () => {
     };
 
     try {
+      // console.log('hi');
       const { data } = await axios.post(
         `http://localhost:3000/api/client/book-coach/${id}`,
         payload,
@@ -201,6 +202,7 @@ const Client = () => {
 
         <button
           type="submit"
+          onClick = {() => navigate("/client-wait-for-approval")}
           className="w-full mt-4 bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition duration-300"
         >
           Submit Booking Request

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { transporter } from "../config/nodemailer.js";
 import clientModel from "../models/clientModel.js";
 import coachModel from "../models/coachModel.js";
@@ -90,3 +91,36 @@ export const registerClient = async (req, res) => {
 
     }
 }
+
+export const getClientById = async (req, res) => {
+    const { clientId } = req.params;
+  
+    try {
+      console.log("Received ID:", clientId); // Log the ID
+  
+      if (!clientId) {
+        return res.status(400).json({ success: false, message: "ID is required" });
+      }
+  
+      // Just return something simple to test the route
+      // return res.json({ success: true, message: "Route works", receivedId: id });
+  
+      // Once that works, uncomment the below code
+  
+      if (!mongoose.Types.ObjectId.isValid(clientId)) {
+        return res.json({ success: false, message: "Invalid coach ID format" });
+      }
+  
+      const client = await clientModel.findById(clientId);
+  
+      if (!client) {
+        return res.json({ success: false, message: "Coach not found!" });
+      }
+  
+      return res.json({ success: true, message: "Fetch coach successfully!", client });
+  
+    } catch (error) {
+      console.error("Server error:", error); // Log the full error
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  };
