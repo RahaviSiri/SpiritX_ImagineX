@@ -1,6 +1,7 @@
 import  {transporter} from "../config/nodemailer.js";
-import clientModel from "../models/clientModel.js";
+
 import coachModel from "../models/coachModel.js";
+import userModel from "../models/userModel.js";
 
 
 export const approveByAdmin = async (req,res) => {
@@ -84,7 +85,7 @@ export const approveBycoach = async (req, res) => {
     try {
       const {clientId} = req.params;
       console.log(clientId)
-      const client = await clientModel.findById(clientId);
+      const client = await userModel.findById(clientId);
       if (!client) {
         return res.json({ success: false, message: "User not found!" })
       }
@@ -128,7 +129,7 @@ export const approveBycoach = async (req, res) => {
     try {
   
       const {clientId}= req.params
-      const client = await clientModel.findById(clientId)
+      const client = await userModel.findById(clientId)
       console.log(client)
   
       const mailOptions = {
