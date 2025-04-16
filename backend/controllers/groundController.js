@@ -1,10 +1,15 @@
 import groundModel from "../models/groundModel.js";
+import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import bcrypt from "bcrypt";
+import validator from "validator"
 
 // Get all grounds
 const getAllGrounds = async (req, res) => {
   try {
-    const grounds = await groundModel.find({});
+    const grounds = await groundModel
+      .find({})
+      .select("-ownerPassword -ownerEmail");
     res.json({ success: true, grounds });
   } catch (error) {
     console.log("Error in getting all grounds", error);
@@ -17,7 +22,9 @@ const getGround = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const ground = await groundModel.findById(id);
+    const ground = await groundModel
+      .findById(id)
+      .select("-ownerPassword -ownerEmail");
     console.log(ground);
     if (!ground) {
       return res
@@ -34,7 +41,8 @@ const getGround = async (req, res) => {
 // Add Ground
 const addGround = async (req, res) => {
   try {
-    const { name, address, category } = req.body;
+    const { name, address, category, ownerEmail, ownerPassword, groundType } =
+      req.body;
     const image = req.file;
     let freeTime = req.body.freeTime;
 
@@ -54,18 +62,36 @@ const addGround = async (req, res) => {
         .json({ success: false, message: "Image is required" });
     }
     // Upload image to Cloudinary
-    const imageUpload = await cloudinary.uploader.upload(image.path, {
-      resource_type: "image",
-    }).catch((err) => {
-      console.log("Cloudinary upload error:", err);
-      throw err;  // Propagate the error to be caught by the outer try-catch
-    });    
+    const imageUpload = await cloudinary.uploader
+      .upload(image.path, {
+        resource_type: "image",
+      })
+      .catch((err) => {
+        console.log("Cloudinary upload error:", err);
+        throw err; // Propagate the error to be caught by the outer try-catch
+      });
+
+    if (!validator.isEmail(ownerEmail)) {
+      return res.json({ success: false, message: "Enter valid Email" });
+    }
+
+    if (ownerPassword.length < 8) {
+      return res.json({ success: false, message: "Enter 8 digit correct password" });
+    }
+
+    // Hashing the Password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(ownerPassword,salt);
+
     const ground = new groundModel({
       name,
       address,
       category,
       freeTime,
       image: imageUpload.secure_url,
+      ownerEmail,
+      ownerPassword : hashPassword,
+      groundType,
     });
     await ground.save();
     res.json({ success: true, ground });
@@ -75,4 +101,149 @@ const addGround = async (req, res) => {
   }
 };
 
-export { getAllGrounds, getGround, addGround };
+// Delete ground by ID
+const deleteGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await groundModel.findByIdAndDelete(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error in getting ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Update ground
+const updateGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, address, category, groundType } = req.body;
+    let freeTime = req.body.freeTime;
+
+    // Handle stringified array
+    if (typeof freeTime === "string") {
+      try {
+        freeTime = JSON.parse(freeTime);
+      } catch (err) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid freeTime format" });
+      }
+    }
+
+    // Get existing ground
+    const existingGround = await groundModel.findById(id);
+    if (!existingGround) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground not found" });
+    }
+
+    let imageUrl = existingGround.image;
+
+    // If a new image is uploaded
+    if (req.file) {
+      const imageUpload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
+      imageUrl = imageUpload.secure_url;
+    }
+
+    await groundModel.findByIdAndUpdate(
+      id,
+      {
+        name,
+        address,
+        category,
+        freeTime,
+        image: imageUrl,
+        groundType,
+      },
+      { new: true }
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error in updating ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Validate Ground
+const validateGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ownerPassword, ownerEmail } = req.body;
+
+    const ground = await groundModel.findById(id);
+    if (!ground) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground not found" });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(ownerPassword, ground.ownerPassword);
+
+    if (ground.ownerEmail === ownerEmail && isPasswordCorrect) {
+      return res.json({ success: true });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Enter correct credentials" });
+    }
+  } catch (error) {
+    console.log("Error in validating ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Handle Booking
+const handleBooking = async (req, res) => {
+  try {
+    const { groundId, timeSlot } = req.body;
+    const userId = req.user._id;
+
+    if (!groundId || !userId || !timeSlot) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const ground = await groundModel.findById(groundId);
+    const user = await userModel.findById(userId);
+
+    if (!ground || !user) {
+      return res.status(404).json({ success: false, message: "Ground or User not found" });
+    }
+
+    // Check if the slot is still available
+    if (!ground.freeTime.includes(timeSlot)) {
+      return res.status(400).json({ success: false, message: "Time slot not available" });
+    }
+
+    // Remove the time slot from available slots
+    ground.freeTime = ground.freeTime.filter((slot) => slot !== timeSlot);
+
+    // Add booking to ground
+    ground.bookings.push({
+      userId,
+      timeSlot,
+      status: "pending",
+    });
+
+    // Add booking to user
+    user.groundBookings.push({
+      groundId,
+      timeSlot,
+    });
+
+    await ground.save();
+    await user.save();
+
+    res.json({ success: true, message: "Booking successful" });
+  } catch (error) {
+    console.log("Error in booking ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export { getAllGrounds, getGround, addGround, deleteGround, updateGround,validateGround, handleBooking };

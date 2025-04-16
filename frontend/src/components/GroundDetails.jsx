@@ -1,61 +1,126 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { GroundContext } from '../context/GroundContext';
-import { toast } from 'react-toastify';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { GroundContext } from "../context/GroundContext";
+import { toast } from "react-toastify";
+import { Trash2, Pencil } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const GroundDetails = () => {
-  const { backend_url } = useContext(GroundContext);
-  const [ground, setGround] = useState(null);
+  const { getGround, ground, backend_url } = useContext(GroundContext);
+  const { uToken } = useContext(UserContext);
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  const getGroundById = async () => {
+  const handleBooking = async (timeSlot) => {
     try {
-      const { data } = await axios.get(`${backend_url}/api/ground/get-ground/${id}`);
-      if (data.success) {
-        setGround(data.ground);
+      const response = await axios.post(`${backend_url}/api/ground/handle-booking`, {
+        groundId: id,
+        timeSlot,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${uToken}`,
+        },
+      });
+  
+      if (response.data.success) {
+        toast.success("Booking successful!");
+        getGround(id);
+      } else {
+        toast.error(response.data.message || "Booking failed");
       }
     } catch (error) {
-      toast.error("Error in fetching ground");
+      console.error("Booking error:", error);
+      toast.error("Something went wrong");
     }
   };
-
-  const handleBooking = (timeSlot) => {
-    toast.success(`Booking requested for: ${timeSlot}`);
-    // Optionally navigate or call API to book
-  };
-
+  
   useEffect(() => {
-    getGroundById();
+    getGround(id);
   }, [id]);
 
-  if (!ground) return <div className="text-center p-4">Loading...</div>;
+  if (!ground)
+    return (
+      <div className="text-center py-10 text-gray-600 text-lg">Loading...</div>
+    );
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="rounded-xl overflow-hidden shadow-lg">
-        <img
-          src={ground.image}
-          alt={ground.name}
-          className="w-full h-64 object-cover"
-        />
-        <div className="p-4">
-          <h2 className="text-2xl font-bold mb-2">{ground.name}</h2>
-          <p className="text-gray-600 mb-1"><strong>Category:</strong> {ground.category}</p>
-          <p className="text-gray-600 mb-4"><strong>Address:</strong> {ground.address}</p>
+    <div className="min-h-screen bg-gray-50 px-4 py-8 flex flex-col items-center font-sans">
+      <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg overflow-hidden p-6 md:p-10">
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-2">
+          Welcome to {ground.name}
+        </h1>
+        <p className="text-center text-gray-600 mb-6">
+          Book Us and Grow Up Your Skills!
+        </p>
 
-          <h3 className="text-lg font-semibold mb-2">Available Time Slots:</h3>
-          <div className="flex flex-wrap gap-3">
-            {ground.freeTime?.map((slot, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleBooking(slot)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                {slot}
-              </button>
-            ))}
+        <div className="flex flex-col md:flex-row gap-8">
+          <img
+            src={ground.image}
+            alt={ground.name}
+            className="w-full md:w-1/2 h-64 object-cover rounded-lg shadow-md"
+          />
+
+          <div className="flex-1 space-y-4">
+            <h2 className="text-2xl font-semibold text-gray-800">
+              {ground.name}{" "}
+              <span className="text-sm text-gray-500">
+                ({ground.groundType})
+              </span>
+            </h2>
+
+            <p className="text-gray-700">
+              <strong>Category:</strong> {ground.category}
+            </p>
+            <p className="text-gray-700">
+              <strong>Address:</strong> {ground.address}
+            </p>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-4">
+                Available Time Slots:
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {ground.freeTime?.length > 0 ? (
+                  ground.freeTime.map((slot, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleBooking(slot)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm shadow"
+                    >
+                      {slot}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No slots available currently.
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Bottom Buttons */}
+        <div className="mt-10 flex justify-end gap-4">
+          <button
+            onClick={() =>
+              navigate("/validate-ground", { state: { id, action: "Update" } })
+            }
+            className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition"
+          >
+            <Pencil size={18} /> Update
+          </button>
+
+          <button
+            onClick={() =>
+              navigate("/validate-ground", { state: { id, action: "Delete" } })
+            }
+            className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+          >
+            <Trash2 size={18} /> Delete
+          </button>
         </div>
       </div>
     </div>
