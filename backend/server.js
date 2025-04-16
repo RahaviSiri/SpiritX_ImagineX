@@ -22,7 +22,6 @@ app.use(cors({ origin: true, credentials: true })); // Allow all origins
 // Routes 
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
-app.use('/api/client',clientRouter)
 app.use('/api/ground',groundRouter);
 app.use('/api/user',userRouter);
 
