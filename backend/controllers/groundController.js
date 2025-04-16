@@ -1,4 +1,5 @@
 import groundModel from "../models/groundModel.js";
+import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import bcrypt from "bcrypt";
 import validator from "validator"
@@ -196,5 +197,53 @@ const validateGround = async (req, res) => {
   }
 };
 
+// Handle Booking
+const handleBooking = async (req, res) => {
+  try {
+    const { groundId, timeSlot } = req.body;
+    const userId = req.user._id;
 
-export { getAllGrounds, getGround, addGround, deleteGround, updateGround,validateGround };
+    if (!groundId || !userId || !timeSlot) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const ground = await groundModel.findById(groundId);
+    const user = await userModel.findById(userId);
+
+    if (!ground || !user) {
+      return res.status(404).json({ success: false, message: "Ground or User not found" });
+    }
+
+    // Check if the slot is still available
+    if (!ground.freeTime.includes(timeSlot)) {
+      return res.status(400).json({ success: false, message: "Time slot not available" });
+    }
+
+    // Remove the time slot from available slots
+    ground.freeTime = ground.freeTime.filter((slot) => slot !== timeSlot);
+
+    // Add booking to ground
+    ground.bookings.push({
+      userId,
+      timeSlot,
+      status: "pending",
+    });
+
+    // Add booking to user
+    user.groundBookings.push({
+      groundId,
+      timeSlot,
+    });
+
+    await ground.save();
+    await user.save();
+
+    res.json({ success: true, message: "Booking successful" });
+  } catch (error) {
+    console.log("Error in booking ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export { getAllGrounds, getGround, addGround, deleteGround, updateGround,validateGround, handleBooking };
