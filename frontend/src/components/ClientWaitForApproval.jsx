@@ -72,8 +72,8 @@ const ClientWaitForApproval = () => {
           Waiting for Admin Approval
         </h1>
 
-        {userData?.isApprove}
-        {userData?.isApprove ? (
+        {userData?.coachBooking.isApprove}
+        {userData?.coachBooking.isApprove ? (
           <>
             <p className="text-center text-gray-600 mb-6">
               If you've been approved, enter the OTP sent to your email to

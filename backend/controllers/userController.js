@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { transporter } from "../config/nodemailer.js";
 import coachModel from "../models/coachModel.js";
+import mongoose from "mongoose";
 
 const registerUser = async (req, res) => {
     try {
@@ -118,13 +119,14 @@ const registerCoach = async (req, res) => {
         if (!userId || !id) {
             return res.status(400).json({ success: false, message: "User ID and Coach ID are required" });
         }
-
+        console.log(userId)
         const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
         const newBooking = {
+            _id: new mongoose.Types.ObjectId(),
             coachId: id,
             fullName,
             email,
@@ -144,7 +146,7 @@ const registerCoach = async (req, res) => {
         if (!coach || !coach.contactDetails?.email) {
             return res.status(404).json({ success: false, message: "Coach or coach email not found" });
         }
-
+        console.log(user._id)
         const mailOptions = {
             from: process.env.ADMIN_EMAIL,
             to: coach.contactDetails.email,
@@ -168,11 +170,11 @@ const registerCoach = async (req, res) => {
                 <p>
                     Click below to approve or reject:
                 </p>
-                <a href="http://localhost:3000/api/admin/approve-by-coach/${user._id}" 
+                <a href="http://localhost:3000/api/admin/approve-by-coach/${user._id}/${newBooking._id}" 
                     style="display:inline-block;padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
                     Approve & Send OTP
                 </a>
-                <a href="http://localhost:3000/api/admin/reject-by-coach/${user._id}" 
+                <a href="http://localhost:3000/api/admin/reject-by-coach/${user._id}/${newBooking._id}" 
                     style="display:inline-block;padding:10px 20px;background:#dc3545;color:white;text-decoration:none;border-radius:5px;">
                     Reject
                 </a>
