@@ -23,6 +23,7 @@ function App() {
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
+        
         <Route path='/all-ground' element={<AllGrounds />} />
         <Route path='/add-ground' element={<AddGround />} />
         <Route path='/add-ground/:id' element={<AddGround />} />

@@ -41,8 +41,8 @@ const CoachRegistration = () => {
 
     selectionType,
     setSelectionType,
-    school_Academics,
-    setSchool_Academics,
+    salary,
+    setSalary,
     sport,
     setSport,
     qualifications,
@@ -379,19 +379,14 @@ const CoachRegistration = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <select
+            <input
+                type="text"
+                onChange={(e) => setSalary(e.target.value)}
+                value={salary}
+                placeholder="Expected salary*"
                 className="input-style border border-gray-300 p-2 rounded-md"
-                onChange={(e) => setSchool_Academics(e.target.value)}
-                value={school_Academics}
-              >
-                <option value="">-- Select a School --</option>
-                <option value="engineering">School of Engineering</option>
-                <option value="business">School of Business</option>
-                <option value="arts">School of Arts & Humanities</option>
-                <option value="science">School of Science</option>
-                <option value="law">School of Law</option>
-                <option value="medicine">School of Medicine</option>
-              </select>
+                required
+              />
               <select
                 className="input-style border border-gray-300 p-2 rounded-md"
                 onChange={(e) => setSport(e.target.value)}
