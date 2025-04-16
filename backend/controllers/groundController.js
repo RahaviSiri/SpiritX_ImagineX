@@ -2,7 +2,8 @@ import groundModel from "../models/groundModel.js";
 import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import bcrypt from "bcrypt";
-import validator from "validator"
+import validator from "validator";
+import { transporter } from "../config/nodemailer.js";
 
 // Get all grounds
 const getAllGrounds = async (req, res) => {
@@ -76,12 +77,15 @@ const addGround = async (req, res) => {
     }
 
     if (ownerPassword.length < 8) {
-      return res.json({ success: false, message: "Enter 8 digit correct password" });
+      return res.json({
+        success: false,
+        message: "Enter 8 digit correct password",
+      });
     }
 
     // Hashing the Password
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(ownerPassword,salt);
+    const hashPassword = await bcrypt.hash(ownerPassword, salt);
 
     const ground = new groundModel({
       name,
@@ -90,7 +94,7 @@ const addGround = async (req, res) => {
       freeTime,
       image: imageUpload.secure_url,
       ownerEmail,
-      ownerPassword : hashPassword,
+      ownerPassword: hashPassword,
       groundType,
     });
     await ground.save();
@@ -182,7 +186,10 @@ const validateGround = async (req, res) => {
         .json({ success: false, message: "Ground not found" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(ownerPassword, ground.ownerPassword);
+    const isPasswordCorrect = await bcrypt.compare(
+      ownerPassword,
+      ground.ownerPassword
+    );
 
     if (ground.ownerEmail === ownerEmail && isPasswordCorrect) {
       return res.json({ success: true });
@@ -204,19 +211,25 @@ const handleBooking = async (req, res) => {
     const userId = req.user._id;
 
     if (!groundId || !userId || !timeSlot) {
-      return res.status(400).json({ success: false, message: "Missing required fields" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
     }
 
     const ground = await groundModel.findById(groundId);
     const user = await userModel.findById(userId);
 
     if (!ground || !user) {
-      return res.status(404).json({ success: false, message: "Ground or User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground or User not found" });
     }
 
     // Check if the slot is still available
     if (!ground.freeTime.includes(timeSlot)) {
-      return res.status(400).json({ success: false, message: "Time slot not available" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Time slot not available" });
     }
 
     // Remove the time slot from available slots
@@ -238,12 +251,40 @@ const handleBooking = async (req, res) => {
     await ground.save();
     await user.save();
 
-    res.json({ success: true, message: "Booking successful" });
+    // Send notification email to the ground owner
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: ground.ownerEmail,
+      subject: "New Ground Booking Request",
+      html: `
+        <p>Dear Ground Owner,</p>
+        <p>You have received a new booking request for your ground.</p>
+        <ul>
+          <li><strong>Time Slot:</strong> ${timeSlot}</li>
+          <li><strong>User:</strong> ${user.name}</li>
+        </ul>
+        <p>Thank you!</p>
+      `,
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log("Mail sent successfully");
+    } catch (err) {
+      console.error("Failed to send mail:", err);
+    }    
+    return res.json({ success: true, message: "Booking successful" });
   } catch (error) {
     console.log("Error in booking ground", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-export { getAllGrounds, getGround, addGround, deleteGround, updateGround,validateGround, handleBooking };
+export {
+  getAllGrounds,
+  getGround,
+  addGround,
+  deleteGround,
+  updateGround,
+  validateGround,
+  handleBooking,
+};
