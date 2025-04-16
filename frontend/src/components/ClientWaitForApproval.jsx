@@ -7,9 +7,11 @@ import { UserContext } from "../context/UserContext";
 
 const ClientWaitForApproval = () => {
   const inputRefs = React.useRef([]);
-  const [email, setEmail] = useState("");
-  const { backendURL, userData, } = useContext(UserContext);
+
+  const { backendURL, userData,uToken } = useContext(UserContext);
   const navigate = useNavigate();
+  console.log(userData);
+  const email = userData.coachBooking[userData.coachBooking.length - 1].email;
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -32,25 +34,30 @@ const ClientWaitForApproval = () => {
       }
     });
   };
- 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const bookingId =
+        userData.coachBooking[userData.coachBooking.length - 1]._id;
       const OTPArray = inputRefs.current.map((el) => el.value);
       const otp = OTPArray.join("");
       const data = {
+        bookingId: bookingId,
         email: email,
         otp: otp,
-        userId: userData._id,
       };
-      
+
       // const token = localStorage.getItem("token");
       const { data: response } = await axios.post(
-        `${backendURL}/api/coach/check-otp`,
+        `${backendURL}/api/user/check-otp-by-user`,
         data,
 
         {
+          headers: {
+            Authorization: `Bearer ${uToken}`,
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );
