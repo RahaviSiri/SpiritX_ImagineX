@@ -84,14 +84,14 @@ const getUserData = async (req, res) => {
 //  Get User by ID
 const getUserById = async (req, res) => {
     try {
-      const userId = req.params.id;
+      const userId = req.user._id
       console.log(`Fetching user with ID: ${userId}`); 
       
       const user = await userModel.findById(userId).select("-password");
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
       }
-      res.json({ success: true, user });
+      res.json({ success: true,user });
     } catch (error) {
       console.error(`Error fetching user: ${error.message}`);  
       return res.status(500).json({ success: false, message: error.message });

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { CoachContext } from "../context/Coachcontext";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const ClientWaitForApproval = () => {
   const inputRefs = React.useRef([]);
   const [email, setEmail] = useState("");
-  const { backend_url, userData,fetchCoach,fetchCoaches } = useContext(CoachContext);
+  const { backendURL, userData, } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLength = (e, index) => {
@@ -45,15 +45,15 @@ const ClientWaitForApproval = () => {
         userId: userData._id,
       };
       
-      const token = localStorage.getItem("token");
-      // const { data: response } = await axios.post(
-      //   `${backend_url}/api/coach/check-otp`,
-      //   data,
+      // const token = localStorage.getItem("token");
+      const { data: response } = await axios.post(
+        `${backendURL}/api/coach/check-otp`,
+        data,
 
-      //   {
-      //     withCredentials: true,
-      //   }
-      // );
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.success && response.session_url) {
         window.location.replace(response.session_url);
