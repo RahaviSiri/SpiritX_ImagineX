@@ -1,5 +1,5 @@
 import express from "express";
-import { addGround, deleteGround, getAllGrounds, getGround, handleBooking, updateGround, validateGround } from "../controllers/groundController.js";
+import { addGround, cancelBooking, deleteGround, getAllGrounds, getGround, handleBooking, updateGround, validateGround } from "../controllers/groundController.js";
 import upload from "../middleware/multer.js";
 import authUser from "../middleware/authUser.js";
 
@@ -12,7 +12,7 @@ groundRouter.delete("/delete-ground/:id", deleteGround);
 groundRouter.post("/update-ground/:id", upload.single("image"), updateGround);
 groundRouter.post("/validate-ground/:id", validateGround);
 groundRouter.post("/handle-booking",authUser, handleBooking);
-
+groundRouter.post("/cancel-booking",authUser,cancelBooking);
 
 
 export default groundRouter;

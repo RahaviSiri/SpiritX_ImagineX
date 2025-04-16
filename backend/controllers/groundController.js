@@ -279,6 +279,70 @@ const handleBooking = async (req, res) => {
   }
 };
 
+// Cancel Booking
+const cancelBooking = async (req,res) => {
+  try {
+    const { groundId, timeSlot } = req.body;
+    const userId = req.user._id;
+    if (!groundId || !userId || !timeSlot) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+    }
+
+    const ground = await groundModel.findById(groundId);
+    const user = await userModel.findById(userId);
+
+    if (!ground || !user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground or User not found" });
+    }
+
+    if (!ground.freeTime.includes(timeSlot)) {
+      ground.freeTime.push(timeSlot);
+    }
+
+    // Remove the booking from the ground's booking list
+    ground.bookings = ground.bookings.filter(
+      (booking) =>
+        !(booking.userId.toString() === userId.toString() && booking.timeSlot === timeSlot)
+    );
+
+    // Remove the booking from the user's booking list
+    user.groundBookings = user.groundBookings.filter(
+      (booking) =>
+        !(booking.groundId.toString() === groundId.toString() && booking.timeSlot === timeSlot)
+    );
+
+    await ground.save();
+    await user.save();
+
+    // Send notification email to the ground owner
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: user.coachBooking.email,
+      subject: "Ground Booking Cancellation",
+      html: `
+        <p>Dear ${user.name},</p>
+        <p>Your ground booking today at ${timeSlot} is cancelled. Choose another time</p>
+        <p>Thank you!</p>
+      `,
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log("Mail sent successfully");
+    } catch (err) {
+      console.error("Failed to send mail:", err);
+    }   
+
+    return res.json({ success: true, message: "Booking Cancelled" });
+  } catch (error) {
+    console.log("Error in cancelling ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 export {
   getAllGrounds,
   getGround,
@@ -287,4 +351,5 @@ export {
   updateGround,
   validateGround,
   handleBooking,
+  cancelBooking,
 };
