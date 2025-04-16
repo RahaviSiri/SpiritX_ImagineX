@@ -79,6 +79,7 @@ export const registerClient = async (req, res) => {
         };
         try {
             await transporter.sendMail(mailOptions);
+            return res.json({success:true,message:"Successfully registered",client})
         } catch (emailErr) {
             console.log(emailErr)
             console.error("Email sending failed:", emailErr);
@@ -117,7 +118,7 @@ export const getClientById = async (req, res) => {
         return res.json({ success: false, message: "Coach not found!" });
       }
   
-      return res.json({ success: true, message: "Fetch coach successfully!", client });
+      return res.json({ success: true, message: "Fetch client successfully!", client });
   
     } catch (error) {
       console.error("Server error:", error); // Log the full error

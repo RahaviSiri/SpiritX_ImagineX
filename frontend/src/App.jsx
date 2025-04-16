@@ -23,13 +23,14 @@ function App() {
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
-        <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
+        
         <Route path='/all-ground' element={<AllGrounds />} />
         <Route path='/add-ground' element={<AddGround />} />
         <Route path='/ground-details/:id' element={<GroundDetails />} />
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
         <Route path='/client/:id' element={<Client />} />
+        <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
       </Routes>
     </div>
     

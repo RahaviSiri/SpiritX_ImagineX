@@ -27,35 +27,39 @@ const Client = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      ...formData,
-      id: id, // Fixed syntax: properly adding id to payload
-    };
-
     try {
+      e.preventDefault();
+      const payload = {
+        ...formData,
+        id: id, // Fixed syntax: properly adding id to payload
+      };
       // console.log('hi');
       const { data } = await axios.post(
         `http://localhost:3000/api/client/book-coach/${id}`,
         payload,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
           withCredentials: true,
         }
       );
-      console.log('hi');
-      console.log(data);
-      
-      // Navigation after successful API call
-      console.log("Navigation should happen now!");
-      navigate("/client-wait-for-approval");
-      
-      // Uncomment if you want to show a success message
-      // toast.success(data.message || "Request submitted successfully");
+      console.log("hi");
+      if (data.success) {
+        console.log(data);
+
+        // Navigation after successful API call
+        console.log("Navigation should happen now!");
+        navigate("/client-wait-for-approval");
+
+        // Uncomment if you want to show a success message
+        // toast.success(data.message || "Request submitted successfully");
+      }
+      else{
+        console.log("error")
+      }
     } catch (err) {
+      console.log(err);
       console.error("Error:", err);
       toast.error(err.message || "An error occurred");
     }
@@ -202,7 +206,7 @@ const Client = () => {
 
         <button
           type="submit"
-          onClick = {() => navigate("/client-wait-for-approval")}
+          // onClick = {() => navigate("/client-wait-for-approval")}
           className="w-full mt-4 bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition duration-300"
         >
           Submit Booking Request
