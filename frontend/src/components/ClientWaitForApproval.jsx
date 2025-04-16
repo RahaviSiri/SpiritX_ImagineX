@@ -73,7 +73,7 @@ const ClientWaitForApproval = () => {
         </h1>
 
         {userData?.coachBooking.isApprove}
-        {userData?.coachBooking.isApprove ? (
+        {userData?.coachBooking[userData.coachBooking.length - 1].isApprove ? (
           <>
             <p className="text-center text-gray-600 mb-6">
               If you've been approved, enter the OTP sent to your email to

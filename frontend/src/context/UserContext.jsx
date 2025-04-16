@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useState, useEffect } from "react";
 
 export const UserContext = createContext();
@@ -19,7 +20,7 @@ export const UserContextProvider = ({ children }) => {
       console.log(response)
       if (response.success) {
         
-        setUserData(response.coach);
+        setUserData(response.user);
         
       } else {
         toast.error("Error in fetching user");
