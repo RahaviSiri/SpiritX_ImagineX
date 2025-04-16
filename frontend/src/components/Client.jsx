@@ -31,7 +31,8 @@ const Client = () => {
       e.preventDefault();
       const payload = {
         ...formData,
-        id: id, // Fixed syntax: properly adding id to payload
+        id: id, 
+        
       };
       // console.log('hi');
       const { data } = await axios.post(
