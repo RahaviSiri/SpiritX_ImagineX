@@ -57,6 +57,15 @@ const CoachRegistration = () => {
     // qualificaions_photoState,
     // setQualificaions_photoState
   } = useContext(CoachContext);
+  const districts = [
+    "Ampara", "Anuradhapura", "Badulla", "Batticaloa",
+    "Colombo", "Galle", "Gampaha", "Hambantota",
+    "Jaffna", "Kalutara", "Kandy", "Kegalle",
+    "Kilinochchi", "Kurunegala", "Mannar", "Matale",
+    "Matara", "Monaragala", "Mullaitivu", "Nuwara Eliya",
+    "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee",
+    "Vavuniya"
+  ];
 
   const [NIC_photo_name,setNIC_photoName] = useState("");
     const [qualifications_photo_name,setQualifications_photo_name] = useState("");
@@ -340,14 +349,27 @@ const CoachRegistration = () => {
                 className="input-style border border-gray-300 p-2 rounded-md"
                 required
               />
-              <input
-                type="text"
-                onChange={(e) => setDistrict(e.target.value)}
+              
+
+
+              <select 
                 value={district}
-                placeholder="District*"
-                className="input-style border border-gray-300 p-2 rounded-md"
+                onChange={(e) => setDistrict(e.target.value)}
                 required
-              />
+                className="border border-gray-300 p-2 rounded-md"
+              >
+              {/* Placeholder option */}
+              <option value="" disabled>
+                Select District*
+              </option>
+
+              {/* Map over districts array to generate options */}
+              {districts.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+              ))}
+              </select>
             </div>
           </div>
 
