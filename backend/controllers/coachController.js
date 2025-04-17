@@ -47,7 +47,7 @@ export const registerCoach = async (req, res) => {
     });
 
     const qualifications_photo = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
-      resource_type: "image"
+      resource_type: "raw"
     });
 
 

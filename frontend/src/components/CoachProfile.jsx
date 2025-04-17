@@ -137,6 +137,7 @@ const CoachProfile = () => {
               <a
                 href={selection.qualifications_photo}
                 target="_blank"
+                download
                 rel="noreferrer"
                 className="text-blue-600 underline"
               >
