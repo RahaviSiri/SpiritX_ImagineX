@@ -87,8 +87,6 @@ const CoachRegistration = () => {
     const savedQual = localStorage.getItem("coachQual");
     const savedQualName = localStorage.getItem("quali_name");
 
-    
-
     if (savedProfile) {
       setProfile(savedProfile);
 
@@ -140,7 +138,7 @@ const CoachRegistration = () => {
     }
   }, [qualifications_photo]);
 
- 
+ console.log(NIC_photo_name)
 
   const imagePrevent = (e) => {
     try {
