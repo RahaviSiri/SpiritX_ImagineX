@@ -138,7 +138,7 @@ const CoachRegistration = () => {
     }
   }, [qualifications_photo]);
 
- console.log(NIC_photo_name)
+ console.log(qualifications_photo_name)
 
   const imagePrevent = (e) => {
     try {

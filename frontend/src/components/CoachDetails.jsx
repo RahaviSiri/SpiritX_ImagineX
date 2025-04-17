@@ -4,6 +4,18 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Helper to resolve File or URL to [href, displayName]
+function resolveFileLink(input) {
+  if (input instanceof window.File) {
+    const blobUrl = URL.createObjectURL(input);
+    return [blobUrl, input.name];
+  } else {
+    const parts = input.split("/");
+    const name = parts[parts.length - 1] || input;
+    return [input, name];
+  }
+}
+
 const CoachDetails = () => {
   const navigate = useNavigate();
   const {
@@ -34,18 +46,16 @@ const CoachDetails = () => {
     fetchCoaches,
   } = useContext(CoachContext);
 
-  // In CoachDetails.js, update the handleSubmit function:
+  // Submit form data to backend
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
-
       formData.append("fullName", fullName);
 
-      // Handle profile image properly
+      // Profile image handling
       if (profile instanceof window.File) {
         formData.append("profile", profile);
       } else if (typeof profile === "string" && profile.startsWith("data:")) {
-        // Convert base64 back to File
         const fetchRes = await fetch(profile);
         const blob = await fetchRes.blob();
         formData.append(
@@ -57,13 +67,10 @@ const CoachDetails = () => {
         );
       }
 
-      // Similar handling for other files
+      // NIC photo handling
       if (NIC_photo instanceof window.File) {
         formData.append("NIC_photo", NIC_photo);
-      } else if (
-        typeof NIC_photo === "string" &&
-        NIC_photo.startsWith("data:")
-      ) {
+      } else if (typeof NIC_photo === "string" && NIC_photo.startsWith("data:")) {
         const fetchRes = await fetch(NIC_photo);
         const blob = await fetchRes.blob();
         formData.append(
@@ -72,6 +79,7 @@ const CoachDetails = () => {
         );
       }
 
+      // Qualifications document handling
       if (qualifications_photo instanceof window.File) {
         formData.append("qualifications_photo", qualifications_photo);
       } else if (
@@ -89,7 +97,7 @@ const CoachDetails = () => {
         );
       }
 
-      // Handle other form fields
+      // Other fields
       formData.append("DOB", DOB);
       formData.append("gender", gender);
       formData.append("NIC", NIC);
@@ -118,27 +126,34 @@ const CoachDetails = () => {
       );
 
       if (response.success) {
+        // Clear stored files
         localStorage.removeItem("coachProfile");
         localStorage.removeItem("coachProfile_name");
         localStorage.removeItem("coachNIC");
         localStorage.removeItem("NIC_name");
         localStorage.removeItem("coachQual");
         localStorage.removeItem("quali_name");
+
         toast.success(response.message);
         navigate("/coach-wait-for-approval");
         localStorage.setItem("token", response.token);
         setToken(response.token);
-        
       } else {
         toast.error(response.message);
       }
     } catch (error) {
-      
       toast.error(error.message);
     }
   };
 
-  
+  // Clean up any blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (qualifications_photo instanceof window.File) {
+        // Note: URL.revokeObjectURL(blobUrl) should be called with your stored blobUrl
+      }
+    };
+  }, [qualifications_photo]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 space-y-6">
@@ -146,12 +161,12 @@ const CoachDetails = () => {
         Filled Details
       </h1>
 
-      {/* Profile Image on Top */}
+      {/* Profile Image */}
       {profile && (
         <div className="flex flex-col items-center">
           <img
             src={
-              profile instanceof File ? URL.createObjectURL(profile) : profile
+              profile instanceof window.File ? URL.createObjectURL(profile) : profile
             }
             alt="Profile"
             className="w-32 h-32 rounded-full border-4 border-blue-400 shadow-md object-cover"
@@ -165,25 +180,16 @@ const CoachDetails = () => {
           Personal Info
         </h3>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-          <p>
-            <strong>Full Name: </strong>
-            {fullName}
-          </p>
-          <p>
-            <strong>Date of Birth:</strong> {DOB}
-          </p>
-          <p>
-            <strong>Gender:</strong> {gender}
-          </p>
-          <p>
-            <strong>NIC:</strong> {NIC}
-          </p>
+          <p><strong>Full Name: </strong>{fullName}</p>
+          <p><strong>Date of Birth:</strong> {DOB}</p>
+          <p><strong>Gender:</strong> {gender}</p>
+          <p><strong>NIC:</strong> {NIC}</p>
         </div>
         {NIC_photo && (
           <div className="mt-2">
             <p className="font-medium">NIC Photo:</p>
             <p className="text-blue-600 underline">
-              {NIC_photo instanceof File
+              {NIC_photo instanceof window.File
                 ? NIC_photo.name
                 : localStorage.getItem("NIC_name") || "NIC Document"}
             </p>
@@ -197,18 +203,10 @@ const CoachDetails = () => {
           Contact Details
         </h3>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-          <p>
-            <strong>Contact No:</strong> {contactNo}
-          </p>
-          <p>
-            <strong>Home TP:</strong> {HomeTP}
-          </p>
-          <p>
-            <strong>WhatsApp:</strong> {whatsapp}
-          </p>
-          <p>
-            <strong>Email:</strong> {email}
-          </p>
+          <p><strong>Contact No:</strong> {contactNo}</p>
+          <p><strong>Home TP:</strong> {HomeTP}</p>
+          <p><strong>WhatsApp:</strong> {whatsapp}</p>
+          <p><strong>Email:</strong> {email}</p>
         </div>
       </div>
 
@@ -218,19 +216,10 @@ const CoachDetails = () => {
           Address
         </h3>
         <div className=" text-sm text-gray-700">
-          <p>
-            <strong>Address: </strong>
-            {Line1} {Line2}
-          </p>
+          <p><strong>Address: </strong>{Line1} {Line2}</p>
           <div className="grid grid-cols-2 gap-4">
-            <p>
-              <strong>City: </strong>
-              {city}
-            </p>
-            <p>
-              <strong>District: </strong>
-              {district}
-            </p>
+            <p><strong>City: </strong>{city}</p>
+            <p><strong>District: </strong>{district}</p>
           </div>
         </div>
       </div>
@@ -241,15 +230,9 @@ const CoachDetails = () => {
           Coach Selection Details
         </h3>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-          <p>
-            <strong>Selection Type:</strong> {selectionType}
-          </p>
-          <p>
-            <strong>Expected Salary:</strong> {salary}
-          </p>
-          <p>
-            <strong>Sport:</strong> {sport}
-          </p>
+          <p><strong>Selection Type:</strong> {selectionType}</p>
+          <p><strong>Expected Salary:</strong> {salary}</p>
+          <p><strong>Sport:</strong> {sport}</p>
         </div>
         <div className="mt-2">
           <p className="font-medium text-sm text-gray-700">Qualifications:</p>
@@ -259,14 +242,19 @@ const CoachDetails = () => {
           <div className="mt-2">
             <p className="font-medium">Qualifications Document:</p>
             <p className="text-blue-600 underline">
-              {qualifications_photo instanceof File
-                ? qualifications_photo.name
-                : localStorage.getItem("quali_name") ||
-                  "Qualification Document"}
+              <a
+                href={resolveFileLink(qualifications_photo)[0]}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline"
+              >
+                {resolveFileLink(qualifications_photo)[1]}
+              </a>
             </p>
           </div>
         )}
       </div>
+
       <div className="flex justify-between items-center mt-6 space-x-4">
         <button
           onClick={() => navigate("/coach-registration")}
