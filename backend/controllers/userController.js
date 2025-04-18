@@ -79,7 +79,7 @@ const getUserData = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        res.json({ success: true, user });
+        return res.json({ success: true, user });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -95,7 +95,8 @@ const getUserById = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        res.json({ success: true, user });
+        console.log(user)
+        return res.json({ success: true, user });
     } catch (error) {
         console.error(`Error fetching user: ${error.message}`);
         return res.status(500).json({ success: false, message: error.message });
@@ -122,11 +123,12 @@ const registerCoach = async (req, res) => {
         if (!userId || !id) {
             return res.status(400).json({ success: false, message: "User ID and Coach ID are required" });
         }
-        console.log(userId)
+        
         const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
+        // console.log(user)
 
         if (new Date(preferredDateTime).getTime() < Date.now()) {
             return res.json({
@@ -156,7 +158,7 @@ const registerCoach = async (req, res) => {
         if (!coach || !coach.contactDetails?.email) {
             return res.status(404).json({ success: false, message: "Coach or coach email not found" });
         }
-        console.log(user._id)
+        
         const mailOptions = {
             from: process.env.ADMIN_EMAIL,
             to: coach.contactDetails.email,

@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { createContext, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export const UserContext = createContext();
 
@@ -7,24 +8,31 @@ export const UserContextProvider = ({ children }) => {
   const [uToken, setUToken] = useState(localStorage.getItem("uToken") || "");
   const backendURL = "http://localhost:3000";
 
-  const [userData,setUserData] = useState();
+  const [userData,setUserData] = useState({});
 
   const fetchUser = async () => {
-    const token = localStorage.getItem('uToken')
-      const { data :response} = await axios.get(`${backendURL}/api/user/get-user-byId`, {
-        headers: {
-          Authorization: `Bearer ${uToken}`, // Add space after Bearer
-        },
-        withCredentials :true
-      });
-      console.log(response)
-      if (response.success) {
-        
-        setUserData(response.user);
-        
-      } else {
-        toast.error("Error in fetching user");
-      }
+    try {
+      const token = localStorage.getItem('uToken')
+        const { data :response} = await axios.get(`${backendURL}/api/user/get-user-byId`, {
+          headers: {
+            Authorization: `Bearer ${uToken}`, // Add space after Bearer
+          },
+          withCredentials :true
+        });
+        console.log(response)
+        if (response.success) {
+          
+          setUserData(response.user);
+          toast.success("successfully fetch data")
+          
+        } else {
+          toast.error("Error in fetching user");
+        }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+      
+    }
   }
 
   useEffect(() => {

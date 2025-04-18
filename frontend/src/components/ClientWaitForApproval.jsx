@@ -11,7 +11,21 @@ const ClientWaitForApproval = () => {
   const { backendURL, userData,uToken } = useContext(UserContext);
   const navigate = useNavigate();
   console.log(userData);
-  const email = userData.coachBooking[userData.coachBooking.length - 1].email;
+  const coachBooking = userData?.coachBooking;
+
+  // ✅ Safe check to avoid the error
+  const lastBooking = Array.isArray(coachBooking) && coachBooking.length > 0
+    ? coachBooking[coachBooking.length - 1]
+    : null;
+
+  const email = lastBooking?.email; // only access if defined
+
+  useEffect(() => {
+    if (!lastBooking) {
+      console.warn("No booking found");
+    }
+  }, [lastBooking]);
+  // const email = userData.coachBooking[userData.coachBooking.length - 1].email;
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -79,8 +93,9 @@ const ClientWaitForApproval = () => {
           Waiting for Admin Approval
         </h1>
 
-        {userData?.coachBooking.isApprove}
-        {userData?.coachBooking[userData.coachBooking.length - 1].isApprove ? (
+        {/* {userData?.coachBooking.isApprove} */}
+        {/* {userData?.coachBooking[userData.coachBooking.length - 1].isApprove ? ( */}
+        {lastBooking?.isApprove ? (
           <>
             <p className="text-center text-gray-600 mb-6">
               If you've been approved, enter the OTP sent to your email to
