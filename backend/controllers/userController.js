@@ -128,6 +128,13 @@ const registerCoach = async (req, res) => {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
+        if (new Date(preferredDateTime).getTime() < Date.now()) {
+            return res.json({
+              success: false,
+              message: "You cannot book a session in the past."
+            });
+          }          
+
         const newBooking = {
             _id: new mongoose.Types.ObjectId(),
             coachId: id,
@@ -155,37 +162,62 @@ const registerCoach = async (req, res) => {
             to: coach.contactDetails.email,
             subject: `New Coaching Request from ${fullName}`,
             html: `
-                Hello ${coach.personalInfo?.fullName || "Coach"},
+              <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #0056b3;">Hello ${coach.personalInfo?.fullName || "Coach"},</h2>
                 
-                You have received a new coaching request.
-
-                Client Details:
-                -------------------
-                Name: ${fullName}
-                Email: ${email}
-                Contact: ${contactNumber}
-                City: ${city}, District: ${district}
-                Preferred Date & Time: ${new Date(preferredDateTime).toLocaleString()}
-
-                Additional Notes:
-                ${notes || "No additional notes provided."}
-
-                <p>
-                    Click below to approve or reject:
-                </p>
-                <a href="http://localhost:3000/api/admin/approve-by-coach/${user._id}/${newBooking._id}" 
-                    style="display:inline-block;padding:10px 20px;background:#28a745;color:white;text-decoration:none;border-radius:5px;">
-                    Approve & Send OTP
-                </a>
-                <a href="http://localhost:3000/api/admin/reject-by-coach/${user._id}/${newBooking._id}" 
-                    style="display:inline-block;padding:10px 20px;background:#dc3545;color:white;text-decoration:none;border-radius:5px;">
-                    Reject
-                </a>
-                
-                Best regards,<br/>
-                Your Coaching Platform
+                <p>You have received a new coaching request from one of our clients. Please find the details below:</p>
+          
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold; width: 30%;">Client Name:</td>
+                    <td style="padding: 8px;">${fullName}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold;">Email:</td>
+                    <td style="padding: 8px;">${email}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold;">Contact:</td>
+                    <td style="padding: 8px;">${contactNumber}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold;">City:</td>
+                    <td style="padding: 8px;">${city}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold;">District:</td>
+                    <td style="padding: 8px;">${district}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px; font-weight: bold;">Preferred Date & Time:</td>
+                    <td style="padding: 8px;">${new Date(preferredDateTime).toLocaleString()}</td>
+                  </tr>
+                </table>
+          
+                <h3>Additional Notes:</h3>
+                <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;">${notes || "No additional notes provided."}</p>
+          
+                <p style="margin-top: 20px;">Please review and take action:</p>
+          
+                <div>
+                  <a href="http://localhost:3000/api/admin/approve-by-coach/${user._id}/${newBooking._id}" 
+                     style="display:inline-block; padding: 12px 25px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 15px;">
+                     Approve & Send OTP
+                  </a>
+                  
+                  <a href="http://localhost:3000/api/admin/reject-by-coach/${user._id}/${newBooking._id}" 
+                     style="display:inline-block; padding: 12px 25px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px;">
+                     Reject
+                  </a>
+                </div>
+          
+                <br/>
+                <p style="color: #555;">Best regards,<br/>
+                <strong>Your Coaching Platform</strong></p>
+              </div>
             `
-        };
+          };
+          
 
         await transporter.sendMail(mailOptions);
 

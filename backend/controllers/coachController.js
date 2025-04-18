@@ -353,7 +353,7 @@ export const verifyPayment = async (req, res) => {
       return res.json({ success: false, message: "Not paid yet." })
 
     }
-    // return res.json({success:true})
+    return res.json({success:true})
   } catch (error) {
     return res.json({ success: false, message: error.message })
 

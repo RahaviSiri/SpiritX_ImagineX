@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const Verify = () => {
   const [searchParams] = useSearchParams();
   const success = searchParams.get("success");
+  console.log(success)
   const userId = searchParams.get("userId");
   const navigate = useNavigate();
   const { backend_url } = useContext(CoachContext);

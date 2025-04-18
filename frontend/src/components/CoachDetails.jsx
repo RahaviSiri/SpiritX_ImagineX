@@ -190,7 +190,15 @@ const CoachDetails = () => {
             <p className="font-medium">NIC Photo:</p>
             <p className="text-blue-600 underline">
               {NIC_photo instanceof window.File
-                ? NIC_photo.name
+                ? <a
+                href={NIC_photo}
+                target="_blank"
+                rel="noreferrer"
+                download
+                className="text-blue-600 underline"
+              >
+                {NIC_photo.name}
+              </a>
                 : localStorage.getItem("NIC_name") || "NIC Document"}
             </p>
           </div>
@@ -246,9 +254,10 @@ const CoachDetails = () => {
                 href={resolveFileLink(qualifications_photo)[0]}
                 target="_blank"
                 rel="noreferrer"
+                download
                 className="text-blue-600 underline"
               >
-                {resolveFileLink(qualifications_photo)[1]}
+                View Document
               </a>
             </p>
           </div>

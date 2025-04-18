@@ -12,6 +12,7 @@ import ValidateGround from './components/validateGround';
 import Login from './pages/Login';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/ClientWaitForApproval';
+import Verify from './components/Verify';
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
         <Route path='/validate-ground' element={< ValidateGround/>} />
         <Route path='/client/:id' element={<Client />} />
         <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
+        <Route path='/verify' element={<Verify />} />
+        
       </Routes>
     </div>
     
