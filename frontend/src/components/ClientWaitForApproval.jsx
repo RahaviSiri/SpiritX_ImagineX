@@ -4,28 +4,26 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { UserContext } from "../context/UserContext";
+import assets from "../assets/assets"; // assuming you have a background image here
 
 const ClientWaitForApproval = () => {
   const inputRefs = React.useRef([]);
-
-  const { backendURL, userData,uToken } = useContext(UserContext);
+  const { backendURL, userData, uToken } = useContext(UserContext);
   const navigate = useNavigate();
-  console.log(userData);
+
   const coachBooking = userData?.coachBooking;
+  const lastBooking =
+    Array.isArray(coachBooking) && coachBooking.length > 0
+      ? coachBooking[coachBooking.length - 1]
+      : null;
 
-  // ✅ Safe check to avoid the error
-  const lastBooking = Array.isArray(coachBooking) && coachBooking.length > 0
-    ? coachBooking[coachBooking.length - 1]
-    : null;
-
-  const email = lastBooking?.email; // only access if defined
+  const [email, setEmail] = useState(lastBooking?.email || "");
 
   useEffect(() => {
     if (!lastBooking) {
       console.warn("No booking found");
     }
   }, [lastBooking]);
-  // const email = userData.coachBooking[userData.coachBooking.length - 1].email;
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -52,21 +50,18 @@ const ClientWaitForApproval = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const bookingId =
-        userData.coachBooking[userData.coachBooking.length - 1]._id;
-      const OTPArray = inputRefs.current.map((el) => el.value);
-      const otp = OTPArray.join("");
+      const bookingId = lastBooking?._id;
+      const otp = inputRefs.current.map((el) => el.value).join("");
+
       const data = {
-        bookingId: bookingId,
-        email: email,
-        otp: otp,
+        bookingId,
+        email,
+        otp,
       };
 
-      // const token = localStorage.getItem("token");
       const { data: response } = await axios.post(
         `${backendURL}/api/user/check-otp-by-user`,
         data,
-
         {
           headers: {
             Authorization: `Bearer ${uToken}`,
@@ -86,18 +81,25 @@ const ClientWaitForApproval = () => {
       toast.error(error.message || "An error occurred");
     }
   };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center mb-2 text-blue-700">
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{
+        backgroundImage: `url(${assets.coach2})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full font-sans">
+        <h1 className="text-2xl font-bold text-center mb-4 text-white">
           Waiting for Admin Approval
         </h1>
 
-        {/* {userData?.coachBooking.isApprove} */}
-        {/* {userData?.coachBooking[userData.coachBooking.length - 1].isApprove ? ( */}
         {lastBooking?.isApprove ? (
           <>
-            <p className="text-center text-gray-600 mb-6">
+            <p className="text-center text-white mb-6">
               If you've been approved, enter the OTP sent to your email to
               continue.
             </p>
@@ -109,7 +111,7 @@ const ClientWaitForApproval = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your registered email"
                 required
-                className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               />
 
               <div className="flex justify-center gap-2 mb-6">
@@ -125,7 +127,7 @@ const ClientWaitForApproval = () => {
                       onInput={(e) => handleLength(e, index)}
                       onKeyDown={(e) => handleLockDown(e, index)}
                       onPaste={handlePaste}
-                      className="w-10 h-12 text-center text-xl border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-10 h-12 text-center text-xl border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                     />
                   ))}
               </div>
@@ -139,15 +141,12 @@ const ClientWaitForApproval = () => {
             </form>
           </>
         ) : (
-          <>
-            <div className="flex flex-col items-center justify-center space-y-2 py-4">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <Loader />
-              <p className="text-sm text-blue-700 font-medium">
-                Loading, please wait...
-              </p>
-            </div>
-          </>
+          <div className="flex flex-col items-center justify-center space-y-2 py-6">
+            <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-white font-medium">
+              Loading, please wait...
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -140,7 +140,7 @@ const CoachRegistration = () => {
   
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans"
+      className="flex justify-center items-center min-h-screen bg-gray-50 px-4 py-8 font-sans"
       style={{
         backgroundImage: `url(${assets.coach2})`,
         backgroundSize: "cover",
