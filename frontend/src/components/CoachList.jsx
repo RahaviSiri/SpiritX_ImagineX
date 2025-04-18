@@ -13,11 +13,40 @@ const calculateAge = (dob) => {
     : age;
 };
 
+const districts = [
+  "Ampara",
+  "Anuradhapura",
+  "Badulla",
+  "Batticaloa",
+  "Colombo",
+  "Galle",
+  "Gampaha",
+  "Hambantota",
+  "Jaffna",
+  "Kalutara",
+  "Kandy",
+  "Kegalle",
+  "Kilinochchi",
+  "Kurunegala",
+  "Mannar",
+  "Matale",
+  "Matara",
+  "Monaragala",
+  "Mullaitivu",
+  "Nuwara Eliya",
+  "Polonnaruwa",
+  "Puttalam",
+  "Ratnapura",
+  "Trincomalee",
+  "Vavuniya",
+];
+
 const CoachList = () => {
   const { userDatas, fetchCoaches } = useContext(CoachContext);
   const navigate = useNavigate();
 
   const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
   const [selectionType, setSelectionType] = useState("");
   const [sport, setSport] = useState("");
 
@@ -37,30 +66,45 @@ const CoachList = () => {
     const cityMatch = address.city
       ?.toLowerCase()
       .startsWith(city.toLowerCase());
+    const districtMatch =
+      district === "" ||
+      address.district?.toLowerCase() === district.toLowerCase();
     const sportMatch = sport === "" || selection.sport === sport;
     const selectionTypeMatch =
       selectionType === "" ||
       selection.selectionType === selectionType ||
       selectionType === "Any";
 
-    return cityMatch && sportMatch && selectionTypeMatch;
+    return cityMatch && districtMatch && sportMatch && selectionTypeMatch;
   });
 
   return (
     <div className="max-w-6xl mx-auto p-6">
       {/* Filters */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <input
           type="text"
           placeholder="Search by City"
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-lg w-full md:w-1/3"
+          className="border border-gray-300 px-4 py-2 rounded-lg w-full"
         />
+        <select
+          value={district}
+          onChange={(e) => setDistrict(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded-lg w-full"
+        >
+          <option value="">-- Select District --</option>
+          {districts.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
         <select
           value={selectionType}
           onChange={(e) => setSelectionType(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-lg w-full md:w-1/3"
+          className="border border-gray-300 px-4 py-2 rounded-lg w-full"
         >
           <option value="">-- Select Type --</option>
           <option value="School">School</option>
@@ -71,7 +115,7 @@ const CoachList = () => {
         <select
           value={sport}
           onChange={(e) => setSport(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-lg w-full md:w-1/3"
+          className="border border-gray-300 px-4 py-2 rounded-lg w-full"
         >
           <option value="">-- Select a Sport --</option>
           <option value="football">Football</option>
@@ -86,7 +130,15 @@ const CoachList = () => {
       {/* Coaches */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredCoaches?.length === 0 ? (
-          <p className="text-center col-span-full">No coaches found.</p>
+          <div className="text-center col-span-full py-10">
+            <div className="text-5xl mb-4">😕</div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+              No coaches found
+            </h2>
+            <p className="text-gray-500">
+              Try adjusting your filters or search with different criteria.
+            </p>
+          </div>
         ) : (
           filteredCoaches?.map((coach) => {
             const personal = coach.personalInfo || {};
@@ -107,9 +159,12 @@ const CoachList = () => {
                 <h3 className="text-lg font-bold text-gray-800">
                   {personal.fullName || "Unnamed Coach"}
                 </h3>
-                <p className="text-gray-600">Age: {calculateAge(personal.DOB)}</p>
-                <p className="text-gray-600">Gender: {personal.gender || "N/A"}</p>
-                {/* <p className="text-gray-600">City: {address.city || "N/A"}</p> */}
+                <p className="text-gray-600">
+                  Age: {calculateAge(personal.DOB)}
+                </p>
+                <p className="text-gray-600">
+                  Gender: {personal.gender || "N/A"}
+                </p>
                 <p className="text-gray-600">
                   {selection.sport} - {selection.selectionType}
                 </p>

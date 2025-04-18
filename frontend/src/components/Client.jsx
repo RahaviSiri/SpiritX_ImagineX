@@ -51,13 +51,14 @@ const Client = () => {
       console.log("hi");
       if (data.success) {
         console.log(data);
-
+        toast.success(data.message)
         // Navigation after successful API call
         console.log("Navigation should happen now!");
         navigate("/client-wait-for-approval");
       }
       else{
         console.log("error")
+        toast.error(data.message)
       }
     } catch (err) {
       console.log(err);
