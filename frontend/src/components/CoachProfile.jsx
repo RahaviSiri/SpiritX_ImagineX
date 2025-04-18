@@ -2,12 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { CoachContext } from "../context/Coachcontext";
+import assets from "../assets/assets.js";
 
 const CoachProfile = () => {
   const { id } = useParams();
   const [coach, setCoach] = useState(null);
   const { backend_url } = useContext(CoachContext);
   const navigate = useNavigate();
+
+  // Use a safe approach to access assets
+  // let backgroundImage;
+  // try {
+  //   // Try to import assets dynamically
+  //   const assets = require("../assets/assets.js").default;
+  //   backgroundImage = assets.coach3;
+  // } catch (error) {
+  //   // Fallback to a solid color if the import fails
+  //   backgroundImage = null;
+  // }
 
   useEffect(() => {
     const fetchCoachById = async () => {
@@ -29,132 +41,150 @@ const CoachProfile = () => {
     if (id && id !== "undefined") {
       fetchCoachById();
     }
-  }, [id]);
+  }, [id, backend_url]);
 
   if (!coach)
     return (
-      <p className="text-center mt-10 text-gray-500">
-        Loading coach details...
-      </p>
+      <div 
+        className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans"
+        style={{
+          backgroundImage: `url(${assets.AddGroundBackroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",}}
+      >
+        <p className="text-center text-white text-xl">
+          Loading coach details...
+        </p>
+      </div>
     );
 
   const personal = coach.personalInfo || {};
   const address = coach.Address || {};
   const selection = coach.coachSelection || {};
   const contact = coach.contactDetails || {};
-  const publicId = coach.personalInfo?.profile; // e.g. "coach_images/profile123"
-  const imageUrl = `https://res.cloudinary.com/dmdej2vts/image/upload/${publicId}`;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 bg-white rounded-3xl shadow-lg mt-10">
-      {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-6 space-y-4 sm:space-y-0">
-        <img
-          src={personal?.profile || "/default-avatar.png"}
-          alt={personal?.fullName}
-          className="w-32 h-32 rounded-full border-4 border-blue-500 shadow-md"
-        />
-        <div className="text-center sm:text-left">
-          <h2 className="text-3xl font-extrabold text-gray-800">
-            {personal?.fullName}
-          </h2>
-          <p className="text-lg text-gray-600">
-            {selection?.sport} &mdash; {selection?.selectionType}
-          </p>
+    <div 
+      className="flex justify-center items-center min-h-screen bg-gray-50  px-4 font-sans"
+      style={{backgroundImage: `url(${assets.coach3})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",}}
+    >
+      <div className="w-full max-w-3xl bg-black/50 p-8 rounded-2xl shadow-xl space-y-6">
+        {/* Profile Header */}
+        <div className="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-6 space-y-4 sm:space-y-0">
+          <img
+            src={personal?.profile || "/default-avatar.png"}
+            alt={personal?.fullName}
+            className="w-32 h-32 rounded-full border-4 border-blue-300 shadow-md object-cover"
+          />
+          <div className="text-center sm:text-left">
+            <h2 className="text-2xl font-bold text-white">
+              {personal?.fullName}
+            </h2>
+            <p className="text-lg text-blue-200">
+              {selection?.sport} &mdash; {selection?.selectionType}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Section: Personal Info */}
-      <div className="mt-10">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
-          Personal Info
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p>
-            <span className="font-semibold">NIC:</span> {personal?.NIC}
-          </p>
-          <p>
-            <span className="font-semibold">Gender:</span> {personal?.gender}
-          </p>
+        {/* Section: Personal Info */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            Personal Info
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
+            <p>
+              <span className="font-semibold">NIC:</span> {personal?.NIC}
+            </p>
+            <p>
+              <span className="font-semibold">Gender:</span> {personal?.gender}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Section: Contact Details */}
-      <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
-          Contact Details
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p>
-            <span className="font-semibold">Email:</span> {contact?.email}
-          </p>
-          <p>
-            <span className="font-semibold">WhatsApp:</span> {contact?.whatsapp}
-          </p>
-          <p>
-            <span className="font-semibold">Contact No:</span>{" "}
-            {contact?.contactNo}
-          </p>
-          <p>
-            <span className="font-semibold">Home Telephone:</span>{" "}
-            {contact?.HomeTP}
-          </p>
+        {/* Section: Contact Details */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            Contact Details
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
+            <p>
+              <span className="font-semibold">Email:</span> {contact?.email}
+            </p>
+            <p>
+              <span className="font-semibold">WhatsApp:</span> {contact?.whatsapp}
+            </p>
+            <p>
+              <span className="font-semibold">Contact No:</span>{" "}
+              {contact?.contactNo}
+            </p>
+            <p>
+              <span className="font-semibold">Home Telephone:</span>{" "}
+              {contact?.HomeTP || "N/A"}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Section: Address */}
-      <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
-          Address
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p>
-            <span className="font-semibold">Address:</span> {address?.Line1}{" "}
-            {address?.Line2 ? `, ${address?.Line2} ` : `${address?.Line2}`}{" "}
-          </p>
-          <p>
-            <span className="font-semibold">City:</span> {address?.city}
-          </p>
-          <p>
-            <span className="font-semibold">District:</span> {address?.district}
-          </p>
+        {/* Section: Address */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            Address
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
+            <p>
+              <span className="font-semibold">Address:</span> {address?.Line1}{" "}
+              {address?.Line2 ? `, ${address?.Line2}` : ""}
+            </p>
+            <p>
+              <span className="font-semibold">City:</span> {address?.city}
+            </p>
+            <p>
+              <span className="font-semibold">District:</span> {address?.district}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Section: Coach Selection Info */}
-      <div className="mt-6">
-        <h3 className="text-xl font-bold text-blue-600 mb-2 border-b pb-1">
-          Coach Selection Info
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <p>
-            <span className="font-semibold">Qualifications:</span>{" "}
-            {selection?.qualifications}
-          </p>
-          <p>
-            <span className="font-semibold">Evidence:</span>
-            {selection?.qualifications_photo ? (
-              <a
-                href={selection.qualifications_photo}
-                target="_blank"
-                download
-                rel="noreferrer"
-                className="text-blue-600 underline"
-              >
-                View Document
-              </a>
-            ) : (
-              "Not uploaded"
-            )}
-          </p>
+        {/* Section: Coach Selection Info */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            Coach Selection Info
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
+            <p>
+              <span className="font-semibold">Qualifications:</span>{" "}
+              {selection?.qualifications || "N/A"}
+            </p>
+            <p>
+              <span className="font-semibold">Evidence:</span>{" "}
+              {selection?.qualifications_photo ? (
+                <a
+                  href={selection.qualifications_photo}
+                  target="_blank"
+                  download
+                  rel="noreferrer"
+                  className="text-blue-300 underline"
+                >
+                  View Document
+                </a>
+              ) : (
+                "Not uploaded"
+              )}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Book Button */}
-      <div className="mt-10 text-center">
-        <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition duration-300" onClick={() => navigate(`/client/${id}`)}>
-          Book Coach
-        </button>
+        {/* Book Button */}
+        <div className="mt-8 text-center">
+          <button 
+            className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition" 
+            onClick={() => navigate(`/client/${id}`)}
+          >
+            Book Coach
+          </button>
+        </div>
       </div>
     </div>
   );
