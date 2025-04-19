@@ -279,11 +279,102 @@ const handleBooking = async (req, res) => {
   }
 };
 
-// Cancel Booking
-const cancelBooking = async (req,res) => {
+// Get all booking
+const getAllBookings = async (req, res) => {
   try {
-    const { groundId, timeSlot } = req.body;
-    const userId = req.user._id;
+    const grounds = await groundModel.find().populate("bookings.userId", "name");
+
+    const bookings = [];
+
+    grounds.forEach((ground) => {
+      ground.bookings.forEach((booking) => {
+        bookings.push({
+          groundId: ground._id,
+          bookingId: booking._id,
+          groundName: ground.name,
+          ownerEmail: ground.ownerEmail, 
+          userId: booking.userId,
+          userName: booking.userId?.name || "Unknown User",
+          timeSlot: booking.timeSlot,
+          status: booking.status,
+        });
+      });
+    });
+
+    return res.json({ success: true, bookings });
+  } catch (error) {
+    console.error("Error in getAllBookings:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Cancel Booking
+// const cancelBooking = async (req,res) => {
+//   try {
+//     const { groundId, timeSlot, userId } = req.body;
+//     if (!groundId || !userId || !timeSlot) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Missing required fields" });
+//     }
+
+//     const ground = await groundModel.findById(groundId);
+//     const user = await userModel.findById(userId);
+
+//     if (!ground || !user) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Ground or User not found" });
+//     }
+
+//     if (!ground.freeTime.includes(timeSlot)) {
+//       ground.freeTime.push(timeSlot);
+//     }
+
+//     // Remove the booking from the ground's booking list
+//     ground.bookings = ground.bookings.filter(
+//       (booking) =>
+//         !(booking.userId === userId && booking.timeSlot === timeSlot)
+//     );
+
+//     // Remove the booking from the user's booking list
+//     user.groundBookings = user.groundBookings.filter(
+//       (booking) =>
+//         !(booking.groundId === groundId && booking.timeSlot === timeSlot)
+//     );
+//     ground.bookings.status = "cancelled";
+
+//     await ground.save();
+//     await user.save();
+
+//     // Send notification email to the ground owner
+//     const mailOptions = {
+//       from: process.env.ADMIN_EMAIL,
+//       to: user.coachBooking.email,
+//       subject: "Ground Booking Cancellation",
+//       html: `
+//         <p>Dear ${user.name},</p>
+//         <p>Your ground booking today at ${timeSlot} is cancelled. Choose another time</p>
+//         <p>Thank you!</p>
+//       `,
+//     };
+//     try {
+//       await transporter.sendMail(mailOptions);
+//       console.log("Mail sent successfully");
+//     } catch (err) {
+//       console.error("Failed to send mail:", err);
+//     }   
+
+//     return res.json({ success: true, message: "Booking Cancelled" });
+//   } catch (error) {
+//     console.log("Error in cancelling ground", error);
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// }
+
+const cancelBooking = async (req, res) => {
+  try {
+    const { groundId, timeSlot, userId } = req.body;
     if (!groundId || !userId || !timeSlot) {
       return res
         .status(400)
@@ -299,49 +390,80 @@ const cancelBooking = async (req,res) => {
         .json({ success: false, message: "Ground or User not found" });
     }
 
+    // Re-add the cancelled time slot if not already in freeTime
     if (!ground.freeTime.includes(timeSlot)) {
       ground.freeTime.push(timeSlot);
     }
 
-    // Remove the booking from the ground's booking list
+    // ✅ Update booking status to "cancelled" in ground.bookings
+    // ❌ Remove from ground bookings array
     ground.bookings = ground.bookings.filter(
       (booking) =>
-        !(booking.userId.toString() === userId.toString() && booking.timeSlot === timeSlot)
+        booking.userId !== userId ||
+        booking.timeSlot !== timeSlot
     );
 
-    // Remove the booking from the user's booking list
+
+    ground.bookings.status = "cancelled";
+    
+
+    // ❌ Remove the booking from user's list (optional)
     user.groundBookings = user.groundBookings.filter(
       (booking) =>
-        !(booking.groundId.toString() === groundId.toString() && booking.timeSlot === timeSlot)
+        (
+          booking.groundId !== groundId &&
+          booking.timeSlot !== timeSlot
+        )
     );
 
     await ground.save();
     await user.save();
 
-    // Send notification email to the ground owner
+    // ✅ Send email to user, not user.coachBooking.email
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: user.coachBooking.email,
+      to: user.userName, // or user.email if you store it
       subject: "Ground Booking Cancellation",
       html: `
         <p>Dear ${user.name},</p>
-        <p>Your ground booking today at ${timeSlot} is cancelled. Choose another time</p>
+        <p>Your ground booking at ${timeSlot} has been cancelled. You can now choose another time slot.</p>
         <p>Thank you!</p>
       `,
     };
+
     try {
       await transporter.sendMail(mailOptions);
       console.log("Mail sent successfully");
     } catch (err) {
       console.error("Failed to send mail:", err);
-    }   
+    }
 
     return res.json({ success: true, message: "Booking Cancelled" });
   } catch (error) {
     console.log("Error in cancelling ground", error);
     res.status(500).json({ success: false, message: error.message });
   }
-}
+};
+
+// make verify of ground
+const verifyGround = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const ground = await groundModel.findById(id);
+
+    if (!ground) {
+      return res.status(404).json({ success: false, message: "Ground not found" });
+    }
+
+    ground.verified = true;
+    await ground.save();
+
+    return res.json({ success: true, message: "Ground Verified Successfully" });
+  } catch (error) {
+    console.log("Error in verifying ground", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export {
   getAllGrounds,
@@ -352,4 +474,6 @@ export {
   validateGround,
   handleBooking,
   cancelBooking,
+  getAllBookings,
+  verifyGround
 };
