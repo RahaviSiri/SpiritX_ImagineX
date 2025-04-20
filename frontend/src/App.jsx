@@ -8,6 +8,7 @@ import AddGround from './components/AddGround';
 import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
+import Login from './pages/Login';
 
 import SportsAcademies from './components/SportsAcademics';
 import ApplyAcademics from './components/ApplyAcademics';

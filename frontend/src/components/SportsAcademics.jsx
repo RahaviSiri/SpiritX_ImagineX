@@ -61,4 +61,6 @@ const SportsAcademies = () => {
   );
 };
 
+console.log("SportsAcademies component rendered");
+
 export default SportsAcademies;

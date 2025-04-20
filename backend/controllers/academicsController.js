@@ -1,82 +1,77 @@
 import User from "../models/userModel.js";
+import Academy from "../models/academyModel.js";
 
 // Apply to an academy
 export const applyToAcademy = async (req, res) => {
-  try {
-    const {
-      userId,
-      academyId,
-      fullName,
-      email,
-      contactNumber,
-      addressLine1,
-      addressLine2,
-      city,
-      district,
-      preferredStartDate,
-      duration,
-      feeAmount,
-      documents,
-      notes
-    } = req.body;
+    try {
+        const userId = req.user._id;
+        const {
+          academyId,
+          preferredStartDate,
+          documents,
+        } = req.body;
+    
+        const academy = await Academy.findById(academyId);
+        if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
 
-    const newBooking = {
-      academyId,
-      fullName,
-      email,
-      contactNumber,
-      addressLine1,
-      addressLine2,
-      city,
-      district,
-      preferredStartDate,
-      duration,
-      feeAmount,
-      documents,
-      notes
-    };
+        const bookingData = {
+            academyId,
+            preferredStartDate: academy.isFlexible ? preferredStartDate : null,
+            startDate: academy.isFlexible ? null : academy.startDates[0],
+            isApprove: false,
+            isPayment: "",
+            duration: academy.duration,
+            documents,
+        };
 
-    const user = await User.findById(userId);
-    user.academicsBooking.push(newBooking);
-    await user.save();
-
-    res.status(201).json({ success: true, message: "Applied to academy!" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
+        await User.findByIdAndUpdate(userId, {
+        $push: { academicsBooking: bookingData },
+        });
+      
+        res.status(200).json({ success: true, message: "Applied to academy" });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
 };
 
-// Check all academy application statuses of a user
+// Get booking status
 export const getAcademyStatus = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const user = await User.findById(userId).populate("academicsBooking.academyId");
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
-
-    res.json({ success: true, bookings: user.academicsBooking });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
+    try {
+      const userId = req.user._id;
+      const { academyId } = req.params;
+  
+      const user = await User.findById(userId).populate("academicsBooking.academyId");
+  
+      const booking = user.academicsBooking.find((a) => a.academyId._id.toString() === academyId);
+      if (!booking) return res.status(404).json({ success: false, message: "Booking not found" });
+  
+      res.status(200).json({ success: true, booking });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
 };
 
-// Mark payment as completed
-export const markAcademyPaymentComplete = async (req, res) => {
-  try {
-    const { userId, bookingId } = req.params;
-    const { transactionId } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
-
-    const booking = user.academicsBooking.id(bookingId);
-    if (!booking) return res.status(404).json({ success: false, message: "Booking not found" });
-
-    booking.paymentStatus = "completed";
-    booking.transactionId = transactionId;
-    await user.save();
-
-    res.json({ success: true, message: "Payment marked as completed" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
+// Mark payment
+export const markAcademyPayment = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const { academyId } = req.params;
+  
+      const updatedUser = await User.findOneAndUpdate(
+        {
+          _id: userId,
+          "academicsBooking.academyId": academyId,
+        },
+        {
+          $set: { "academicsBooking.$.isPayment": "completed" },
+        },
+        { new: true }
+      );
+  
+      if (!updatedUser) return res.status(404).json({ success: false, message: "Booking not found" });
+  
+      res.status(200).json({ success: true, message: "Payment marked as completed" });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
 };
