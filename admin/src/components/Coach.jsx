@@ -79,7 +79,7 @@ const Coach = () => {
       className="min-h-screen bg-cover bg-center p-6" 
       style={{ backgroundImage: `url(${assets.coach1})` }}
     >
-      <div className="bg-white/90 rounded-lg shadow-xl p-6 backdrop-blur-sm">
+      <div className="bg-white/90 min-h-screen rounded-lg shadow-xl p-6 backdrop-blur-sm">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Coach Applications</h2>
           

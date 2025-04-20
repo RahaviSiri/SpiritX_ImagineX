@@ -80,7 +80,7 @@ const CoachList = () => {
   });
 
   return (<div
-    className="flex  justify-center items-start bg-gray-50  font-sans"
+    className="flex min-h-screen justify-center items-start bg-gray-50 p-10 font-sans"
     style={{
       backgroundImage: `url(${assets.coach3})`,
       backgroundSize: "cover",
@@ -88,7 +88,7 @@ const CoachList = () => {
       backgroundRepeat: "no-repeat",
     }}
   >
-    <div className="w-full  bg-black/30 p-6 rounded-2xl shadow-xl">
+    <div className=" w-full min-h-screen bg-black/30 p-6 rounded-2xl shadow-xl">
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
         <input
