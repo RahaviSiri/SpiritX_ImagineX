@@ -60,6 +60,7 @@ const CoachList = () => {
   };
 
   const filteredCoaches = userDatas?.filter((coach) => {
+    if (!coach.isApprove) return false;
     const personal = coach.personalInfo || {};
     const address = coach.Address || {};
     const selection = coach.coachSelection || {};
@@ -137,6 +138,7 @@ const CoachList = () => {
       </div>
   
       {/* Coaches */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {filteredCoaches?.length === 0 ? (
           <div className="text-center col-span-full py-10 text-white">
@@ -154,11 +156,13 @@ const CoachList = () => {
             const selection = coach.coachSelection || {};
   
             return (
+              
               <div
                 key={coach._id}
                 onClick={() => handleCardClick(coach._id)}
                 className="bg-white/90 p-4 rounded-2xl shadow hover:shadow-lg transition-all cursor-pointer flex flex-col items-center text-center"
               >
+                
                 <img
                   src={personal.profile || "/default-avatar.png"}
                   alt={personal.fullName}
