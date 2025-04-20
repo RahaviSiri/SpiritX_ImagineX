@@ -6,13 +6,16 @@ import { BrowserRouter } from "react-router-dom";
 import { CoachContextProvider } from "./context/Coachcontext.jsx";
 import { GroundContextProvider } from "./context/GroundContext.jsx";
 import { AppContextProvider } from "./context/AppContext.jsx";
+import { UserContextProvider } from "./context/UserContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AppContextProvider>
       <CoachContextProvider>
         <GroundContextProvider>
-          <App />
+          <UserContextProvider>
+            <App />
+          </UserContextProvider>
         </GroundContextProvider>
       </CoachContextProvider>
     </AppContextProvider>

@@ -27,7 +27,7 @@ export const CoachContextProvider = (props) => {
 
   // Coach Selection
   const [selectionType, setSelectionType] = useState("");
-  const [school_Academics, setSchool_Academics] = useState("");
+  const [salary, setSalary] = useState("");
   const [sport, setSport] = useState("");
   const [qualifications, setQualifications] = useState("");
   const [qualifications_photo, setQualifications_photo] = useState(null); // file/image
@@ -132,8 +132,9 @@ export const CoachContextProvider = (props) => {
 
     selectionType,
     setSelectionType,
-    school_Academics,
-    setSchool_Academics,
+    salary,
+    setSalary,
+    
     sport,
     setSport,
     qualifications,

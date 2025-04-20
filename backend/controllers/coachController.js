@@ -8,10 +8,8 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import mongoose from "mongoose";
 
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-
-
 
 export const registerCoach = async (req, res) => {
   try {
@@ -49,7 +47,7 @@ export const registerCoach = async (req, res) => {
     });
 
     const qualifications_photo = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
-      resource_type: "image"
+      resource_type: "raw"
     });
 
 
@@ -93,19 +91,42 @@ export const registerCoach = async (req, res) => {
     const mailOptions = {
       from: user.contactDetails.email,
       to: process.env.ADMIN_EMAIL,
-      subject: 'A coach Registered ',
-      text: 'Approving his/her application'
-    }
+      subject: 'New Coach Registration Request',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; color: #333;">
+          <h2 style="color: #2c3e50;">🎓 New Coach Registration</h2>
+          <p>Hello Admin,</p>
+    
+          <p>
+            A new coach has submitted a registration request and is awaiting your approval.
+          </p>
+    
+          <h3 style="color: #34495e;">Coach Details:</h3>
+          <ul style="line-height: 1.6;">
+            <li><strong>Name:</strong> ${user.personalInfo?.fullName || 'N/A'}</li>
+            <li><strong>Email:</strong> ${user.contactDetails.email}</li>
+            <li><strong>Phone:</strong> ${user.contactDetails.contactNo || 'N/A'}</li>
+            <li><strong>City:</strong> ${user.Address?.city || 'N/A'}</li>
+            <li><strong>District:</strong> ${user.Address?.district || 'N/A'}</li>
+          </ul>
+    
+          <p>Please review and approve or reject their application from the admin dashboard.</p>
+    
+          <p style="margin-top: 30px;">Thanks,<br/>Your Coaching Platform</p>
+        </div>
+      `
+    };
+    
 
     await transporter.sendMail(mailOptions);
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
-    
+
 
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
-      sameSite:  "None" ,
+      sameSite: "None",
       maxAge: 7 * 24 * 3600 * 1000
     })
 
@@ -115,7 +136,7 @@ export const registerCoach = async (req, res) => {
       token
     });
   } catch (error) {
-   
+
     return res.json({ success: false, message: error.message });
   }
 };
@@ -203,7 +224,7 @@ export const editDetails = async (req, res) => {
       data: updatedCoach
     });
   } catch (error) {
-    
+
     return res.json({ success: false, message: error.message });
   }
 
@@ -212,7 +233,7 @@ export const editDetails = async (req, res) => {
 
 export const checkOTP = async (req, res) => {
   try {
-    
+
     if (!req.body.email || !req.body.otp) {
       return res.json({ success: false, message: "Email and OTP are required!" })
     }
@@ -240,7 +261,7 @@ export const checkOTP = async (req, res) => {
         },
       ],
       mode: 'payment',
-      
+
       success_url: `http://localhost:5173/verify?success=true&userId=${user._id}`,
       cancel_url: `http://localhost:5173/verify?success=false&userId=${user._id}`,
       metadata: {
@@ -248,93 +269,95 @@ export const checkOTP = async (req, res) => {
         userId: user._id.toString(),
       },
     });
-    
-    
-    return res.json({ success: true, message: "Continue your payment processing!" ,session_url: session.url })
+
+
+    return res.json({ success: true, message: "Continue your payment processing!", session_url: session.url })
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
 }
 
-export const getCoaches = async (req,res) => {
+export const getCoaches = async (req, res) => {
   try {
     const users = await coachModel.find({});
-    if(!users){
-      return res.json({success:false,message:"Users not found!"})
+    if (!users) {
+      return res.json({ success: false, message: "Users not found!" })
     }
-    
-    return res.json({success:true,message:"Fetch coaches successfully!",users})
+
+    return res.json({ success: true, message: "Fetch coaches successfully!", users })
   } catch (error) {
-    return res.json({success:false,message:error.message})
-    
+    return res.json({ success: false, message: error.message })
+
   }
 }
 
-export const getCoach = async (req,res) => {
+export const getCoach = async (req, res) => {
   try {
     const coach = await coachModel.findById(req.body.userId)
-    
-    if(!coach){
-      return res.json({success:false,message:"User not found!"})
+
+    if (!coach) {
+      return res.json({ success: false, message: "User not found!" })
     }
-    
-    return res.json({success:true,message:"Fetch coaches successfully!",coach})
+
+    return res.json({ success: true, message: "Fetch coaches successfully!", coach })
   } catch (error) {
     console.log(error)
-    return res.json({success:false,message:error.message})
-    
+    return res.json({ success: false, message: error.message })
+
   }
 }
 
 export const getCoachById = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     console.log("Received ID:", id); // Log the ID
-    
+
     if (!id) {
       return res.status(400).json({ success: false, message: "ID is required" });
     }
-    
+
     // Just return something simple to test the route
     // return res.json({ success: true, message: "Route works", receivedId: id });
-    
+
     // Once that works, uncomment the below code
-    
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.json({ success: false, message: "Invalid coach ID format" });
     }
-    
+
     const coach = await coachModel.findById(id);
-    
+
     if (!coach) {
       return res.json({ success: false, message: "Coach not found!" });
     }
-    
+
     return res.json({ success: true, message: "Fetch coach successfully!", coach });
-    
+
   } catch (error) {
     console.error("Server error:", error); // Log the full error
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export const verifyPayment = async (req,res) => {
+export const verifyPayment = async (req, res) => {
   try {
-    const {success,userId} = req.body;
-  
-  if(success === 'true'){
-    await coachModel.findByIdAndUpdate(userId, {isPayment:true})
-    return res.json({success:true,message:"Paid successfully"})
-  }
-  else{
-    await coachModel.findByIdAndDelete(userId)
-    return res.json({success:false,message:"Not paid yet."})
+    const { success, userId } = req.body;
+
+    if (success === 'true') {
+      await coachModel.findByIdAndUpdate(userId, { isPayment: true })
+      return res.json({ success: true, message: "Paid successfully" })
+    }
+    else {
+      await coachModel.findByIdAndDelete(userId)
+      return res.json({ success: false, message: "Not paid yet." })
+
+    }
+    return res.json({success:true})
+  } catch (error) {
+    return res.json({ success: false, message: error.message })
 
   }
-  } catch (error) {
-    return res.json({success:false,message:error.message})
-    
-  }
-  
+
 }
+

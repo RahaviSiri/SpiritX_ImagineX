@@ -130,8 +130,8 @@ const AddGround = () => {
       setCategory(ground.category || "");
       setAddress(ground.address || "");
       setFreeTime(ground.freeTime || []);
-      setOwnerEmail(ground.ownerEmail || "");
-      setOwnerPassword(ground.ownerPassword || "");
+      // setOwnerEmail(ground.ownerEmail || "");
+      // setOwnerPassword(ground.ownerPassword || "");
       setGroundType(ground.groundType || "");
       setImagePreview(ground.image || null);
     }

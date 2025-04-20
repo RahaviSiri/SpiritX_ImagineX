@@ -8,8 +8,6 @@ import AddGround from './components/AddGround';
 import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
-import SportsAcademies from './components/SportsAcademics';
-import ApplyAcademics from './components/ApplyAcademics';
 
 
 function App() {
@@ -17,7 +15,8 @@ function App() {
     <div className='min-h-screen'>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<AddGround/>} />
+        {/* <Route path='/' element={<Client/>} /> */}
+        <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
         <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
@@ -27,8 +26,6 @@ function App() {
         <Route path='/ground-details/:id' element={<GroundDetails />} />
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
-        <Route path='/sports-academics' element={<SportsAcademies />} />
-        <Route path='/apply-academics' element={<ApplyAcademics />} />
       </Routes>
     </div>
     
