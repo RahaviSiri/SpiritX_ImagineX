@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GroundContext } from "../context/GroundContext";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const AllGrounds = () => {
   const { getAllGrounds, grounds } = useContext(GroundContext);
@@ -16,7 +17,8 @@ const AllGrounds = () => {
 
     if (selectedCategory) {
       filtered = filtered.filter(
-        (ground) => ground.category.toLowerCase() === selectedCategory.toLowerCase()
+        (ground) =>
+          ground.category.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
 
@@ -76,34 +78,39 @@ const AllGrounds = () => {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Filters */}
         <div
-          className={`flex flex-col gap-3 text-sm text-gray-600 w-full sm:w-auto lg:w-1/4 ${showFilter ? "flex" : "hidden sm:flex"
-            }`}
+          className={`flex flex-col gap-3 text-sm text-gray-600 w-full sm:w-auto lg:w-1/4 ${
+            showFilter ? "flex" : "hidden sm:flex"
+          }`}
         >
           <p
             onClick={() => handleCategoryClick(null)}
-            className={`cursor-pointer px-4 py-2 border rounded ${selectedCategory === null ? "bg-blue-100 font-semibold" : ""
-              }`}
+            className={`cursor-pointer px-4 py-2 border rounded ${
+              selectedCategory === null ? "bg-blue-100 font-semibold" : ""
+            }`}
           >
             All Grounds
           </p>
           <p
             onClick={() => handleCategoryClick("sports")}
-            className={`cursor-pointer px-4 py-2 border rounded ${selectedCategory === "sports" ? "bg-blue-100 font-semibold" : ""
-              }`}
+            className={`cursor-pointer px-4 py-2 border rounded ${
+              selectedCategory === "sports" ? "bg-blue-100 font-semibold" : ""
+            }`}
           >
             Sports Grounds
           </p>
           <p
             onClick={() => handleCategoryClick("indoor")}
-            className={`cursor-pointer px-4 py-2 border rounded ${selectedCategory === "indoor" ? "bg-blue-100 font-semibold" : ""
-              }`}
+            className={`cursor-pointer px-4 py-2 border rounded ${
+              selectedCategory === "indoor" ? "bg-blue-100 font-semibold" : ""
+            }`}
           >
             Indoor Grounds
           </p>
           <p
             onClick={() => handleCategoryClick("outdoor")}
-            className={`cursor-pointer px-4 py-2 border rounded ${selectedCategory === "outdoor" ? "bg-blue-100 font-semibold" : ""
-              }`}
+            className={`cursor-pointer px-4 py-2 border rounded ${
+              selectedCategory === "outdoor" ? "bg-blue-100 font-semibold" : ""
+            }`}
           >
             Outdoor Grounds
           </p>
@@ -123,12 +130,23 @@ const AllGrounds = () => {
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-xl font-semibold text-gray-800">{ground.name}</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {ground.name}
+                </h2>
                 <p className="text-sm text-gray-500 mt-1">{ground.address}</p>
 
-                <span className="inline-block mt-3 px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 capitalize">
+                <span className="inline-block mt-3 px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 capitalize mr-3 ">
                   {ground.category}
                 </span>
+                {ground.verified ? (
+                  <span className="inline-flex items-center gap-1 mt-3 px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-600">
+                    <FaCheckCircle /> Verified
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 mt-3 px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-600">
+                    <FaTimesCircle /> Not Verified
+                  </span>
+                )}
               </div>
             </div>
           ))}
