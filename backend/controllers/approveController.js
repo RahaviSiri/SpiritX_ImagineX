@@ -60,14 +60,16 @@ export const approveByAdmin = async (req, res) => {
 
 export const rejectByAdmin = async (req, res) => {
   try {
+    const user = await coachModel.findById(req.body.userId);
+     if(!user) {
+      return res.json({success:false,message:"user not found"})
+     }
 
-
-    await coachModel.findByIdAndDelete(req.body.userId)
-
-
+     user.isReject = true
+     await user.save();
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: email,
+      to: user.contactDetails.email,
       subject: "Update on Your Coaching Application",
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
@@ -91,6 +93,7 @@ export const rejectByAdmin = async (req, res) => {
     
 
     await transporter.sendMail(mailOptions);
+    // await coachModel.findByIdAndDelete(req.body.userId)
     return res.json({ success: true, message: "Rejected the coach successfully!" })
 
   } catch (error) {
