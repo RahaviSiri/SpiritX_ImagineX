@@ -30,6 +30,7 @@ const coachSchema = new mongoose.Schema({
         
     },
     isApprove : {type:Boolean,default : false},
+    isReject : {type:Boolean,default:false},
     otp:{type:String,default:''},
     isPayment:{type:Boolean,default:false},
     
