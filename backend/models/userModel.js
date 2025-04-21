@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     address: { type: String },
     email: { type: String, required: true, trim: true },
     password: { type: String, required: true, trim: true },
-    resetOTP: { type: String, required: true},
+    resetOTP: { type: String },
     groundBookings: [
       {
         groundId: { type: mongoose.Schema.Types.ObjectId, ref: "ground" },
