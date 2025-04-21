@@ -10,19 +10,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const registerUser = async (req, res) => {
     try {
-        const { name, userName, password } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!userName || !password) {
+        if (!email || !password) {
             return res.json({ success: false, message: "Please enter details" });
         }
         if (password.length < 8) {
             return res.json({ success: false, message: "Please enter 8-digit password" });
         }
 
-        // Check if the username already exists
-        const existingUser = await userModel.findOne({ userName });
+        // Check if the email already exists
+        const existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            return res.json({ success: false, message: "Username already taken, choose a different one" });
+            return res.json({ success: false, message: "email already taken, choose a different one" });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
 
         const userData = {
             name,
-            userName,
+            email,
             password: hashPassword,
         };
 
@@ -51,8 +51,8 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
 
     try {
-        const { userName, password } = req.body;
-        const user = await userModel.findOne({ userName });
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email });
 
         if (!user) {
             return res.json({ success: false, message: "User not found" });
@@ -291,4 +291,103 @@ const checkOTPByUser = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, getUserData, getUserById, registerCoach, checkOTPByUser }
+const resetOTP = async (req,res) => {
+    const {email} = req.body;
+    if(!email){
+        res.json({success:false,message:"email is required"})
+    }
+    try {
+        const user = await userModel.findOne({email});
+        if(!user){
+            res.json({success:false,message:"User not found!"});
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        user.resetOTP = otp;
+        
+        await user.save();
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "Your OTP to Reset Your Account Password!",
+            html: `
+              <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                  <h2 style="color: #1e40af; text-align: center;">Reset Your Password</h2>
+                  <p style="font-size: 16px; color: #333;">Hi <strong>${user.name}</strong>,</p>
+                  <p style="font-size: 16px; color: #333;">
+                    We received a request to reset the password for your account. Please use the OTP below to reset your password:
+                  </p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <span style="font-size: 28px; letter-spacing: 5px; color: #1e3a8a; font-weight: bold;">${user.resetOTP}</span>
+                  </div>
+                  <p style="font-size: 14px; color: #666;">
+                    This OTP is valid for a limited time. If you did not request a password reset, please ignore this email.
+                  </p>
+                  <p style="font-size: 14px; color: #666;">Thank you,<br/>The Support Team</p>
+                </div>
+              </div>
+            `
+          };
+          
+
+        await transporter.sendMail(mailOption);
+        return res.json({success:true,message:"Reset OTP is sent successfully.",email})
+
+        
+    } catch (error) {
+        res.json({success:false,message:error.message})
+    }
+}
+
+const resetOtpCheck = async (req,res) => {
+    try {
+        const {email,otp} = req.body;
+        if(!email || !otp){
+            return res.json({success:false,message:"Email and OTP are required!"})
+        }
+        const user = await userModel.findOne({email});
+        if(!user){
+            return res.json({success:false,message:"User not found!"})
+        }
+        if(user.resetOTP === "" || user.resetOTP !== String(otp)){
+            return res.json({success:false,message:"OTP is Invalid!"})
+
+        }
+        
+        return res.json({success:true,message:"OTP is correct",otp})
+    } catch (error) {
+        return res.json({success:false,message:error.message})
+    }
+}
+const resetPassword  = async (req,res) => {
+    const {email, newPassword,confirmNewPassword} = req.body;
+    if(!email  || !newPassword || !confirmNewPassword){
+        res.json({success:false,message:"email,otp,newPassword are required"});
+
+    }
+    try {
+        const user = await userModel.findOne({email});
+        if(!user){
+            return res.json({success:false,message:"User not found!"})
+        }
+        
+        if(newPassword !== confirmNewPassword){
+            return res.json({success:false,message:"Confirm new password is mismatch with new password!"})
+        }
+        const hashedPassword = await bcrypt.hash(newPassword,10);
+        const hashedConfirmPassword = await bcrypt.hash(confirmNewPassword,10);
+        user.password = hashedPassword;
+        user.confirmNewPassword = hashedConfirmPassword;
+        
+        
+        await user.save();
+        return res.json({success:true,message:"Reset passwaord successfully!"})
+    } catch (error) {
+        console.log(error)
+        return res.json({success:false,message:error.message})
+
+    }
+}
+
+export { registerUser, loginUser, getUserData, getUserById, registerCoach, checkOTPByUser,resetOTP, resetOtpCheck, resetPassword }
