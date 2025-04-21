@@ -307,13 +307,29 @@ const resetOTP = async (req,res) => {
         await user.save();
 
         const mailOption = {
-            from : process.env.SENDER_EMAIL,
-            to : user.email,
-            subject : "Your OTP to Reset your account password! ",
-            text : `Your otp is ready to reset your password. Your OTP is ${otp}`
-            
-            
-        }
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "Your OTP to Reset Your Account Password!",
+            html: `
+              <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                  <h2 style="color: #1e40af; text-align: center;">Reset Your Password</h2>
+                  <p style="font-size: 16px; color: #333;">Hi <strong>${user.name}</strong>,</p>
+                  <p style="font-size: 16px; color: #333;">
+                    We received a request to reset the password for your account. Please use the OTP below to reset your password:
+                  </p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <span style="font-size: 28px; letter-spacing: 5px; color: #1e3a8a; font-weight: bold;">${user.resetOTP}</span>
+                  </div>
+                  <p style="font-size: 14px; color: #666;">
+                    This OTP is valid for a limited time. If you did not request a password reset, please ignore this email.
+                  </p>
+                  <p style="font-size: 14px; color: #666;">Thank you,<br/>The Support Team</p>
+                </div>
+              </div>
+            `
+          };
+          
 
         await transporter.sendMail(mailOption);
         return res.json({success:true,message:"Reset OTP is sent successfully.",email})
