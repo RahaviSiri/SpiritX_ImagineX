@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/ClientWaitForApproval';
 import Verify from './components/Verify';
+import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path='/client/:id' element={<Client />} />
         <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/reset-password-send-otp' element={<ResetPasswordSendOTP />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
         
       </Routes>
     </div>

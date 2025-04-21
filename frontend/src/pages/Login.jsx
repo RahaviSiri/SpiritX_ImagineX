@@ -8,7 +8,7 @@ import { UserContext } from "../context/UserContext.jsx";
 const Login = () => {
   const [state, setState] = useState("Sign Up");
   const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const Login = () => {
       if (state === "Sign Up") {
         const { data } = await axios.post(backendURL + "/api/user/register", {
           name,
-          userName,
+          email,
           password,
         });
         if (data.success) {
@@ -29,24 +29,24 @@ const Login = () => {
           setUToken(data.token);
           navigate("/");
           setName("");
-          setUserName("");
+          setEmail("");
           setPassword("");
         } else {
           toast.error(data.message);
           setName("");
-          setUserName("");
+          setEmail("");
           setPassword("");
         }
       } else {
         const { data } = await axios.post(backendURL + "/api/user/login", {
-          userName,
+          email,
           password,
         });
         if (data.success) {
           localStorage.setItem("uToken", data.token);
           setUToken(data.token);
           navigate("/");
-          setUserName("");
+          setEmail("");
           setPassword("");
         } else {
           toast.error(data.message);
@@ -84,14 +84,14 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="userName" className="text-sm font-medium text-white">Your Username</label>
+                <label htmlFor="email" className="text-sm font-medium text-white">Your email</label>
                 <input
-                  id="userName"
-                  type="text"
+                  id="email"
+                  type="email"
                   required
                   className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -122,6 +122,7 @@ const Login = () => {
               Login here
             </span>
           </p>
+          
         </div>
       ) : (
         <div className="w-full max-w-md p-8 bg-black bg-opacity-30 rounded-lg shadow-xl">
@@ -130,14 +131,14 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div className="flex flex-col gap-2">
-                <label htmlFor="userName" className="text-sm font-medium text-white">Enter Username</label>
+                <label htmlFor="email" className="text-sm font-medium text-white">Enter email</label>
                 <input
-                  id="userName"
-                  type="text"
+                  id="email"
+                  type="email"
                   required
                   className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -166,6 +167,15 @@ const Login = () => {
               className="text-blue-500 cursor-pointer hover:underline "
             >
               SignUp here
+            </span>
+          </p>
+          <p className="text-sm text-center text-white mt-4">
+            Forgot Password?{" "}
+            <span
+              onClick={() => navigate('/reset-password-send-otp')}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
+              Click here
             </span>
           </p>
         </div>
