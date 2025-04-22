@@ -16,6 +16,7 @@ import Verify from './components/Verify';
 import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
 import ResetPassword from './components/ResetPassword';
 import ContactUs from './pages/ContactUs';
+import AboutUs from './pages/AboutUs';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path='/reset-password-send-otp' element={<ResetPasswordSendOTP />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path="/contact" element={<ContactUs/>} />
+        <Route path="/about-us" element={<AboutUs/>} />
       </Routes>
     </div>
     
