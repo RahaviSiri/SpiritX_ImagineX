@@ -45,24 +45,15 @@ const userSchema = new mongoose.Schema(
         // For flexible online courses
         preferredStartDate: { type: Date }, 
 
-        // Set by the academy after approval
-        startDate: { type: Date },       
-
-        duration: { type: String },  // E.g., “3 months”
-
-        documents: [String],         // URLs to uploaded docs
-
+        NIC: {type: String, required: true },         // URLs to uploaded docs
         notes: { type: String },
-
         isApprove: { type: Boolean, default: false },
-        rejectionReason: { type: String },
+        rejectionReason: { type: String }, //mail to user
 
         paymentStatus: { type: String, enum: ["pending", "completed"], default: "pending" },
-        feeAmount: { type: Number, required: true },
-        transactionId: { type: String },
 
-        otp: { type: String, default: "" },
-        createdAt: { type: Date, default: Date.now },
+        otp: { type: String, default: "" }, //after approve give otp
+        // createdAt: { type: Date, default: Date.now },
       },
     ],
   },

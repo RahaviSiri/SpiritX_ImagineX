@@ -9,9 +9,9 @@ import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
 import Login from './pages/Login';
-
 import SportsAcademies from './components/SportsAcademics';
 import ApplyAcademics from './components/ApplyAcademics';
+import AcademyDetails from './components/AcademyDetails';
 
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
         <Route path='/sports-academics' element={<SportsAcademies />} />
         <Route path='/apply-academics' element={<ApplyAcademics />} />
+        <Route path='/academies/:id' element={<AcademyDetails />} />
       </Routes>
     </div>
     
