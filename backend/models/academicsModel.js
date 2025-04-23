@@ -6,7 +6,7 @@ const academySchema = new mongoose.Schema({
     academyLogo: {type: String}, // URL to the logo image
     picture: {type: String, required: true}, // URL to the picture of the academy or organization
     sportType: { type: String },
-    shortdescription: { type: String, required: true },
+    shortDescription: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: String },  // E.g., “3 months”
     instructors: { type: String, required: true }, // E.g., "John Doe, Jane Smith"

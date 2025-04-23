@@ -1,63 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const academies = [
-  {
-    _id: "1",
-    academyBasicDetails: {
-      academyName: "Elite Soccer Academy",
-      academyLogo: "/logos/soccer.png", // Logo
-      picture: "/pictures/soccer-banner.jpg", // Picture
-      sportType: "Football",
-      description: "Top-tier training for aspiring footballers.",
-      duration: "3 months",
-      instructors: "John Doe, Jane Smith",
-      feeAmount: 300,
-      mode: "Physical",
-      isFlexible: false,
-      startDate: "2025-05-10",
-    },
-    Address: {
-      Line1: "123 Sports Lane",
-      city: "London",
-      district: "Greater London",
-    },
-    contactDetails: {
-      contactNo: "1234567890",
-      whatsapp: "1234567890",
-      email: "elite@soccer.com",
-    },
-  },
-  {
-    _id: "2",
-    academyBasicDetails: {
-      academyName: "Soccer Academy",
-      academyLogo: "/logos/soccer.png",
-      picture: "/pictures/soccer-online.jpg",
-      sportType: "Football",
-      description: "Top-tier training for aspiring footballers.",
-      duration: "3 months",
-      instructors: "Jane Smith",
-      feeAmount: 0,
-      mode: "Online",
-      isFlexible: true,
-      startDate: "According to your preference",
-    },
-    Address: {
-      Line1: "123 Sports Lane",
-      city: "London",
-      district: "Greater London",
-    },
-    contactDetails: {
-      contactNo: "1234567890",
-      whatsapp: "1234567890",
-      email: "elite@soccer.com",
-    },
-  },
-];
+import axios from "axios"; // Import Axios for HTTP requests
 
 const SportsAcademies = () => {
   const navigate = useNavigate();
+  
+  const [academies, setAcademies] = useState([]);  // State to store fetched academies
+  const [loading, setLoading] = useState(true);    // State to handle loading
+  const [error, setError] = useState(null);        // State to handle errors
+
+  useEffect(() => {
+    // Function to fetch academies from backend
+    const fetchAcademies = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/academies/get-all-academies");  // Replace with your actual API endpoint
+        setAcademies(response.data.academies);
+      } catch (err) {
+        setError("Failed to load academies");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAcademies();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;  // You can replace with a loading spinner or placeholder
+  }
+
+  if (error) {
+    return <div>{error}</div>;  // Display error message if fetching fails
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-100 p-6">

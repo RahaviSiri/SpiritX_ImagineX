@@ -1,5 +1,4 @@
 import User from "../models/userModel.js";
-import Academy from "../models/academyModel.js";
 import { v2 as cloudinary } from 'cloudinary';
 import upload from "../middleware/multer.js";
 // import moment from 'moment';
@@ -58,9 +57,9 @@ export const addAcademy = async (req, res) => {
           academyBasicDetails: {
             academyName: body.academyName,
             academyLogo: academyLogo.secure_url,
-            picture: body.picture,
+            picture: picture.secure_url,
             sportType: body.sportType,
-            shortdescription: body.shortDescription,
+            shortDescription: body.shortDescription,
             description: body.description,
             duration: body.duration,
             instructors: body.instructors,
@@ -96,33 +95,33 @@ export const addAcademy = async (req, res) => {
         await newAcademy.save();
 
         // Send email to admin
-        const mailOptions = {
-          from: body.email,
-          to: process.env.ADMIN_EMAIL,
-          subject: 'New Academy Registration Request',
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; color: #333;">
-              <h2 style="color: #2c3e50;">🏫 New Academy Registration</h2>
-              <p>Hello Admin,</p>
-              <p>A new academy has been submitted for approval.</p>
-              <ul>
-                <li><strong>Academy:</strong> ${body.academyName}</li>
-                <li><strong>Short Description:</strong> ${body.shortDescription}</li>
-                <li><strong>duration: ${body.duration}</li>  
-                <li><strong>feeAmount: ${body.feeAmount}</li>
-                <li><strong>Mode:</strong> ${body.mode}</li>
-                ${body.startDate ? `<li><strong>Start Date:</strong> ${body.startDate}</li>` : ''}
-                <li><strong>Owner:</strong> ${body.fullName}</li>
-                <li><strong>Email:</strong> ${body.email}</li>
-                <li><strong>Contact:</strong> ${body.contactNo}</li>
-                <li><strong>City:</strong> ${body.city}, ${body.district}</li>
-              </ul>
-              <p>Please review it in the admin panel.</p>
-            </div>
-          `
-        };
+        // const mailOptions = {
+        //   from: body.email,
+        //   to: process.env.ADMIN_EMAIL,
+        //   subject: 'New Academy Registration Request',
+        //   html: `
+        //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; color: #333;">
+        //       <h2 style="color: #2c3e50;">🏫 New Academy Registration</h2>
+        //       <p>Hello Admin,</p>
+        //       <p>A new academy has been submitted for approval.</p>
+        //       <ul>
+        //         <li><strong>Academy:</strong> ${body.academyName}</li>
+        //         <li><strong>Short Description:</strong> ${body.shortDescription}</li>
+        //         <li><strong>duration: ${body.duration}</li>  
+        //         <li><strong>feeAmount: ${body.feeAmount}</li>
+        //         <li><strong>Mode:</strong> ${body.mode}</li>
+        //         ${body.startDate ? `<li><strong>Start Date:</strong> ${body.startDate}</li>` : ''}
+        //         <li><strong>Owner:</strong> ${body.fullName}</li>
+        //         <li><strong>Email:</strong> ${body.email}</li>
+        //         <li><strong>Contact:</strong> ${body.contactNo}</li>
+        //         <li><strong>City:</strong> ${body.city}, ${body.district}</li>
+        //       </ul>
+        //       <p>Please review it in the admin panel.</p>
+        //     </div>
+        //   `
+        // };
 
-        await transporter.sendMail(mailOptions);
+        // await transporter.sendMail(mailOptions);
 
         // Create JWT token for the owner
         const token = jwt.sign({ id: newAcademy._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -150,10 +149,10 @@ export const addAcademy = async (req, res) => {
 // Get all academies
 export const getAllAcademies = async (req, res) => {
     try {
-      const academies = await Academy.find();
+      const academies = await academicsModel.find();
       res.status(200).json({ success: true, academies });
     } catch (err) {
-      res.status(500).json({ message: 'Failed to fetch academies', error: error.message });
+      res.status(500).json({ message: 'Failed to fetch academies', error: err.message });
     }
 }
 
@@ -162,11 +161,11 @@ export const getAllAcademies = async (req, res) => {
 export const getAcademyById = async (req, res) => {
     try {
         const academyId = req.params.id;
-        const academy = await Academy.findById(academyId);
+        const academy = await academicsModel.findById(academyId);
         if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
         res.status(200).json({ success: true, academy });
     } catch (err) {
-      res.status(500).json({ message: 'Failed to fetch academy', error: error.message });
+      res.status(500).json({ message: 'Failed to fetch academy', error: err.message });
     }
 }
 
@@ -275,7 +274,7 @@ export const applyToAcademy = async (req, res) => {
           documents,
         } = req.body;
     
-        const academy = await Academy.findById(academyId);
+        const academy = await academicsModel.findById(academyId);
         if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
 
         const bookingData = {
