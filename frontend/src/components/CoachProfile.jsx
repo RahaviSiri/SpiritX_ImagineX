@@ -45,13 +45,14 @@ const CoachProfile = () => {
 
   if (!coach)
     return (
-      <div 
+      <div
         className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans"
         style={{
           backgroundImage: `url(${assets.AddGroundBackroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",}}
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <p className="text-center text-white text-xl">
           Loading coach details...
@@ -65,12 +66,14 @@ const CoachProfile = () => {
   const contact = coach.contactDetails || {};
 
   return (
-    <div 
+    <div
       className="flex justify-center items-center min-h-screen bg-gray-50  px-4 font-sans"
-      style={{backgroundImage: `url(${assets.coach3})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",}}
+      style={{
+        backgroundImage: `url(${assets.coach3})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <div className="w-full max-w-3xl bg-black/50 p-8 rounded-2xl shadow-xl space-y-6">
         {/* Profile Header */}
@@ -100,30 +103,11 @@ const CoachProfile = () => {
               <span className="font-semibold">NIC:</span> {personal?.NIC}
             </p>
             <p>
+              <span className="font-semibold">DOB:</span>{" "}
+              {personal?.DOB.split("T")[0]}
+            </p>
+            <p>
               <span className="font-semibold">Gender:</span> {personal?.gender}
-            </p>
-          </div>
-        </div>
-
-        {/* Section: Contact Details */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
-            Contact Details
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
-            <p>
-              <span className="font-semibold">Email:</span> {contact?.email}
-            </p>
-            <p>
-              <span className="font-semibold">WhatsApp:</span> {contact?.whatsapp}
-            </p>
-            <p>
-              <span className="font-semibold">Contact No:</span>{" "}
-              {contact?.contactNo}
-            </p>
-            <p>
-              <span className="font-semibold">Home Telephone:</span>{" "}
-              {contact?.HomeTP || "N/A"}
             </p>
           </div>
         </div>
@@ -135,14 +119,11 @@ const CoachProfile = () => {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
             <p>
-              <span className="font-semibold">Address:</span> {address?.Line1}{" "}
-              {address?.Line2 ? `, ${address?.Line2}` : ""}
-            </p>
-            <p>
               <span className="font-semibold">City:</span> {address?.city}
             </p>
             <p>
-              <span className="font-semibold">District:</span> {address?.district}
+              <span className="font-semibold">District:</span>{" "}
+              {address?.district}
             </p>
           </div>
         </div>
@@ -154,9 +135,14 @@ const CoachProfile = () => {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white mt-2">
             <p>
+              <span className="font-semibold">Salary:</span>{" "}
+              {selection?.expected_Salary || "N/A"}
+            </p>
+            <p>
               <span className="font-semibold">Qualifications:</span>{" "}
               {selection?.qualifications || "N/A"}
             </p>
+
             <p>
               <span className="font-semibold">Evidence:</span>{" "}
               {selection?.qualifications_photo ? (
@@ -178,8 +164,8 @@ const CoachProfile = () => {
 
         {/* Book Button */}
         <div className="mt-8 text-center">
-          <button 
-            className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition" 
+          <button
+            className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
             onClick={() => navigate(`/client/${id}`)}
           >
             Book Coach

@@ -6,8 +6,9 @@ const userSchema = new mongoose.Schema(
     image: { type: String },
     phone: { type: String },
     address: { type: String },
-    userName: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true },
     password: { type: String, required: true, trim: true },
+    resetOTP: { type: String },
     groundBookings: [
       {
         groundId: { type: mongoose.Schema.Types.ObjectId, ref: "ground" },

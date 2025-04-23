@@ -1,7 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import React,{ createContext, useEffect, useState } from "react";
 import Coach from "../components/Coach";
 import {toast} from 'react-toastify'
-import axios from 'axios'
+import axios from 'axios';
 
 
 export const CoachContext = createContext();
@@ -33,7 +33,6 @@ export const CoachContextProvider = (probs) => {
     },[])
     useEffect(() => {
         console.log(Coach)
-        
     },[])
     
     const value = {

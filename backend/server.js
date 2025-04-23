@@ -8,6 +8,8 @@ import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
 import userRouter from './routers/userRouter.js';
 import academicsRouter from './routers/academicsRouter.js';
+import contactRouter from './routers/contactRouter.js';
+
 
 
 const app = express();
@@ -26,6 +28,7 @@ app.use('/api/admin',approveRouter)
 app.use('/api/ground',groundRouter);
 app.use('/api/user',userRouter);
 app.use('/api/academies', academicsRouter); 
+app.use('/api/contact',contactRouter);
 
 app.get('/', (req, res) => {
     res.json('API is working')

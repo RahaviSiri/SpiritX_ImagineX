@@ -12,6 +12,13 @@ import Login from './pages/Login';
 import SportsAcademies from './components/SportsAcademics';
 import ApplyAcademics from './components/ApplyAcademics';
 import AcademyDetails from './components/AcademyDetails';
+import Client from './components/Client';
+import ClientWaitForApproval from './components/ClientWaitForApproval';
+import Verify from './components/Verify';
+import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
+import ResetPassword from './components/ResetPassword';
+import ContactUs from './pages/ContactUs';
+import AboutUs from './pages/AboutUs';
 
 
 function App() {
@@ -33,6 +40,14 @@ function App() {
         <Route path='/sports-academics' element={<SportsAcademies />} />
         <Route path='/apply-academics' element={<ApplyAcademics />} />
         <Route path='/academies/:id' element={<AcademyDetails />} />
+        <Route path='/validate-ground' element={< ValidateGround/>} />
+        <Route path='/client/:id' element={<Client />} />
+        <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
+        <Route path='/verify' element={<Verify />} />
+        <Route path='/reset-password-send-otp' element={<ResetPasswordSendOTP />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path="/contact" element={<ContactUs/>} />
+        <Route path="/about-us" element={<AboutUs/>} />
       </Routes>
     </div>
     
