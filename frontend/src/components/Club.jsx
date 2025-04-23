@@ -23,7 +23,7 @@ export default function ClubPage() {
   const [selectedClub, setSelectedClub] = useState(null);
   const [showAddClubForm, setShowAddClubForm] = useState(false);
   const [newClub, setNewClub] = useState({
-    name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '',
+    name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '', img: null,
   });
   const [submissionStatus, setSubmissionStatus] = useState('');
 
@@ -73,10 +73,12 @@ export default function ClubPage() {
       if (match) {
         return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
       }
+      console.warn("Invalid Google Maps link format. Returning default coordinates.");
+      return { lat: 7.0, lng: 80.0 }; // Default location
     } catch (err) {
-      console.error('Invalid link format');
+      console.error('Error extracting coordinates:', err.message);
+      return { lat: 7.0, lng: 80.0 }; // Default fallback coordinates
     }
-    return { lat: 7.0, lng: 80.0 };
   };
 
   const handleAddClubSubmit = async (e) => {
@@ -90,12 +92,28 @@ export default function ClubPage() {
       const updatedClubs = [...clubs, response.data];
       setClubs(updatedClubs);
       setFilteredClubs(updatedClubs);
-      setNewClub({ name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '' });
+      setNewClub({ name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '', img: null });
       setShowAddClubForm(false);
       setSubmissionStatus('success');
     } catch (error) {
       console.error('Error adding club:', error);
       setSubmissionStatus('error');
+    }
+  };
+
+  const handleCancel = () => {
+    setShowAddClubForm(false);
+    setNewClub({ name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '', img: null });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewClub(prevState => ({ ...prevState, img: reader.result }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -117,9 +135,18 @@ export default function ClubPage() {
         <div className="relative h-[400px] sm:h-[500px] w-full mb-6 rounded-2xl overflow-hidden shadow-xl">
           <MapContainer center={[7.0, 80.0]} zoom={7} scrollWheelZoom className="h-full w-full z-0">
             <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {filteredClubs.map((club, idx) => (
-              <Marker key={idx} position={[club.location.lat, club.location.lng]} eventHandlers={{ click: () => setSelectedClub(club) }} />
-            ))}
+            {filteredClubs.map((club, idx) => {
+              const location = club.location || { lat: 7.0, lng: 80.0 }; // Fallback if location is null or undefined
+              const { lat, lng } = location;
+
+              return (
+                <Marker
+                  key={idx}
+                  position={[lat, lng]}
+                  eventHandlers={{ click: () => setSelectedClub(club) }}
+                />
+              );
+            })}
             <MapClickHandler />
           </MapContainer>
 
@@ -151,7 +178,7 @@ export default function ClubPage() {
         <div className="text-center mt-6">
           {!showAddClubForm ? (
             <div className="cursor-pointer inline-block bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105" onClick={() => setShowAddClubForm(true)}>
-              <h3 className="text-xl font-bold">➕ Add Your Club</h3>
+              <h3 className="text-xl font-bold"> Add Your Club</h3>
               <p className="text-sm">Click to share your club with others!</p>
             </div>
           ) : (
@@ -163,11 +190,13 @@ export default function ClubPage() {
                 <input name="phone" type="text" placeholder="Phone Number" value={newClub.phone} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
                 <input name="city" type="text" placeholder="City" value={newClub.city} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
                 <textarea name="description" placeholder="Description" value={newClub.description} onChange={handleNewClubChange} className="w-full p-3 border rounded-md"></textarea>
-                <input name="locationLink" type="text" placeholder="Google Maps Link" value={newClub.locationLink} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
+                <input name="locationLink" type="text" placeholder="Google Map full Link" value={newClub.locationLink} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
                 <input name="competitions" type="text" placeholder="Competitions (comma separated)" value={newClub.competitions} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-semibold">Submit</button>
+                <input type="file" accept="image/*" onChange={handleImageChange} className="w-full p-3 border rounded-md" />
+                {submissionStatus === 'success' && <p className="text-green-600 mt-3">Club added successfully!</p>}
+                <button type="submit" title="Click to upload your club's logo. Supported image formats: PNG, JPG, JPEG." className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-semibold">Submit</button>
+                <button type="button" onClick={handleCancel} className="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-md font-semibold">Cancel</button>
               </form>
-              {submissionStatus === 'success' && <p className="text-green-600 mt-3">Club added successfully!</p>}
               {submissionStatus === 'error' && <p className="text-red-600 mt-3">Failed to add club. Please try again.</p>}
             </div>
           )}

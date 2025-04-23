@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
 const clubSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  phone: String,
-  city: String,
-  description: String,
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  city: { type: String, required: true },
+  description: { type: String },
   location: {
-    lat: Number,
-    lng: Number,
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
   },
-  competitions: [String]
+  competitions: [String],
+  img: String // Optional image URL
 });
 
 const Club = mongoose.model('Club', clubSchema);

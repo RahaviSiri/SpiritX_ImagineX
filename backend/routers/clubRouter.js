@@ -1,12 +1,12 @@
-import express from 'express'; // Use import instead of require
-import { addClub, getClubs } from '../controllers/clubcontroller.js';
+import express from 'express';
+import { addClub, getClubs, uploadClubImage } from '../controllers/clubcontroller.js';
 
 const router = express.Router();
 
-// Route for getting all clubs
+// POST route to add a new club with image upload
+router.post('/', uploadClubImage, addClub);
+
+// GET route to get all clubs
 router.get('/', getClubs);
 
-// Route for adding a new club
-router.post('/', addClub);
-
-export default router; // Default export
+export default router;
