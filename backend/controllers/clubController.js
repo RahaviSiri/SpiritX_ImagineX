@@ -1,4 +1,4 @@
-import Club from '../models/clubmodel.js'; // Use ES import
+import Club from '../models/clubModel.js'; // Use ES import
 
 // Get all clubs
 export const getClubs = async (req, res) => {
