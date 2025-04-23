@@ -65,7 +65,7 @@ function App() {
           showForm ? 'blur-sm pointer-events-none select-none' : ''
         }`}
       >
-        <div className="bg-white bg-opacity-60 backdrop-blur-md rounded-2xl p-8 w-full lg:w-2/3 shadow-xl">
+        <div className="bg-white bg-opacity-60 backdrop-blur-md rounded-2xl p-8 w-full lg:w-2/3 shadow-xl overflow-y-auto max-h-screen">
           <h2 className="text-5xl font-extrabold text-center mb-8 text-sky-900 drop-shadow">Competitions</h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {competitions.map((competition) => (

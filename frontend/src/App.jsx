@@ -24,8 +24,8 @@ function App() {
       <ToastContainer />
       <Routes>
         {/* <Route path='/' element={<Client/>} /> */}
-        <Route path="/competitionpage" element={<CompetitionPage />} />
-        <Route path="/" element={<ClubPage />} />
+        <Route path="/" element={<CompetitionPage />} />
+        <Route path="/ClubPage" element={<ClubPage />} />
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
