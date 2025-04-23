@@ -16,6 +16,7 @@ import Verify from './components/Verify';
 import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
 import ResetPassword from './components/ResetPassword';
 import ClubPage from './components/Club';
+import CompetitionPage from './components/Competitions';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <ToastContainer />
       <Routes>
         {/* <Route path='/' element={<Client/>} /> */}
+        <Route path="/competitionpage" element={<CompetitionPage />} />
         <Route path="/" element={<ClubPage />} />
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
