@@ -13,7 +13,7 @@ coachRouter.put('/edit/:id',upload.fields([
     { name: "profile", maxCount: 1 },
     { name: "NIC_photo", maxCount: 1 },
     { name: "qualifications_photo", maxCount: 1 }]), editDetails)
-coachRouter.post('/check-otp',authCoach,checkOTP)
+coachRouter.post('/check-otp',checkOTP)
 coachRouter.get('/getCoaches',getCoaches)
 coachRouter.get('/getCoach',authCoach, getCoach)
 coachRouter.get('/getCoachById/:id', getCoachById)

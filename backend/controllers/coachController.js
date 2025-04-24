@@ -233,16 +233,15 @@ export const deleteCoach = async (req, res) => {
 
 export const checkOTP = async (req, res) => {
   try {
-
-    if (!req.body.email || !req.body.otp) {
+    const { email, otp ,id } = req.body;
+    if (!email || !otp) {
       return res.json({ success: false, message: "Email and OTP are required!" })
     }
-    console.log(req.body.userId);
-    const user = await coachModel.findById(req.body.userId);
-    if (!user) {
+    const coach = await coachModel.findById(id);
+    if (!coach) {
       return res.json({ success: false, message: "This email is not registered! Enter the registered email." })
     }
-    if (req.body.otp === '' || user.otp !== (String)(req.body.otp)) {
+    if (otp === '' || coach.otp !== (String)(otp)) {
       return res.json({ success: false, message: "OTP is invalid! Enter the valid OTP." })
     }
 
@@ -263,15 +262,13 @@ export const checkOTP = async (req, res) => {
       ],
       mode: 'payment',
 
-      success_url: `http://localhost:5173/verify?success=true&userId=${user._id}`,
-      cancel_url: `http://localhost:5173/verify?success=false&userId=${user._id}`,
+      success_url: `http://localhost:5173/verify?success=true&userId=${coach._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&userId=${coach._id}`,
       metadata: {
         orderType: "registration",
-        userId: user._id.toString(),
+        userId: coach._id.toString(),
       },
     });
-
-
     return res.json({ success: true, message: "Continue your payment processing!", session_url: session.url })
   } catch (error) {
     res.json({ success: false, message: error.message })
