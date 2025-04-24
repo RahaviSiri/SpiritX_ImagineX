@@ -1,7 +1,5 @@
 import coachModel from "../models/coachModel.js";
 import { v2 as cloudinary } from 'cloudinary';
-import upload from "../middleware/multer.js";
-import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
@@ -47,7 +45,7 @@ export const registerCoach = async (req, res) => {
     });
 
     const qualifications_photo = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
-      resource_type: "image"
+      resource_type: "raw"
     });
 
 
@@ -91,16 +89,39 @@ export const registerCoach = async (req, res) => {
     const mailOptions = {
       from: user.contactDetails.email,
       to: process.env.ADMIN_EMAIL,
-      subject: 'A coach Registered ',
-      text: 'Approving his/her application'
-    }
+      subject: 'New Coach Registration Request',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; color: #333;">
+          <h2 style="color: #2c3e50;">🎓 New Coach Registration</h2>
+          <p>Hello Admin,</p>
+    
+          <p>
+            A new coach has submitted a registration request and is awaiting your approval.
+          </p>
+    
+          <h3 style="color: #34495e;">Coach Details:</h3>
+          <ul style="line-height: 1.6;">
+            <li><strong>Name:</strong> ${user.personalInfo?.fullName || 'N/A'}</li>
+            <li><strong>Email:</strong> ${user.contactDetails.email}</li>
+            <li><strong>Phone:</strong> ${user.contactDetails.contactNo || 'N/A'}</li>
+            <li><strong>City:</strong> ${user.Address?.city || 'N/A'}</li>
+            <li><strong>District:</strong> ${user.Address?.district || 'N/A'}</li>
+          </ul>
+    
+          <p>Please review and approve or reject their application from the admin dashboard.</p>
+    
+          <p style="margin-top: 30px;">Thanks,<br/>Your Coaching Platform</p>
+        </div>
+      `
+    };
+    
 
     await transporter.sendMail(mailOptions);
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const Ctoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
 
-    res.cookie('token', token, {
+    res.cookie('Ctoken', Ctoken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
@@ -110,7 +131,7 @@ export const registerCoach = async (req, res) => {
     return res.json({
       success: true,
       message: "Registration successfully completed. Waiting for approval message!",
-      token
+      Ctoken
     });
   } catch (error) {
 
@@ -120,15 +141,18 @@ export const registerCoach = async (req, res) => {
 
 export const editDetails = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.body.userId;
     const { body, files } = req;
 
+    // Validate required fields
+    if (!body.fullName || !body.contactNo) {
+      return res.json({ success: false, message: "Full name and contact number are required" });
+    }
 
     const existingCoach = await coachModel.findById(id);
     if (!existingCoach) {
       return res.json({ success: false, message: "Coach not found" });
     }
-
 
     const updateData = {
       personalInfo: {
@@ -161,39 +185,24 @@ export const editDetails = async (req, res) => {
       }
     };
 
-
     if (files) {
-
       if (files.profile && files.profile[0]) {
-        const profileResult = await cloudinary.uploader.upload(files.profile[0].path, {
-          resource_type: "image"
-        });
+        const profileResult = await cloudinary.uploader.upload(files.profile[0].path, { resource_type: "image" });
         updateData.personalInfo.profile = profileResult.secure_url;
       }
 
-
       if (files.NIC_photo && files.NIC_photo[0]) {
-        const nicResult = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
-          resource_type: "image"
-        });
+        const nicResult = await cloudinary.uploader.upload(files.NIC_photo[0].path, { resource_type: "image" });
         updateData.personalInfo.NIC_photo = nicResult.secure_url;
       }
 
-
       if (files.qualifications_photo && files.qualifications_photo[0]) {
-        const qualResult = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
-          resource_type: "image"
-        });
+        const qualResult = await cloudinary.uploader.upload(files.qualifications_photo[0].path, { resource_type: "image" });
         updateData.coachSelection.qualifications_photo = qualResult.secure_url;
       }
     }
 
-
-    const updatedCoach = await coachModel.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true }
-    );
+    const updatedCoach = await coachModel.findByIdAndUpdate(id, updateData, { new: true });
 
     return res.json({
       success: true,
@@ -201,24 +210,38 @@ export const editDetails = async (req, res) => {
       data: updatedCoach
     });
   } catch (error) {
-
     return res.json({ success: false, message: error.message });
   }
-
 };
 
+export const deleteCoach = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.json({ success: false, message: "Coach ID is required!" });
+    }
+    const coach = await coachModel.findById(id);
+    if (!coach) {
+      return res.json({ success: false, message: "Coach not found!" });
+    }
+    await coachModel.findByIdAndDelete(id);
+    return res.json({ success: true, message: "Coach deleted successfully!" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+}
 
 export const checkOTP = async (req, res) => {
   try {
-
-    if (!req.body.email || !req.body.otp) {
+    const { email, otp ,id } = req.body;
+    if (!email || !otp) {
       return res.json({ success: false, message: "Email and OTP are required!" })
     }
-    const user = await coachModel.findById(req.body.userId);
-    if (!user) {
+    const coach = await coachModel.findById(id);
+    if (!coach) {
       return res.json({ success: false, message: "This email is not registered! Enter the registered email." })
     }
-    if (req.body.otp === '' || user.otp !== (String)(req.body.otp)) {
+    if (otp === '' || coach.otp !== (String)(otp)) {
       return res.json({ success: false, message: "OTP is invalid! Enter the valid OTP." })
     }
 
@@ -239,15 +262,13 @@ export const checkOTP = async (req, res) => {
       ],
       mode: 'payment',
 
-      success_url: `http://localhost:5173/verify?success=true&userId=${user._id}`,
-      cancel_url: `http://localhost:5173/verify?success=false&userId=${user._id}`,
+      success_url: `http://localhost:5173/verify?success=true&userId=${coach._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&userId=${coach._id}`,
       metadata: {
         orderType: "registration",
-        userId: user._id.toString(),
+        userId: coach._id.toString(),
       },
     });
-
-
     return res.json({ success: true, message: "Continue your payment processing!", session_url: session.url })
   } catch (error) {
     res.json({ success: false, message: error.message })
@@ -330,6 +351,7 @@ export const verifyPayment = async (req, res) => {
       return res.json({ success: false, message: "Not paid yet." })
 
     }
+    return res.json({success:true})
   } catch (error) {
     return res.json({ success: false, message: error.message })
 

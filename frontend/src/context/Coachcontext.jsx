@@ -42,7 +42,7 @@ export const CoachContextProvider = (props) => {
   // comment
 
   const backend_url = "http://localhost:3000";
-  const [userData,setUserData] = useState(null);
+  const [coachData,setCoachData] = useState(null);
   const [userDatas,setUserDatas] = useState(null);
 
   const fetchCoaches = async () => {
@@ -65,18 +65,17 @@ export const CoachContextProvider = (props) => {
   
   const fetchCoach = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const Ctoken = localStorage.getItem('Ctoken')
       const { data :response} = await axios.get(`${backend_url}/api/coach/getCoach`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Add space after Bearer
+          Authorization: `Bearer ${Ctoken}`, // Add space after Bearer
         },
         // withCredentials :true
       });
       console.log(response)
       if (response.success) {
-        
-        setUserData(response.coach);
-        
+        setCoachData(response.coach);
+        // console.log();
       } else {
         toast.error("Error in fetching user");
       }
@@ -89,12 +88,9 @@ export const CoachContextProvider = (props) => {
  
 
   useEffect(() => {
-    const storedtoken = localStorage.getItem('token')
+    const storedtoken = localStorage.getItem('Ctoken')
     if(storedtoken){
-     
-      fetchCoach();
-        
-        
+      fetchCoach(); 
     }
   },[])
 
@@ -153,8 +149,8 @@ export const CoachContextProvider = (props) => {
     fetchCoaches,
 
     backend_url,
-    userData,
-    setUserData,
+    coachData,
+    setCoachData,
     userDatas,
     setUserDatas,
     token,

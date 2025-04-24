@@ -22,24 +22,33 @@ export const approveByAdmin = async (req, res) => {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: user.contactDetails.email,
-      subject: 'Your Coaching Application Has Been Approved!',
-      text: `Dear ${user.fullName},
+      subject: '🎉 Welcome to the Coaching Platform – Your Application is Approved!',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #4CAF50;">Hi ${user.personalInfo.fullName},</h2>
           
-          Congratulations! Your application has been approved by our admin team.
+          <p>🎉 <strong>Great news!</strong> Your coaching application has been <strong>approved</strong> by our admin team.</p>
           
-          Welcome aboard! We're excited to have you join our platform. We believe you’ll make a great impact as a coach.
+          <p>We're thrilled to welcome you to our community of passionate and dedicated coaches. Your journey with us begins now, and we’re confident you’ll inspire and empower many lives.</p>
           
-          To complete your registration and verify your account, please use the following One-Time Password (OTP):
+          <p style="font-size: 16px; margin-top: 20px;">
+            <strong>To complete your registration, please verify your account using the One-Time Password (OTP) below:</strong>
+          </p>
           
-          OTP: ${otp}
+          <div style="font-size: 20px; font-weight: bold; background: #f0f0f0; padding: 15px; border-radius: 8px; display: inline-block; margin: 10px 0;">
+            🔐 OTP: ${otp}
+          </div>
           
-          Please enter this code on the verification page to activate your account.
+          <p>Please enter this code on the verification page to activate your account.</p>
           
-          If you have any questions, feel free to reach out to us.
+          <p>If you have any questions or need assistance, don’t hesitate to reach out. We’re here to help!</p>
           
-          Best regards,  
-          The Coaching Platform Team`
+          <p style="margin-top: 30px;">Warm regards,<br/>
+          <strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
     };
+    
 
 
     await transporter.sendMail(mailOptions);
@@ -51,30 +60,40 @@ export const approveByAdmin = async (req, res) => {
 
 export const rejectByAdmin = async (req, res) => {
   try {
+    const user = await coachModel.findById(req.body.userId);
+     if(!user) {
+      return res.json({success:false,message:"user not found"})
+     }
 
-
-    await coachModel.findByIdAndDelete(req.body.userId)
-
-
+     user.isReject = true
+     await user.save();
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: email,
+      to: user.contactDetails.email,
       subject: "Update on Your Coaching Application",
-      text: `Dear Applicant,
-          
-          Thank you for your interest in joining our coaching platform.
-          
-          After careful review of your application, we regret to inform you that it does not meet our current qualification criteria. We appreciate the time and effort you invested in the process.
-          
-          We encourage you to continue gaining experience and enhancing your skills, and we welcome you to reapply in the future when you meet the necessary qualifications.
-          
-          Thank you again for your interest in our platform.
-          
-          Best regards,  
-          The Coaching Platform Team`
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+          <h2 style="color: #D32F2F;">Dear Applicant,</h2>
+    
+          <p>Thank you for your interest in joining our <strong>Coaching Platform</strong>.</p>
+    
+          <p>After a thorough review of your application, we regret to inform you that it does not currently meet our qualification criteria.</p>
+    
+          <p>We truly appreciate the time, effort, and enthusiasm you brought to the application process. While we are unable to move forward at this time, we encourage you to continue building your experience and strengthening your skills.</p>
+    
+          <p>We welcome you to reapply in the future when you feel you meet the necessary qualifications, and we would be glad to reconsider your application.</p>
+    
+          <p>Thank you once again for your interest in being a part of our platform.</p>
+    
+          <p style="margin-top: 30px;">Sincerely,<br/>
+          <strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
     };
+    
 
     await transporter.sendMail(mailOptions);
+    // await coachModel.findByIdAndDelete(req.body.userId)
     return res.json({ success: true, message: "Rejected the coach successfully!" })
 
   } catch (error) {
@@ -111,8 +130,26 @@ export const approveByCoach = async (req, res) => {
       from: process.env.ADMIN_EMAIL,
       to: booking.email,
       subject: 'Your Coaching Request Has Been Approved!',
-      text: `Dear ${client.fullName},\n\nYour request has been approved by ${coach.personalInfo.fullName}.\n\nYour OTP is: ${otp}\n\nThank you!`
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+          <h2 style="color: #2E7D32;">Hello ${client.coachBooking.fullName},</h2>
+    
+          <p>Great news! Your coaching request has been <strong>approved</strong> by <strong>${coach.personalInfo.fullName}</strong>.</p>
+    
+          <p>Please use the following One-Time Password (OTP) to proceed:</p>
+    
+          <div style="background-color: #f2f2f2; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center; margin: 20px 0;">
+            OTP: ${otp}
+          </div>
+    
+          <p>If you have any questions or need further assistance, feel free to contact us anytime.</p>
+    
+          <p style="margin-top: 30px;">Thank you and best of luck with your session!<br/>
+          <strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
     };
+    
 
     await transporter.sendMail(mailOptions);
     return res.json({ success: true, message: "Approved", otp });
@@ -141,8 +178,22 @@ export const rejectByCoach = async (req, res) => {
       from: process.env.ADMIN_EMAIL,
       to: booking.email,
       subject: 'Update on Your Coaching Request',
-      text: `Dear ${client.fullName},\n\nUnfortunately, your coach has rejected the session.\n\nPlease try booking another coach.\n\nThanks!`
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+          <h2 style="color: #D32F2F;">Hello ${client.coachBooking.fullName},</h2>
+    
+          <p>We regret to inform you that your coaching request has been <strong>rejected</strong> by the coach.</p>
+    
+          <p>We understand this may be disappointing, but don't worry — there are many other qualified coaches available for booking.</p>
+    
+          <p>You can browse our directory and submit a request to another coach at your convenience.</p>
+    
+          <p style="margin-top: 30px;">Thank you for using our platform,<br/>
+          <strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
     };
+    
 
     await transporter.sendMail(mailOptions);
 

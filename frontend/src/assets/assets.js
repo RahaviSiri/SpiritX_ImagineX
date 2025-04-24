@@ -17,6 +17,11 @@ import Volleyball3 from "./volleyball3.jpg"
 import Netball1 from "./netball1.png"
 import Netball2 from "./netball2.jpg"
 import Netball3 from "./netball3.png"
+import coach1 from './Coach1.jpg'
+import coach2 from './coach2.jpg'
+import coach3 from './coach3.jpg'
+import AboutPage from './AboutPage.jpg'
+import Upload from './UploadIcon.png'
 
 
 const assets = {
@@ -38,8 +43,14 @@ const assets = {
     Volleyball3,
     Netball1,
     Netball2,
-    Netball3
-    
+    Netball3,
+    AddGroundBackroundImage,
+    ValidationBackround,
+    coach1,
+    coach2,
+    coach3,
+    AboutPage,
+    Upload
 }
 
 export default assets;

@@ -4,8 +4,8 @@ import authCoach from '../middleware/authCoach.js';
 
 const approveRouter = express.Router();
 
-approveRouter.post('/approve',authCoach, approveByAdmin);
-approveRouter.post('/reject',authCoach, rejectByAdmin);
+approveRouter.post('/approve', approveByAdmin);
+approveRouter.post('/reject', rejectByAdmin);
 approveRouter.get('/approve-by-coach/:userId/:bookingId', approveByCoach)
 approveRouter.get('/reject-by-coach/:userId/:bookingId', rejectByCoach)
 

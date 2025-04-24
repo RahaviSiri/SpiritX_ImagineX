@@ -9,6 +9,7 @@ const groundSchema = new mongoose.Schema(
       enum: ["indoor", "outdoor", "sports"], 
       trim: true,
     },
+    verified: { type: Boolean, default: false },
     image: { type: String, required: true, trim: true },
     address: { type: String, required: true, trim: true },
     freeTime: { type: [String], required: true },
