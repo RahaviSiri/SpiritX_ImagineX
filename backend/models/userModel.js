@@ -43,18 +43,15 @@ const userSchema = new mongoose.Schema(
         city: { type: String, required: true },
         district: { type: String, required: true },
         
-        // For flexible online courses
+        // Set by users for flexible online courses
         preferredStartDate: { type: Date }, 
 
         NIC: {type: String, required: true },         // URLs to uploaded docs
         notes: { type: String },
         isApprove: { type: Boolean, default: false },
         rejectionReason: { type: String }, //mail to user
-
         paymentStatus: { type: String, enum: ["pending", "completed"], default: "pending" },
-
-        otp: { type: String, default: "" }, //after approve give otp
-        // createdAt: { type: Date, default: Date.now },
+        otp: { type: String, default: "" },
       },
     ],
   },

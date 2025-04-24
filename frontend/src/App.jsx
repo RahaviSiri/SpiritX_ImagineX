@@ -9,9 +9,7 @@ import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
 import Login from './pages/Login';
-import SportsAcademies from './components/SportsAcademics';
-import ApplyAcademics from './components/ApplyAcademics';
-import AcademyDetails from './components/AcademyDetails';
+import ValidateGround from './components/ValidateGround';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/ClientWaitForApproval';
 import Verify from './components/Verify';
@@ -19,6 +17,9 @@ import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
 import ResetPassword from './components/ResetPassword';
 import ContactUs from './pages/ContactUs';
 import AboutUs from './pages/AboutUs';
+import SportsAcademy from './components/SportsAcademy';
+import AddAcademy from './components/AddAcademy';
+import AcademyDetails from './components/AcademyDetails';
 
 
 function App() {
@@ -37,9 +38,6 @@ function App() {
         <Route path='/ground-details/:id' element={<GroundDetails />} />
         <Route path='/coach-list' element={<CoachList />} />
         <Route path='/coach-profile/:id' element={<CoachProfile />} />
-        <Route path='/sports-academics' element={<SportsAcademies />} />
-        <Route path='/apply-academics' element={<ApplyAcademics />} />
-        <Route path='/academies/:id' element={<AcademyDetails />} />
         <Route path='/validate-ground' element={< ValidateGround/>} />
         <Route path='/client/:id' element={<Client />} />
         <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
@@ -48,6 +46,9 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path="/contact" element={<ContactUs/>} />
         <Route path="/about-us" element={<AboutUs/>} />
+        <Route path='/sports-academy' element={<SportsAcademy />} />
+        <Route path='/add-academy' element={<AddAcademy />} />
+        <Route path='/academy/:id' element={<AcademyDetails />} />
       </Routes>
     </div>
     

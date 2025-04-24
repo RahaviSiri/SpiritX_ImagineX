@@ -4,6 +4,7 @@ import coach1 from './Coach1.jpg'
 import coach2 from './coach2.jpg'
 import coach3 from './coach3.jpg'
 import AboutPage from './AboutPage.jpg'
+import AddAcademy from './AddAcademy.jpg'
 
 const assets = {
     AddGroundBackroundImage,
@@ -11,8 +12,8 @@ const assets = {
     coach1,
     coach2,
     coach3,
-    AboutPage
-    
+    AboutPage,
+    AddAcademy
 }
 
 export default assets;

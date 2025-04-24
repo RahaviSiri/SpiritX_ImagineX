@@ -2,12 +2,12 @@ import User from "../models/userModel.js";
 import { v2 as cloudinary } from 'cloudinary';
 import upload from "../middleware/multer.js";
 // import moment from 'moment';
-// import { transporter } from "../config/nodemailer.js";
+import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import mongoose from "mongoose";
-import academicsModel from "../models/academicsModel.js";
+import academyModel from "../models/academyModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -15,14 +15,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const addAcademy = async (req, res) => {
     try {
         const { body, files } = req;
-        dotenv.config();
+        // dotenv.config();
     
         if (!body) {
           return res.json({ success: false, message: "Form data is required!" });
         }
 
 
-        const requiredFiles = ["academyLogo", "NIC_photo", "proof", "certificate", "picture"];
+        const requiredFiles = ["picture", "profile", "NIC_photo", "proof", "certificate"];
 
         const missingFile = requiredFiles.find(
           (field) => !files?.[field] || !files[field][0]
@@ -39,10 +39,13 @@ export const addAcademy = async (req, res) => {
         const academyLogo = await cloudinary.uploader.upload(files.academyLogo[0].path, {
           resource_type: "image"
         });
-        const NIC_photo = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
+        const picture = await cloudinary.uploader.upload(files.picture[0].path, {
           resource_type: "image"
         });
-        const picture = await cloudinary.uploader.upload(files.picture[0].path, {
+        const profile = await cloudinary.uploader.upload(files.profile[0].path, {
+          resource_type: "image"
+        });
+        const NIC_photo = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
           resource_type: "image"
         });
         const proof = await cloudinary.uploader.upload(files.proof[0].path, {
@@ -53,7 +56,7 @@ export const addAcademy = async (req, res) => {
         });
 
 
-        const newAcademy = new academicsModel({
+        const newAcademy = new academyModel({
           academyBasicDetails: {
             academyName: body.academyName,
             academyLogo: academyLogo.secure_url,
@@ -95,33 +98,33 @@ export const addAcademy = async (req, res) => {
         await newAcademy.save();
 
         // Send email to admin
-        // const mailOptions = {
-        //   from: body.email,
-        //   to: process.env.ADMIN_EMAIL,
-        //   subject: 'New Academy Registration Request',
-        //   html: `
-        //     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; color: #333;">
-        //       <h2 style="color: #2c3e50;">🏫 New Academy Registration</h2>
-        //       <p>Hello Admin,</p>
-        //       <p>A new academy has been submitted for approval.</p>
-        //       <ul>
-        //         <li><strong>Academy:</strong> ${body.academyName}</li>
-        //         <li><strong>Short Description:</strong> ${body.shortDescription}</li>
-        //         <li><strong>duration: ${body.duration}</li>  
-        //         <li><strong>feeAmount: ${body.feeAmount}</li>
-        //         <li><strong>Mode:</strong> ${body.mode}</li>
-        //         ${body.startDate ? `<li><strong>Start Date:</strong> ${body.startDate}</li>` : ''}
-        //         <li><strong>Owner:</strong> ${body.fullName}</li>
-        //         <li><strong>Email:</strong> ${body.email}</li>
-        //         <li><strong>Contact:</strong> ${body.contactNo}</li>
-        //         <li><strong>City:</strong> ${body.city}, ${body.district}</li>
-        //       </ul>
-        //       <p>Please review it in the admin panel.</p>
-        //     </div>
-        //   `
-        // };
+        const mailOptions = {
+          from: body.email,
+          to: process.env.ADMIN_EMAIL,
+          subject: 'New Academy Registration Request',
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; color: #333;">
+              <h2 style="color: #2c3e50;">🏫 New Academy Registration</h2>
+              <p>Hello Admin,</p>
+              <p>A new academy has been submitted for approval.</p>
+              <ul>
+                <li><strong>Academy:</strong> ${body.academyName}</li>
+                <li><strong>Short Description:</strong> ${body.shortDescription}</li>
+                <li><strong>duration: ${body.duration}</li>  
+                <li><strong>feeAmount: ${body.feeAmount}</li>
+                <li><strong>Mode:</strong> ${body.mode}</li>
+                ${body.startDate ? `<li><strong>Start Date:</strong> ${body.startDate}</li>` : ''}
+                <li><strong>Owner:</strong> ${body.fullName}</li>
+                <li><strong>Email:</strong> ${body.email}</li>
+                <li><strong>Contact:</strong> ${body.contactNo}</li>
+                <li><strong>City:</strong> ${body.city}, ${body.district}</li>
+              </ul>
+              <p>Please review it in the admin panel.</p>
+            </div>
+          `
+        };
 
-        // await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
         // Create JWT token for the owner
         const token = jwt.sign({ id: newAcademy._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -149,7 +152,7 @@ export const addAcademy = async (req, res) => {
 // Get all academies
 export const getAllAcademies = async (req, res) => {
     try {
-      const academies = await academicsModel.find();
+      const academies = await academyModel.find();
       res.status(200).json({ success: true, academies });
     } catch (err) {
       res.status(500).json({ message: 'Failed to fetch academies', error: err.message });
@@ -161,7 +164,7 @@ export const getAllAcademies = async (req, res) => {
 export const getAcademyById = async (req, res) => {
     try {
         const academyId = req.params.id;
-        const academy = await academicsModel.findById(academyId);
+        const academy = await academyModel.findById(academyId);
         if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
         res.status(200).json({ success: true, academy });
     } catch (err) {
@@ -170,32 +173,30 @@ export const getAcademyById = async (req, res) => {
 }
 
 
-// Update academy details 
+// Update academy details
 export const updateAcademy = async (req, res) => {
   try {
       const academyId = req.params.id;
       const { body, files } = req;
 
-      //const { name, shortDesc, description, location, mode, isFlexible, feeAmount } = req.body;
-      const existingAcademy = await academicsModel.findById(academyId);
+      const existingAcademy = await academyModel.findById(academyId);
       if (!existingAcademy) {
         return res.json({ success: false, message: "Academy not found" });
       }
 
       const updateData = {
-        academyInfo: {
-          ...existingAcademy.personalInfo,
-          name: body.name || existingAcademy.personalInfo.name,
-          DOB: body.DOB || existingAcademy.personalInfo.DOB,
-          gender: body.gender || existingAcademy.personalInfo.gender,
-          NIC: body.NIC || existingAcademy.personalInfo.NIC,
-        },
-        contactDetails: {
-          ...existingAcademy.contactDetails,
-          contactNo: body.contactNo || existingAcademy.contactDetails.contactNo,
-          HomeTP: body.HomeTP || existingAcademy.contactDetails.HomeTP,
-          whatsapp: body.whatsapp || existingAcademy.contactDetails.whatsapp,
-          email: body.email || existingAcademy.contactDetails.email,
+        academyBasicDetails: {
+          ...existingAcademy.academyBasicDetails,
+          academyName: body.academyName || existingAcademy.academyBasicDetails.academyName,
+          sportType: body.sportType || existingAcademy.academyBasicDetails.sportType,
+          shortDescription: body.shortDescription || existingAcademy.academyBasicDetails.shortDescription,
+          description: body.description || existingAcademy.academyBasicDetails.description,
+          duration: body.duration || existingAcademy.academyBasicDetails.duration,
+          instructors: body.instructors || existingAcademy.academyBasicDetails.instructors,
+          feeAmount: body.feeAmount || existingAcademy.academyBasicDetails.feeAmount,
+          mode: body.mode || existingAcademy.academyBasicDetails.mode,
+          isFlexible: body.hasOwnProperty("isFlexible")? body.isFlexible === "true": existingAcademy.academyBasicDetails.isFlexible,
+          startDate: body.startDate ? new Date(body.startDate) : existingAcademy.academyBasicDetails.startDate,
         },
         Address: {
           ...existingAcademy.Address,
@@ -204,23 +205,45 @@ export const updateAcademy = async (req, res) => {
           city: body.city || existingAcademy.Address.city,
           district: body.district || existingAcademy.Address.district,
         },
-        coachSelection: {
-          ...existingAcademy.coachSelection,
-          selectionType: body.selectionType || existingAcademy.coachSelection.selectionType,
-          school_Academics: body.school_Academics || existingAcademy.coachSelection.school_Academics,
-          sport: body.sport || existingAcademy.coachSelection.sport,
-          qualifications: body.qualifications || existingAcademy.coachSelection.qualifications,
-        }
+        contactDetails: {
+          ...existingAcademy.contactDetails,
+          contactNo: body.contactNo || existingAcademy.contactDetails.contactNo,
+          HomeTP: body.HomeTP || existingAcademy.contactDetails.HomeTP,
+          whatsapp: body.whatsapp || existingAcademy.contactDetails.whatsapp,
+          email: body.email || existingAcademy.contactDetails.email,
+        },
+        ownerInfo: {
+          ...existingAcademy.ownerInfo,
+          fullName: body.fullName || existingAcademy.ownerInfo.fullName,
+          DOB: body.DOB || existingAcademy.ownerInfo.DOB,
+          gender: body.gender || existingAcademy.ownerInfo.gender,
+          NIC: body.NIC || existingAcademy.ownerInfo.NIC,
+        },
       };
   
   
       if (files) {
-  
-        if (files.profile && files.profile[0]) {
+        if (files.academyLogo && files.academyLogo[0]) {
+          const academyLogoResult = await cloudinary.uploader.upload(files.academyLogo[0].path, {
+            resource_type: "image"
+          });
+          updateData.academyBasicDetails.academyLogo = academyLogoResult.secure_url;
+        }
+
+        if (files.picture && files.picture[0]) {
+          const pictureResult = await cloudinary.uploader.upload(files.picture[0].path, {
+            resource_type: "image"
+          });
+          updateData.academyBasicDetails.picture = pictureResult.secure_url;
+        }
+///////
+///////
+
+        if (files.profile && files.profile[0]?.path) {
           const profileResult = await cloudinary.uploader.upload(files.profile[0].path, {
             resource_type: "image"
           });
-          updateData.personalInfo.profile = profileResult.secure_url;
+          updateData.ownerInfo.profile = profileResult.secure_url;
         }
   
   
@@ -228,20 +251,26 @@ export const updateAcademy = async (req, res) => {
           const nicResult = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
             resource_type: "image"
           });
-          updateData.personalInfo.NIC_photo = nicResult.secure_url;
+          updateData.ownerInfo.NIC_photo = nicResult.secure_url;
         }
-  
-  
-        if (files.qualifications_photo && files.qualifications_photo[0]) {
-          const qualResult = await cloudinary.uploader.upload(files.qualifications_photo[0].path, {
-            resource_type: "image"
+
+        if (files.proof && files.proof[0]) {
+          const proofResult = await cloudinary.uploader.upload(files.proof[0].path, {
+            resource_type: "raw"
           });
-          updateData.coachSelection.qualifications_photo = qualResult.secure_url;
+          updateData.ownerInfo.proof = proofResult.secure_url;
+        }
+
+        if (files.certificate && files.certificate[0]) {
+          const certificateResult = await cloudinary.uploader.upload(files.certificate[0].path, {
+            resource_type: "raw"
+          });
+          updateData.ownerInfo.certificate = certificateResult.secure_url;
         }
       }
   
   
-      const updatedAcademy = await academicsModel.findByIdAndUpdate(
+      const updatedAcademy = await academyModel.findByIdAndUpdate(
         academyId,
         updateData,
         { new: true }
@@ -261,6 +290,20 @@ export const updateAcademy = async (req, res) => {
 
 
 // Delete an academy
+export const deleteAcademy = async (req, res) => {
+  try {
+    const academyId = req.params.id;
+    const deletedAcademy = await academyModel.findByIdAndDelete(academyId);
+
+    if (!deletedAcademy) {
+      return res.status(404).json({ success: false, message: "Academy not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Academy deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 
 
@@ -274,7 +317,7 @@ export const applyToAcademy = async (req, res) => {
           documents,
         } = req.body;
     
-        const academy = await academicsModel.findById(academyId);
+        const academy = await academyModel.findById(academyId);
         if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
 
         const bookingData = {

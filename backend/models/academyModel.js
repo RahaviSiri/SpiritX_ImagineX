@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 const academySchema = new mongoose.Schema({
   academyBasicDetails: {
     academyName: { type: String, required: true }, // E.g., "ABC Academy, XYZ Institute"
+
     academyLogo: {type: String}, // URL to the logo image
     picture: {type: String, required: true}, // URL to the picture of the academy or organization
+
     sportType: { type: String },
     shortDescription: { type: String, required: true },
     description: { type: String, required: true },
-    duration: { type: String },  // E.g., “3 months”
+    duration: { type: String, required: true },  // E.g., “3 months”
     instructors: { type: String, required: true }, // E.g., "John Doe, Jane Smith"
     feeAmount: { type: Number, default: 0, required: true },
     mode: { type: String, enum: ["Online", "Physical"], required: true },
@@ -33,18 +35,15 @@ const academySchema = new mongoose.Schema({
 
   ownerInfo : {
     fullName : {type:String,required:true },
-    profile : {type:String,required:true },
     DOB : {type:Date, required:true},
     gender : {type:String, required:true},
     NIC : {type:String, required:true},
+
+    profile : {type:String,required:true },
     NIC_photo : {type:String, required:true },
     proof : {type:String, required:true }, // Proof of ownership or authorization
     certificate : {type:String, required:true }, // Certificate of registration or accreditation
   },
-
-
-  // Set by the user after approval for flexible online courses
-  preferredStartDate: { type: Date },
 
   isApprove : {type:Boolean,default : false},
   isReject : {type:Boolean,default:false},
@@ -52,6 +51,6 @@ const academySchema = new mongoose.Schema({
   isAdvertisementPayment:{type:Boolean,default:false},
 });
 
-const academicsModel = mongoose.models.academy  || mongoose.model("academy", academySchema);
+const academyModel = mongoose.models.academy  || mongoose.model("academy", academySchema);
 
-export default academicsModel;
+export default academyModel;

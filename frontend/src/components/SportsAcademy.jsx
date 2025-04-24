@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios for HTTP requests
+import axios from "axios";
 
-const SportsAcademies = () => {
+const SportsAcademy = () => {
   const navigate = useNavigate();
   
   const [academies, setAcademies] = useState([]);  // State to store fetched academies
@@ -13,7 +13,7 @@ const SportsAcademies = () => {
     // Function to fetch academies from backend
     const fetchAcademies = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/academies/get-all-academies");  // Replace with your actual API endpoint
+        const response = await axios.get("http://localhost:3000/api/academy/get-all-academies");  // Replace with your actual API endpoint
         setAcademies(response.data.academies);
       } catch (err) {
         setError("Failed to load academies");
@@ -88,7 +88,7 @@ const SportsAcademies = () => {
       </div>
 
       <button
-        onClick={() => navigate("/apply-academics")}
+        onClick={() => navigate("/add-academy")}
         className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg transition-all"
       >
         Apply for Listing
@@ -97,4 +97,4 @@ const SportsAcademies = () => {
   );
 };
 
-export default SportsAcademies;
+export default SportsAcademy;

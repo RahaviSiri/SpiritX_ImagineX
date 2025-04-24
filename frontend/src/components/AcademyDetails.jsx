@@ -11,7 +11,7 @@ const AcademyDetails = () => {
     // Fetch academy details from the backend API
     const fetchAcademyDetails = async () => {
       try {
-        const response = await fetch(`/api/academies/${id}`);
+        const response = await fetch(`http://localhost:3000/api/academy/${id}`);
         if (!response.ok) {
           throw new Error("Academy not found");
         }

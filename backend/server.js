@@ -7,8 +7,8 @@ import connectCloudinary from './config/cloudinary.js';
 import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
 import userRouter from './routers/userRouter.js';
-import academicsRouter from './routers/academicsRouter.js';
 import contactRouter from './routers/contactRouter.js';
+import academyRouter from './routers/academyRouter.js';
 
 
 
@@ -26,9 +26,9 @@ app.use(cors({ origin: true, credentials: true })); // Allow all origins
 app.use('/api/coach',coachRouter)
 app.use('/api/admin',approveRouter)
 app.use('/api/ground',groundRouter);
-app.use('/api/user',userRouter);
-app.use('/api/academies', academicsRouter); 
+app.use('/api/user',userRouter); 
 app.use('/api/contact',contactRouter);
+app.use('/api/academy', academyRouter);
 
 app.get('/', (req, res) => {
     res.json('API is working')

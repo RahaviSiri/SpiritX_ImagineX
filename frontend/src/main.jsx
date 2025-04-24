@@ -7,6 +7,7 @@ import { CoachContextProvider } from "./context/Coachcontext.jsx";
 import { GroundContextProvider } from "./context/GroundContext.jsx";
 import { AppContextProvider } from "./context/AppContext.jsx";
 import { UserContextProvider } from "./context/UserContext.jsx";
+import { AcademyContextProvider } from "./context/AcademyContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -14,7 +15,9 @@ createRoot(document.getElementById("root")).render(
       <CoachContextProvider>
         <GroundContextProvider>
           <UserContextProvider>
-            <App />
+            <AcademyContextProvider>
+              <App />
+            </AcademyContextProvider>
           </UserContextProvider>
         </GroundContextProvider>
       </CoachContextProvider>
