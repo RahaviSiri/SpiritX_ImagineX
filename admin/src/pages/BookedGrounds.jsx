@@ -66,7 +66,7 @@ const BookedGrounds = () => {
               </tr>
             ) : (
               bookings.map((booking, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+                <tr key={index} className="hover:bg-blue-50 hover:text-blue-950">
                   <td className="px-4 py-2">{booking.groundName}</td>
                   <td className="px-4 py-2">{booking.ownerEmail}</td>
                   <td className="px-4 py-2">{booking.userName}</td>
