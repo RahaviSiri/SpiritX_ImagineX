@@ -15,6 +15,8 @@ import ClientWaitForApproval from './components/ClientWaitForApproval';
 import Verify from './components/Verify';
 import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
 import ResetPassword from './components/ResetPassword';
+import ClubPage from './components/Club';
+import CompetitionPage from './components/Competitions';
 import ContactUs from './pages/ContactUs';
 import AboutUs from './pages/AboutUs';
 
@@ -24,6 +26,8 @@ function App() {
       <ToastContainer />
       <Routes>
         {/* <Route path='/' element={<Client/>} /> */}
+        <Route path="/CompetitionPage" element={<CompetitionPage />} />
+        <Route path="/" element={<ClubPage />} />
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
