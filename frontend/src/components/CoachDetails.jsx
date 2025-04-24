@@ -138,9 +138,9 @@ const CoachDetails = () => {
         localStorage.removeItem("quali_name");
 
         toast.success(response.message);
+        localStorage.setItem("Ctoken", response.Ctoken);
+        setToken(response.Ctoken);
         navigate("/coach-wait-for-approval");
-        localStorage.setItem("token", response.token);
-        setToken(response.token);
       } else {
         toast.error(response.message);
       }

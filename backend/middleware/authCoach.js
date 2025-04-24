@@ -23,12 +23,7 @@ const authCoach = async (req, res, next) => {
         } catch (error) {
             console.log(error)
         }
-        
-       
-        
         req.body ={userId:decoded.id} ;
-        
-
         next();
     } catch (error) {
         return res.status(401).json({ success: false, message: "Invalid token, authorization failed" });

@@ -10,17 +10,6 @@ const CoachProfile = () => {
   const { backend_url } = useContext(CoachContext);
   const navigate = useNavigate();
 
-  // Use a safe approach to access assets
-  // let backgroundImage;
-  // try {
-  //   // Try to import assets dynamically
-  //   const assets = require("../assets/assets.js").default;
-  //   backgroundImage = assets.coach3;
-  // } catch (error) {
-  //   // Fallback to a solid color if the import fails
-  //   backgroundImage = null;
-  // }
-
   useEffect(() => {
     const fetchCoachById = async () => {
       try {
