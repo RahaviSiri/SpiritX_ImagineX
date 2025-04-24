@@ -8,8 +8,8 @@ import AddGround from './components/AddGround';
 import GroundDetails from './components/GroundDetails';
 import CoachList from './components/CoachList';
 import CoachProfile from './components/CoachProfile';
-import ValidateGround from './components/validateGround';
 import Login from './pages/Login';
+import ValidateGround from './components/ValidateGround';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/ClientWaitForApproval';
 import Home from './pages/Home';
@@ -27,6 +27,9 @@ import ClubPage from './components/Club';
 import CompetitionPage from './components/Competitions';
 import ContactUs from './pages/ContactUs';
 import AboutUs from './pages/AboutUs';
+import SportsAcademy from './components/SportsAcademy';
+import AddAcademy from './components/AddAcademy';
+import AcademyDetails from './components/AcademyDetails';
 import Profile from './pages/Profile';
 
 function App() {
@@ -56,6 +59,9 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path="/contact" element={<ContactUs/>} />
         <Route path="/about-us" element={<AboutUs/>} />
+        <Route path='/sports-academy' element={<SportsAcademy />} />
+        <Route path='/add-academy' element={<AddAcademy />} />
+        <Route path='/academy/:id' element={<AcademyDetails />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/sports" element={<ExploreSports />} />
         <Route path="/sports/cricket" element={<Cricket />} />

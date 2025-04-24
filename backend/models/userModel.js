@@ -32,6 +32,28 @@ const userSchema = new mongoose.Schema(
         isPayment: { type: String, default: "" },
       },
     ],
+    academicsBooking: [
+      {
+        academyId: { type: mongoose.Schema.Types.ObjectId, ref: "academy" },
+        fullName: { type: String, required: true },
+        email: { type: String, required: true },
+        contactNumber: { type: String, required: true },
+        addressLine1: { type: String, required: true },
+        addressLine2: { type: String },
+        city: { type: String, required: true },
+        district: { type: String, required: true },
+        
+        // Set by users for flexible online courses
+        preferredStartDate: { type: Date }, 
+
+        NIC: {type: String, required: true },         // URLs to uploaded docs
+        notes: { type: String },
+        isApprove: { type: Boolean, default: false },
+        rejectionReason: { type: String }, //mail to user
+        paymentStatus: { type: String, enum: ["pending", "completed"], default: "pending" },
+        otp: { type: String, default: "" },
+      },
+    ],
   },
   { timestamps: true }
 );
