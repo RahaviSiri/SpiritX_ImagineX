@@ -19,6 +19,7 @@ import ClubPage from './components/Club';
 import CompetitionPage from './components/Competitions';
 import ContactUs from './pages/ContactUs';
 import AboutUs from './pages/AboutUs';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path="/contact" element={<ContactUs/>} />
         <Route path="/about-us" element={<AboutUs/>} />
+        <Route path="/profile" element={<Profile/>} />
       </Routes>
     </div>
     
