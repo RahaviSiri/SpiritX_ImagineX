@@ -45,6 +45,7 @@ export const AcademyContextProvider = (props) => {
     
             if (data.success) {
                 toast.success(data.message || "Academy registered successfully!");
+                
                 return data;
             } else {
                 toast.error(data.message || "Failed to register academy");

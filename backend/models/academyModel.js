@@ -16,6 +16,7 @@ const academySchema = new mongoose.Schema({
     mode: { type: String, enum: ["Online", "Physical"], required: true },
     isFlexible: { type: Boolean, default: false }, // For online courses
     startDate: { type: Date },
+    certificate : {type:String, required:true }, // Certificate of registration or accreditation
   },
 
   // Address of academy or organization 
@@ -31,19 +32,7 @@ const academySchema = new mongoose.Schema({
     HomeTP : {type:String,},
     whatsapp : {type:String, required:true},
     email : {type:String, required:true},
-  },
-
-  ownerInfo : {
-    fullName : {type:String,required:true },
-    DOB : {type:Date, required:true},
-    gender : {type:String, required:true},
-    NIC : {type:String, required:true},
-
-    profile : {type:String,required:true },
-    NIC_photo : {type:String, required:true },
-    proof : {type:String, required:true }, // Proof of ownership or authorization
-    certificate : {type:String, required:true }, // Certificate of registration or accreditation
-  },
+  },  
 
   isApprove : {type:Boolean,default : false},
   isReject : {type:Boolean,default:false},

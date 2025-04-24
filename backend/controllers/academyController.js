@@ -22,7 +22,7 @@ export const addAcademy = async (req, res) => {
         }
 
 
-        const requiredFiles = ["picture", "profile", "NIC_photo", "proof", "certificate"];
+        const requiredFiles = ["picture", "certificate"];
 
         const missingFile = requiredFiles.find(
           (field) => !files?.[field] || !files[field][0]
@@ -41,15 +41,6 @@ export const addAcademy = async (req, res) => {
         });
         const picture = await cloudinary.uploader.upload(files.picture[0].path, {
           resource_type: "image"
-        });
-        const profile = await cloudinary.uploader.upload(files.profile[0].path, {
-          resource_type: "image"
-        });
-        const NIC_photo = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
-          resource_type: "image"
-        });
-        const proof = await cloudinary.uploader.upload(files.proof[0].path, {
-          resource_type: "raw"  
         });
         const certificate = await cloudinary.uploader.upload(files.certificate[0].path, {
           resource_type: "raw"
@@ -70,6 +61,7 @@ export const addAcademy = async (req, res) => {
             mode: body.mode,
             isFlexible: body.isFlexible === "true",
             startDate: body.startDate ? new Date(body.startDate) : null,
+            certificate: certificate.secure_url,
           },
           Address : {
             Line1 : body.Line1,
@@ -83,16 +75,7 @@ export const addAcademy = async (req, res) => {
             whatsapp : body.whatsapp,
             email : body.email
           },
-          ownerInfo : {
-            fullName : body.fullName,
-            profile : files.profile ? (await cloudinary.uploader.upload(files.profile[0].path, { resource_type: "image" })).secure_url : null, // Assuming you have a profile image upload as well
-            DOB : new Date(body.DOB),
-            gender: body.gender,
-            NIC: body.NIC,
-            NIC_photo: NIC_photo.secure_url,
-            proof: proof.secure_url,
-            certificate: certificate.secure_url,
-          },
+          
         });
 
         await newAcademy.save();
@@ -117,7 +100,8 @@ export const addAcademy = async (req, res) => {
                 <li><strong>Owner:</strong> ${body.fullName}</li>
                 <li><strong>Email:</strong> ${body.email}</li>
                 <li><strong>Contact:</strong> ${body.contactNo}</li>
-                <li><strong>City:</strong> ${body.city}, ${body.district}</li>
+                <li><strong>City:</strong> ${body.city}</li> 
+                <li><strong>District:</strong>${body.district}</li>
               </ul>
               <p>Please review it in the admin panel.</p>
             </div>
@@ -212,13 +196,6 @@ export const updateAcademy = async (req, res) => {
           whatsapp: body.whatsapp || existingAcademy.contactDetails.whatsapp,
           email: body.email || existingAcademy.contactDetails.email,
         },
-        ownerInfo: {
-          ...existingAcademy.ownerInfo,
-          fullName: body.fullName || existingAcademy.ownerInfo.fullName,
-          DOB: body.DOB || existingAcademy.ownerInfo.DOB,
-          gender: body.gender || existingAcademy.ownerInfo.gender,
-          NIC: body.NIC || existingAcademy.ownerInfo.NIC,
-        },
       };
   
   
@@ -235,30 +212,6 @@ export const updateAcademy = async (req, res) => {
             resource_type: "image"
           });
           updateData.academyBasicDetails.picture = pictureResult.secure_url;
-        }
-///////
-///////
-
-        if (files.profile && files.profile[0]?.path) {
-          const profileResult = await cloudinary.uploader.upload(files.profile[0].path, {
-            resource_type: "image"
-          });
-          updateData.ownerInfo.profile = profileResult.secure_url;
-        }
-  
-  
-        if (files.NIC_photo && files.NIC_photo[0]) {
-          const nicResult = await cloudinary.uploader.upload(files.NIC_photo[0].path, {
-            resource_type: "image"
-          });
-          updateData.ownerInfo.NIC_photo = nicResult.secure_url;
-        }
-
-        if (files.proof && files.proof[0]) {
-          const proofResult = await cloudinary.uploader.upload(files.proof[0].path, {
-            resource_type: "raw"
-          });
-          updateData.ownerInfo.proof = proofResult.secure_url;
         }
 
         if (files.certificate && files.certificate[0]) {

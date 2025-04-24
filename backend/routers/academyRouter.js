@@ -10,9 +10,6 @@ academyRouter.get("/get-academy/:id", getAcademyById);
 academyRouter.post("/add-academy",  upload.fields([
     { name: 'academyLogo', maxCount: 1 },
     { name: 'picture', maxCount: 1 },
-    { name: 'profile', maxCount: 1 },
-    { name: 'NIC_photo', maxCount: 1 },
-    { name: 'proof', maxCount: 1 },
     { name: 'certificate', maxCount: 1 },
   ]), addAcademy
 );
@@ -22,9 +19,6 @@ academyRouter.delete("/delete-academy/:id", deleteAcademy);
 academyRouter.post("/update-academy/:id", upload.fields([
     { name: "academyLogo" },
     { name: "picture" },
-    { name: "profile" },
-    { name: "NIC_photo" },
-    { name: "proof" },
     { name: "certificate" }
   ]), updateAcademy
 );
