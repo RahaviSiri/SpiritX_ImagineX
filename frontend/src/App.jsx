@@ -25,9 +25,9 @@ function App() {
     <div className='min-h-screen'>
       <ToastContainer />
       <Routes>
-        {/* <Route path='/' element={<Client/>} /> */}
+        <Route path='/' element={<></>} />
         <Route path="/CompetitionPage" element={<CompetitionPage />} />
-        <Route path="/" element={<ClubPage />} />
+        {/* <Route path="/" element={<ClubPage />} /> */}
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />

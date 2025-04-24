@@ -1,5 +1,5 @@
 import React,{ createContext, useEffect, useState } from "react";
-import Coach from "../components/Coach";
+import Coach from "../pages/Coach";
 import {toast} from 'react-toastify'
 import axios from 'axios';
 
