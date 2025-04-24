@@ -3,13 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
-
 import coachRouter from './routers/coachRouter.js';
 import approveRouter from './routers/approveRouter.js';
 import groundRouter from './routers/groundRouter.js';
 import userRouter from './routers/userRouter.js';
 import competition from './routers/competitionRouter.js';
 import clubRouter from './routers/clubRouter.js';
+import contactRouter from './routers/contactRouter.js';
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ app.use('/api/coach', coachRouter);
 app.use('/api/admin', approveRouter);
 app.use('/api/ground', groundRouter);
 app.use('/api/user', userRouter);
+app.use('/api/contact',contactRouter);
 app.use('/api/competition', competition);
 app.use('/api/clubs', clubRouter);
 

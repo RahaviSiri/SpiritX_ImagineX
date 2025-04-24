@@ -353,7 +353,7 @@ const cancelBooking = async (req, res) => {
     // ✅ Fix email sending: Use user.email, not user.userName
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: user.email, // make sure you have `email` in user schema
+      to: user.email, 
       subject: "Ground Booking Cancellation",
       html: `
         <p>Dear ${user.name},</p>
