@@ -2,16 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CoachContext } from "../context/Coachcontext";
-import { useNavigate } from "react-router-dom";
-import { Loader } from "lucide-react";
 import assets from "../assets/assets.js";
+// import { UserContext } from "../context/UserContext.jsx";
 
 const CoachWaitForApproval = () => {
   const inputRefs = React.useRef([]);
   const [email, setEmail] = useState("");
   const { backend_url, coachData, fetchCoach, fetchCoaches } =
     useContext(CoachContext);
-  const navigate = useNavigate();
+  // const { userData } = useContext(UserContext);
 
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -40,28 +39,22 @@ const CoachWaitForApproval = () => {
     try {
       const OTPArray = inputRefs.current.map((el) => el.value);
       const otp = OTPArray.join("");
-      const data = {
-        email: email,
-        otp: otp,
-        userId: userData._id,
-      };
+      const id = coachData._id;
+      console.log(id);
+      console.log(otp,email);
 
       const Ctoken = localStorage.getItem("Ctoken");
-      const { data: response } = await axios.post(
+      console.log(Ctoken);
+      const { data } = await axios.post(
         `${backend_url}/api/coach/check-otp`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${Ctoken}`, 
-          },
-        }
+        { email, otp, id },
       );
 
-      if (response.success && response.session_url) {
-        window.location.replace(response.session_url);
-        toast.success(response.message);
+      if (data.success && data.session_url) {
+        window.location.replace(data.session_url);
+        toast.success(data.message);
       } else {
-        toast.error(response.message || "Failed to create payment session");
+        toast.error(data.message || "Failed to create payment session");
       }
     } catch (error) {
       toast.error(error.message || "An error occurred");
