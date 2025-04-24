@@ -6,6 +6,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import markerRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import axios from 'axios';
+import { toast } from "react-toastify";
 import bgImage from '../assets/clubbg.jpg';
 
 // Setup Leaflet icons
@@ -30,7 +31,7 @@ export default function ClubPage() {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/clubs');
+        const response = await axios.get('http://localhost:3000/api/clubs/getClub');
         setClubs(response.data);
         setFilteredClubs(response.data);
       } catch (error) {
@@ -83,23 +84,43 @@ export default function ClubPage() {
 
   const handleAddClubSubmit = async (e) => {
     e.preventDefault();
+  
     const location = extractLatLngFromLink(newClub.locationLink);
     const competitions = newClub.competitions.split(',').map(c => c.trim());
-
-    const addedClub = { ...newClub, location, competitions };
+  
+    const formData = new FormData();
+    formData.append('name', newClub.name);
+    formData.append('email', newClub.email);
+    formData.append('phone', newClub.phone);
+    formData.append('city', newClub.city);
+    formData.append('description', newClub.description);
+    formData.append('location[lat]', location.lat);
+    formData.append('location[lng]', location.lng);
+    competitions.forEach((comp, index) => formData.append(`competitions[${index}]`, comp));
+    formData.append('img', newClub.img); // Image file
+  
     try {
-      const response = await axios.post('http://localhost:3000/api/clubs', addedClub);
+      const response = await axios.post('http://localhost:3000/api/clubs/addClub', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
+      });
+  
       const updatedClubs = [...clubs, response.data];
       setClubs(updatedClubs);
       setFilteredClubs(updatedClubs);
       setNewClub({ name: '', email: '', phone: '', city: '', description: '', locationLink: '', competitions: '', img: null });
       setShowAddClubForm(false);
-      setSubmissionStatus('success');
+  
+      toast.success("Club added successfully!");
     } catch (error) {
       console.error('Error adding club:', error);
-      setSubmissionStatus('error');
+      toast.error("Failed to add club. Please try again.");
     }
   };
+  
+  
 
   const handleCancel = () => {
     setShowAddClubForm(false);
@@ -109,13 +130,10 @@ export default function ClubPage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewClub(prevState => ({ ...prevState, img: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setNewClub(prevState => ({ ...prevState, img: file }));
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-cover bg-center px-4 py-10 sm:py-12" style={{ backgroundImage: `url(${bgImage})` }}>
@@ -127,7 +145,7 @@ export default function ClubPage() {
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row justify-center items-center mb-8 gap-4">
           <input type="text" placeholder="Search for clubs..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="border border-gray-300 rounded-md p-3 w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <div className="flex gap-2">
-            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md shadow-md">🔍 Search</button>
+            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md shadow-md"> Search</button>
             <button type="button" onClick={handleReset} className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-md shadow-md">↺ Reset</button>
           </div>
         </form>
@@ -192,12 +210,10 @@ export default function ClubPage() {
                 <textarea name="description" placeholder="Description" value={newClub.description} onChange={handleNewClubChange} className="w-full p-3 border rounded-md"></textarea>
                 <input name="locationLink" type="text" placeholder="Google Map full Link" value={newClub.locationLink} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
                 <input name="competitions" type="text" placeholder="Competitions (comma separated)" value={newClub.competitions} onChange={handleNewClubChange} className="w-full p-3 border rounded-md" />
-                <input type="file" accept="image/*" onChange={handleImageChange} className="w-full p-3 border rounded-md" />
-                {submissionStatus === 'success' && <p className="text-green-600 mt-3">Club added successfully!</p>}
+                <input type="file" name="img" accept="image/*" onChange={handleImageChange} required />
                 <button type="submit" title="Click to upload your club's logo. Supported image formats: PNG, JPG, JPEG." className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-semibold">Submit</button>
                 <button type="button" onClick={handleCancel} className="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-md font-semibold">Cancel</button>
               </form>
-              {submissionStatus === 'error' && <p className="text-red-600 mt-3">Failed to add club. Please try again.</p>}
             </div>
           )}
         </div>
