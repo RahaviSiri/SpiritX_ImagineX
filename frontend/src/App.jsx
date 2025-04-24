@@ -1,5 +1,5 @@
-import { ToastContainer} from 'react-toastify';
-import { Routes , Route} from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { Routes, Route } from 'react-router-dom';
 import CoachRegistration from './components/CoachRegistration';
 import CoachDetails from './components/CoachDetails';
 import CoachWaitForApproval from './components/CoachWaitForApproval';
@@ -12,22 +12,35 @@ import Login from './pages/Login';
 import ValidateGround from './components/ValidateGround';
 import Client from './components/Client';
 import ClientWaitForApproval from './components/ClientWaitForApproval';
+import Home from './pages/Home';
+import Navbar from './pages/NavBar';
+import Footer from './pages/Footer'; 
+import ExploreSports from './pages/ExploreSports'; 
+import Cricket from './pages/Sports/Cricket';
+import Football from './pages/Sports/Football';
+import Volleyball from './pages/Sports/Volleyball';
+import Netball from './pages/Sports/Netball';
 import Verify from './components/Verify';
 import ResetPasswordSendOTP from './components/ResetPasswordSendOTP';
 import ResetPassword from './components/ResetPassword';
+import ClubPage from './components/Club';
+import CompetitionPage from './components/Competitions';
 import ContactUs from './pages/ContactUs';
 import AboutUs from './pages/AboutUs';
 import SportsAcademy from './components/SportsAcademy';
 import AddAcademy from './components/AddAcademy';
 import AcademyDetails from './components/AcademyDetails';
-
+import Profile from './pages/Profile';
 
 function App() {
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-screen flex flex-col'>
       <ToastContainer />
+      <Navbar />
       <Routes>
-        {/* <Route path='/' element={<Client/>} /> */}
+        <Route path='/' element={<Home />} />
+        <Route path="/CompetitionPage" element={<CompetitionPage />} />
+        <Route path="/club" element={<ClubPage />} />
         <Route path="/login" element={<Login/>} />
         <Route path='/coach-registration' element={<CoachRegistration />} />
         <Route path='/coach-details' element={<CoachDetails />} />
@@ -49,10 +62,16 @@ function App() {
         <Route path='/sports-academy' element={<SportsAcademy />} />
         <Route path='/add-academy' element={<AddAcademy />} />
         <Route path='/academy/:id' element={<AcademyDetails />} />
+        <Route path="/profile" element={<Profile/>} />
+        <Route path="/sports" element={<ExploreSports />} />
+        <Route path="/sports/cricket" element={<Cricket />} />
+        <Route path="/sports/football" element={<Football />} />
+        <Route path="/sports/volleyball" element={<Volleyball />} />
+        <Route path="/sports/netball" element={<Netball />} />
       </Routes>
+      <Footer /> 
     </div>
-    
-  )
+  );
 }
 
-export default App
+export default App;

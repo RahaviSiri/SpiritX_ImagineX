@@ -1,35 +1,43 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import assets from '../assets/assets';
+import { MapPinned, CalendarCheck, Users } from 'lucide-react'; // Icons
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-blue-950 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-blue-600">
-              🏟️ MyGround
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center space-x-2">
+            <img src={assets.Logo} alt="Logo" className="h-8 w-auto" />
+            <span className="text-2xl font-bold text-white">SportsHive</span>
+          </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link to="/all-grounds" className="text-gray-700 hover:text-blue-600">
-              All Grounds
+          <div className="hidden md:flex space-x-6 items-center">
+            <Link to="/all-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+              <MapPinned className="w-5 h-5" />
+              <span>All Grounds</span>
             </Link>
-            <Link to="/booked-grounds" className="text-gray-700 hover:text-blue-600">
-              Booked Grounds
+            <Link to="/booked-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+              <CalendarCheck className="w-5 h-5" />
+              <span>Booked Grounds</span>
+            </Link>
+            <Link to="/coach" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+              <Users className="w-5 h-5" />
+              <span>Coaches</span>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center">
+          <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="text-white hover:text-blue-600 focus:outline-none transition"
+              aria-label="Toggle Menu"
             >
               <svg
                 className="h-6 w-6"
@@ -52,11 +60,17 @@ const NavBar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2">
-          <Link to="/all-grounds" className="block text-gray-700 hover:text-blue-600">
-            All Grounds
+          <Link to="/all-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <MapPinned className="w-5 h-5" />
+            <span>All Grounds</span>
           </Link>
-          <Link to="/booked-grounds" className="block text-gray-700 hover:text-blue-600">
-            Booked Grounds
+          <Link to="/booked-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <CalendarCheck className="w-5 h-5" />
+            <span>Booked Grounds</span>
+          </Link>
+          <Link to="/coach" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <Users className="w-5 h-5" />
+            <span>Coaches</span>
           </Link>
         </div>
       )}

@@ -12,7 +12,7 @@ export const UserContextProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('uToken')
+      const uToken = localStorage.getItem('uToken')
         const { data :response} = await axios.get(`${backendURL}/api/user/get-user-byId`, {
           headers: {
             Authorization: `Bearer ${uToken}`, // Add space after Bearer
@@ -44,7 +44,7 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ uToken, setUToken,backendURL,userData,setUserData  }}>
+    <UserContext.Provider value={{ uToken, setUToken,backendURL,userData,setUserData,fetchUser  }}>
       {children}
     </UserContext.Provider>
   );
