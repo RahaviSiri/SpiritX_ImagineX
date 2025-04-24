@@ -31,45 +31,52 @@ import SportsAcademy from './components/SportsAcademy';
 import AddAcademy from './components/AddAcademy';
 import AcademyDetails from './components/AcademyDetails';
 import Profile from './pages/Profile';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const location = useLocation(); 
+  const isHomePage = location.pathname === '/';
   return (
-    <div className='min-h-screen flex flex-col'>
+    <div className="min-h-screen flex flex-col">
       <ToastContainer />
       <Navbar />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path="/CompetitionPage" element={<CompetitionPage />} />
-        <Route path="/club" element={<ClubPage />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path='/coach-registration' element={<CoachRegistration />} />
-        <Route path='/coach-details' element={<CoachDetails />} />
-        <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
-        <Route path='/all-ground' element={<AllGrounds />} />
-        <Route path='/add-ground' element={<AddGround />} />
-        <Route path='/add-ground/:id' element={<AddGround />} />
-        <Route path='/ground-details/:id' element={<GroundDetails />} />
-        <Route path='/coach-list' element={<CoachList />} />
-        <Route path='/coach-profile/:id' element={<CoachProfile />} />
-        <Route path='/validate-ground' element={< ValidateGround/>} />
-        <Route path='/client/:id' element={<Client />} />
-        <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
-        <Route path='/verify' element={<Verify />} />
-        <Route path='/reset-password-send-otp' element={<ResetPasswordSendOTP />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path="/contact" element={<ContactUs/>} />
-        <Route path="/about-us" element={<AboutUs/>} />
-        <Route path='/sports-academy' element={<SportsAcademy />} />
-        <Route path='/add-academy' element={<AddAcademy />} />
-        <Route path='/academy/:id' element={<AcademyDetails />} />
-        <Route path="/profile" element={<Profile/>} />
-        <Route path="/sports" element={<ExploreSports />} />
-        <Route path="/sports/cricket" element={<Cricket />} />
-        <Route path="/sports/football" element={<Football />} />
-        <Route path="/sports/volleyball" element={<Volleyball />} />
-        <Route path="/sports/netball" element={<Netball />} />
-      </Routes>
-      <Footer /> 
+      
+      <main className="flex-1 w-full">
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path="/CompetitionPage" element={<CompetitionPage />} />
+          <Route path="/club" element={<ClubPage />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path='/coach-registration' element={<CoachRegistration />} />
+          <Route path='/coach-details' element={<CoachDetails />} />
+          <Route path='/coach-wait-for-approval' element={<CoachWaitForApproval />} />
+          <Route path='/all-ground' element={<AllGrounds />} />
+          <Route path='/add-ground' element={<AddGround />} />
+          <Route path='/add-ground/:id' element={<AddGround />} />
+          <Route path='/ground-details/:id' element={<GroundDetails />} />
+          <Route path='/coach-list' element={<CoachList />} />
+          <Route path='/coach-profile/:id' element={<CoachProfile />} />
+          <Route path='/validate-ground' element={<ValidateGround />} />
+          <Route path='/client/:id' element={<Client />} />
+          <Route path='/client-wait-for-approval' element={<ClientWaitForApproval />} />
+          <Route path='/verify' element={<Verify />} />
+          <Route path='/reset-password-send-otp' element={<ResetPasswordSendOTP />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path='/sports-academy' element={<SportsAcademy />} />
+          <Route path='/add-academy' element={<AddAcademy />} />
+          <Route path='/academy/:id' element={<AcademyDetails />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/sports" element={<ExploreSports />} />
+          <Route path="/sports/cricket" element={<Cricket />} />
+          <Route path="/sports/football" element={<Football />} />
+          <Route path="/sports/volleyball" element={<Volleyball />} />
+          <Route path="/sports/netball" element={<Netball />} />
+        </Routes>
+      </main>
+
+      <Footer />
     </div>
   );
 }

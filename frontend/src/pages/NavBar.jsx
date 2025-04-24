@@ -1,15 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
-  const { uToken } = useContext(UserContext);
+  const { uToken,userData,fetchUser } = useContext(UserContext);
   const [navOpen, setNavOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   const toggleNav = () => setNavOpen(!navOpen);
   const closeNav = () => setNavOpen(false);
+
+  useEffect(() => {
+    fetchUser();
+  },[uToken])
 
   return (
     <nav className="w-full fixed top-0 left-0 z-50 bg-black bg-opacity-50 backdrop-blur-md text-white">
@@ -24,12 +28,12 @@ const Navbar = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8 text-lg font-medium">
           <Link to="/" className="hover:text-yellow-400 transition-colors">Home</Link>
-          <Link to="/grounds" className="hover:text-yellow-400 transition-colors">Find Ground</Link>
-          <Link to="/coaches" className="hover:text-yellow-400 transition-colors">Find Coach</Link>
+          <Link to="/all-ground" className="hover:text-yellow-400 transition-colors">Find Ground</Link>
+          <Link to="/coach-list" className="hover:text-yellow-400 transition-colors">Find Coach</Link>
           <Link to="/sports" className="hover:text-yellow-400 transition-colors">Explore Sports</Link>
-          <Link to="/competitions" className="hover:text-yellow-400 transition-colors">Competitions</Link>
-          <Link to="/clubs" className="hover:text-yellow-400 transition-colors">Clubs</Link>
-          <Link to="/academy" className="hover:text-yellow-400 transition-colors">Academy</Link>
+          <Link to="/CompetitionPage" className="hover:text-yellow-400 transition-colors">Competitions</Link>
+          <Link to="/club" className="hover:text-yellow-400 transition-colors">Clubs</Link>
+          <Link to="/sports-academy" className="hover:text-yellow-400 transition-colors">Academy</Link>
 
           {/* More Dropdown */}
           <div className="relative">
@@ -42,7 +46,7 @@ const Navbar = () => {
             {showMore && (
               <div className="absolute top-full left-0 mt-2 bg-black bg-opacity-90 border border-yellow-400 rounded shadow-lg text-sm z-50">
                 <Link
-                  to="/about"
+                  to="/about-us"
                   className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
                   onClick={() => setShowMore(false)}
                 >
@@ -65,7 +69,7 @@ const Navbar = () => {
           {uToken ? (
             <Link to="/profile">
               <img
-                src="/profile-icon.png"
+                src={`${userData.image}`}
                 alt="Profile"
                 className="w-9 h-9 rounded-full border-2 border-white hover:scale-105 transition-transform"
               />

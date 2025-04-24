@@ -23,7 +23,7 @@ export const UserContextProvider = ({ children }) => {
         if (response.success) {
           
           setUserData(response.user);
-          toast.success("successfully fetch data")
+          // toast.success("successfully fetch data")
           
         } else {
           toast.error("Error in fetching user");
