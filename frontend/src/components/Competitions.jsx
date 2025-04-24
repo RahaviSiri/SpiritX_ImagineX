@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import competition from '../assets/competition.jpg';
+import { toast } from "react-toastify";
 
 function App() {
   const [competitions, setCompetitions] = useState([]);
   const [posterImage, setPosterImage] = useState(null);
   const [registrationLink, setRegistrationLink] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
@@ -38,10 +38,10 @@ function App() {
       setPosterImage(null);
       setRegistrationLink('');
       loadCompetitions();
-      setSuccessMessage('✅ Competition added successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      toast.success('Competition added successfully!');
     } catch (error) {
       console.error('Error submitting competition:', error);
+      toast.error('Error adding competition!');
     }
   };
 
@@ -128,12 +128,6 @@ function App() {
               Add Competition
             </button>
           </form>
-
-          {successMessage && (
-            <div className="mt-4 text-center text-green-500 font-bold text-lg">
-              {successMessage}
-            </div>
-          )}
 
           <button
             onClick={handleCloseForm}
