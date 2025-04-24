@@ -1,7 +1,5 @@
 import coachModel from "../models/coachModel.js";
 import { v2 as cloudinary } from 'cloudinary';
-import upload from "../middleware/multer.js";
-import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
