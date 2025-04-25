@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${backendURL}/api/admin/login`, {
+      const { data } = await axios.post(`http://localhost:3000/api/admin/check-admin-login`, {
         email,
         password,
       });
@@ -32,7 +32,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-gradient-to-b from-black via-gray-900 to-black text-white pt-20 px-4 relative">
+    <div className="min-h-screen  bg-gradient-to-b from-black via-gray-900 to-black text-white pt-8 px-4 relative">
       {/* Yellow glow background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
 

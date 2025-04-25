@@ -5,7 +5,9 @@ import coachModel from "../models/coachModel.js";
 import userModel from "../models/userModel.js";
 import academyModel from "../models/academyModel.js";
 import groundModel from "../models/groundModel.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 export const approveByAdmin = async (req, res) => {
   try {
@@ -260,7 +262,7 @@ export const countBooking = async (req, res) => {
     console.error("Error fetching booking stats:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 
 export const getAdminDashboardData = async (req, res) => {
@@ -329,4 +331,17 @@ export const getAdminDashboardData = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error fetching dashboard data" });
   }
+};
+
+export const checkAdminLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD; 
+
+  if (email !== adminEmail || password !== adminPassword) {
+    return res.status(401).json({ success: false, message: "Unauthorized: Invalid email or password." });
+  }
+
+  return res.status(200).json({ success: true, message: "Admin authenticated." });
 };
