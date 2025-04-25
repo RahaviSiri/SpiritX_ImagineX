@@ -7,6 +7,7 @@ import AllGrounds from './pages/AllGrounds';
 import BookedGrounds from './pages/BookedGrounds';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminDashboard from "./pages/adminDashboard";
+import AdminLogin from "./pages/AdminLogin";
 
 const App = () => {
   return (
@@ -22,8 +23,10 @@ const App = () => {
       />
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Routes>
+        <Routes>          
+
           <Route path="/coach" element={<Coach />} />
+          <Route path="/login" element={<AdminLogin />} />
           <Route path="/all-grounds" element={<AllGrounds />} />
           <Route path="/booked-grounds" element={<BookedGrounds />} />
           <Route path="/" element={<AdminDashboard />} />
