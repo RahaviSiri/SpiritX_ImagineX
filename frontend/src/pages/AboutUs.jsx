@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "animate.css";
-// import { FaUsers, FaMapMarkerAlt } from "react-icons/fa";
 
 const AboutUs = () => {
   const navigate = useNavigate();
@@ -67,12 +66,8 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-cover bg-center animate__animated animate__fadeIn">
-      <div className="bg-black backdrop-blur-lg p-10 max-w-7xl mx-auto shadow-xl">
-        {/* <h1 className="text-4xl md:text-5xl font-extrabold text-yellow-500 text-left mb-10 mt-12">
-          About SportHive
-        </h1> */}
-
+    <div className="min-h-screen w-full bg-black bg-opacity-90">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 animate__animated animate__fadeIn">
         {/* Intro Section */}
         <div className="flex flex-col md:flex-row gap-10 items-start mb-16 mt-16">
           {/* Text Section */}
@@ -86,27 +81,29 @@ const AboutUs = () => {
               certified coaches, join vibrant sports communities, and compete in
               events — all in one place!
             </p>
-            {/* Stats Section with Icons */}
-<div className="flex flex-col md:flex-row gap-6 justify-start">
-  {/* User Count */}
-  <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
-    <div className="flex items-center gap-3">
-      <FaUsers className="text-3xl text-yellow-500" />
-      <p className="text-lg text-yellow-500 font-semibold">User Counts</p>
-    </div>
-    <p className="text-3xl text-center font-bold text-yellow-300">20</p>
-  </div>
 
-  {/* Registered Ground Count */}
-  <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2 ">
-    <div className="flex items-center gap-3">
-      <FaMapMarkerAlt className="text-3xl text-yellow-500" />
-      <p className="text-lg text-yellow-500 font-semibold">Registered Ground Counts</p>
-    </div>
-    <p className="text-3xl text-center font-bold text-yellow-300">20</p>
-  </div>
-</div>
+            {/* Stats Section */}
+            <div className="flex flex-col md:flex-row gap-6 justify-start">
+              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
+                <div className="flex items-center gap-3">
+                  <FaUsers className="text-3xl text-yellow-500" />
+                  <p className="text-lg text-yellow-500 font-semibold">
+                    User Counts
+                  </p>
+                </div>
+                <p className="text-3xl text-center font-bold text-yellow-300">20</p>
+              </div>
 
+              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
+                <div className="flex items-center gap-3">
+                  <FaMapMarkerAlt className="text-3xl text-yellow-500" />
+                  <p className="text-lg text-yellow-500 font-semibold">
+                    Registered Ground Counts
+                  </p>
+                </div>
+                <p className="text-3xl text-center font-bold text-yellow-300">20</p>
+              </div>
+            </div>
           </div>
 
           {/* Image Section */}
@@ -119,7 +116,7 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Features */}
+        {/* Features Section */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {features.map((item, index) => (
             <div
@@ -135,7 +132,7 @@ const AboutUs = () => {
           ))}
         </div>
 
-        {/* FAQ */}
+        {/* FAQ Section */}
         <div className="bg-black/60 p-8 rounded-2xl shadow-inner mb-16">
           <h2 className="text-3xl font-bold text-yellow-500 text-center mb-8 flex items-center justify-center gap-2">
             <FaQuestionCircle className="text-yellow-300" />
@@ -157,11 +154,11 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* Call to Action */}
         <div className="text-center">
           <p className="text-xl font-medium text-gray-200">
-            Join <span className="text-yellow-500 font-bold">SportHive</span>{" "}
-            today and turn your passion into action. 🏆
+            Join <span className="text-yellow-500 font-bold">SportHive</span> today
+            and turn your passion into action. 🏆
           </p>
           <button
             onClick={() => navigate("/login")}

@@ -4,36 +4,58 @@ import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
-  const { uToken,userData,fetchUser } = useContext(UserContext);
+  const { uToken, userData, fetchUser } = useContext(UserContext);
   const [navOpen, setNavOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   const toggleNav = () => setNavOpen(!navOpen);
-  const closeNav = () => setNavOpen(false);
+  const closeNav = () => {
+    setNavOpen(false);
+    setShowMore(false);
+  };
 
   useEffect(() => {
     fetchUser();
-  },[uToken])
+  }, [uToken]);
+
+  const navLinks = [
+    { label: "Home", to: "/" },
+    { label: "Find Ground", to: "/all-ground" },
+    { label: "Find Coach", to: "/coach-list" },
+    { label: "Explore Sports", to: "/sports" },
+    { label: "Competitions", to: "/CompetitionPage" },
+    { label: "Clubs", to: "/club" },
+    { label: "Academy", to: "/sports-academy" },
+  ];
+
+  const moreLinks = [
+    { label: "About Us", to: "/about-us" },
+    { label: "Contact Us", to: "/contact" },
+  ];
 
   return (
-    <nav className="w-full fixed top-0 left-0 z-50 bg-black bg-opacity-50 backdrop-blur-md text-white">
-      <div className="flex justify-between items-center px-6 py-4">
-        <div className="text-2xl text-yellow-400 font-bold tracking-wide">SportsHive</div>
+    <nav className="w-full fixed top-0 left-0 z-50 bg-black bg-opacity-60 backdrop-blur-md text-white">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-8 py-4">
+        <Link to="/" className="text-2xl text-yellow-400 font-bold tracking-wide">
+          SportsHive
+        </Link>
 
-        {/* Hamburger Icon for Mobile */}
+        {/* Hamburger Icon */}
         <div className="md:hidden text-2xl cursor-pointer" onClick={toggleNav}>
           {navOpen ? <FaTimes /> : <FaBars />}
         </div>
 
-        {/* Desktop Links */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8 text-lg font-medium">
-          <Link to="/" className="hover:text-yellow-400 transition-colors">Home</Link>
-          <Link to="/all-ground" className="hover:text-yellow-400 transition-colors">Find Ground</Link>
-          <Link to="/coach-list" className="hover:text-yellow-400 transition-colors">Find Coach</Link>
-          <Link to="/sports" className="hover:text-yellow-400 transition-colors">Explore Sports</Link>
-          <Link to="/CompetitionPage" className="hover:text-yellow-400 transition-colors">Competitions</Link>
-          <Link to="/club" className="hover:text-yellow-400 transition-colors">Clubs</Link>
-          <Link to="/sports-academy" className="hover:text-yellow-400 transition-colors">Academy</Link>
+          {navLinks.map((link, idx) => (
+            <Link
+              key={idx}
+              to={link.to}
+              className="hover:text-yellow-400 transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
 
           {/* More Dropdown */}
           <div className="relative">
@@ -45,37 +67,36 @@ const Navbar = () => {
             </button>
             {showMore && (
               <div className="absolute top-full left-0 mt-2 bg-black bg-opacity-90 border border-yellow-400 rounded shadow-lg text-sm z-50">
-                <Link
-                  to="/about-us"
-                  className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
-                  onClick={() => setShowMore(false)}
-                >
-                  About Us
-                </Link>
-                <Link
-                  to="/contact"
-                  className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
-                  onClick={() => setShowMore(false)}
-                >
-                  Contact Us
-                </Link>
+                {moreLinks.map((link, idx) => (
+                  <Link
+                    key={idx}
+                    to={link.to}
+                    className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
+                    onClick={() => setShowMore(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             )}
           </div>
         </div>
 
-        {/* Profile/Login Button */}
+        {/* Profile/Login - Desktop */}
         <div className="hidden md:block">
           {uToken ? (
             <Link to="/profile">
               <img
-                src={`${userData.image}`}
+                src={userData?.image || "/default-profile.png"}
                 alt="Profile"
                 className="w-9 h-9 rounded-full border-2 border-white hover:scale-105 transition-transform"
               />
             </Link>
           ) : (
-            <Link to="/login" className="bg-yellow-400 text-black px-4 py-1.5 rounded-md font-semibold hover:bg-yellow-300 transition-all">
+            <Link
+              to="/login"
+              className="bg-yellow-400 text-black px-4 py-1.5 rounded-md font-semibold hover:bg-yellow-300 transition-all"
+            >
               Login
             </Link>
           )}
@@ -84,20 +105,43 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {navOpen && (
-        <div className="md:hidden px-6 pb-4 space-y-3 text-base bg-black bg-opacity-80">
-          <Link to="/" className="block hover:text-yellow-400" onClick={closeNav}>Home</Link>
-          <Link to="/grounds" className="block hover:text-yellow-400" onClick={closeNav}>Find Ground</Link>
-          <Link to="/coaches" className="block hover:text-yellow-400" onClick={closeNav}>Find Coach</Link>
-          <Link to="/sports" className="block hover:text-yellow-400" onClick={closeNav}>Explore Sports</Link>
-          <Link to="/competitions" className="block hover:text-yellow-400" onClick={closeNav}>Competitions</Link>
-          <Link to="/clubs" className="block hover:text-yellow-400" onClick={closeNav}>Clubs</Link>
-          <Link to="/academy" className="block hover:text-yellow-400" onClick={closeNav}>Academy</Link>
-          <Link to="/about" className="block hover:text-yellow-400" onClick={closeNav}>About Us</Link>
-          <Link to="/contact" className="block hover:text-yellow-400" onClick={closeNav}>Contact Us</Link>
+        <div className="md:hidden px-6 pb-6 bg-black bg-opacity-90 space-y-4 text-base">
+          {navLinks.map((link, idx) => (
+            <Link
+              key={idx}
+              to={link.to}
+              className="block hover:text-yellow-400"
+              onClick={closeNav}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {moreLinks.map((link, idx) => (
+            <Link
+              key={idx}
+              to={link.to}
+              className="block hover:text-yellow-400"
+              onClick={closeNav}
+            >
+              {link.label}
+            </Link>
+          ))}
           {uToken ? (
-            <Link to="/profile" className="block hover:text-yellow-400" onClick={closeNav}>Profile</Link>
+            <Link
+              to="/profile"
+              className="block hover:text-yellow-400"
+              onClick={closeNav}
+            >
+              Profile
+            </Link>
           ) : (
-            <Link to="/login" className="block hover:text-yellow-400" onClick={closeNav}>Login</Link>
+            <Link
+              to="/login"
+              className="block hover:text-yellow-400"
+              onClick={closeNav}
+            >
+              Login
+            </Link>
           )}
         </div>
       )}
