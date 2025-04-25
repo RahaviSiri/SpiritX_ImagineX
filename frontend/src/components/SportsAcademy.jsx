@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";  
 
 const SportsAcademy = () => {
   const navigate = useNavigate();
+  const { uToken } = useContext(UserContext);
 
   const [academies, setAcademies] = useState([]);  // State to store fetched academies
   const [loading, setLoading] = useState(true);    // State to handle loading
@@ -104,7 +106,7 @@ const SportsAcademy = () => {
       <div className="fixed bottom-10 right-4">
         <button
           className="bg-yellow-400 text-black font-semibold px-8 py-3 rounded-full hover:bg-yellow-500 transition"
-          onClick={() => navigate("/add-academy")}
+          onClick={() => { uToken ? navigate("/add-academy") : navigate("/login") }}
         >
           Apply for Listing
         </button>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   FaUsers,
   FaMapMarkerAlt,
@@ -11,10 +11,12 @@ import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "animate.css";
+import { UserContext } from "../context/UserContext";
 // import { FaUsers, FaMapMarkerAlt } from "react-icons/fa";
 
 const AboutUs = () => {
   const navigate = useNavigate();
+  const { uToken } = useContext(UserContext);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -87,26 +89,33 @@ const AboutUs = () => {
               events — all in one place!
             </p>
             {/* Stats Section with Icons */}
-<div className="flex flex-col md:flex-row gap-6 justify-start">
-  {/* User Count */}
-  <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
-    <div className="flex items-center gap-3">
-      <FaUsers className="text-3xl text-yellow-500" />
-      <p className="text-lg text-yellow-500 font-semibold">User Counts</p>
-    </div>
-    <p className="text-3xl text-center font-bold text-yellow-300">20</p>
-  </div>
+            <div className="flex flex-col md:flex-row gap-6 justify-start">
+              {/* User Count */}
+              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
+                <div className="flex items-center gap-3">
+                  <FaUsers className="text-3xl text-yellow-500" />
+                  <p className="text-lg text-yellow-500 font-semibold">
+                    User Counts
+                  </p>
+                </div>
+                <p className="text-3xl text-center font-bold text-yellow-300">
+                  20
+                </p>
+              </div>
 
-  {/* Registered Ground Count */}
-  <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2 ">
-    <div className="flex items-center gap-3">
-      <FaMapMarkerAlt className="text-3xl text-yellow-500" />
-      <p className="text-lg text-yellow-500 font-semibold">Registered Ground Counts</p>
-    </div>
-    <p className="text-3xl text-center font-bold text-yellow-300">20</p>
-  </div>
-</div>
-
+              {/* Registered Ground Count */}
+              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2 ">
+                <div className="flex items-center gap-3">
+                  <FaMapMarkerAlt className="text-3xl text-yellow-500" />
+                  <p className="text-lg text-yellow-500 font-semibold">
+                    Registered Ground Counts
+                  </p>
+                </div>
+                <p className="text-3xl text-center font-bold text-yellow-300">
+                  20
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Image Section */}
@@ -164,7 +173,16 @@ const AboutUs = () => {
             today and turn your passion into action. 🏆
           </p>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => {
+              // Scroll to top with smooth scroll
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+
+              // Navigate based on uToken condition
+              uToken ? navigate("/") : navigate("/login");
+            }}
             className="mt-6 px-6 py-3 bg-yellow-500 text-black rounded-xl shadow hover:bg-yellow-600 transition"
           >
             Get Started

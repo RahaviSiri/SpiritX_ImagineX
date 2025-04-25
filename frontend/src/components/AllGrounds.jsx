@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GroundContext } from "../context/GroundContext";
 import { FaSearch, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const AllGrounds = () => {
   const { getAllGrounds, grounds } = useContext(GroundContext);
@@ -10,6 +11,7 @@ const AllGrounds = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [filteredGrounds, setFilteredGrounds] = useState([]);
   const navigate = useNavigate();
+  const { uToken } = useContext(UserContext);
 
   const applyFilter = () => {
     let filtered = grounds;
@@ -96,7 +98,7 @@ const AllGrounds = () => {
           {/* Add Ground CTA */}
           <div className="mt-4 bg-gray-800 p-4 rounded-xl text-center">
             <p className="text-sm mb-2">Want to list your ground?</p>
-            <button className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-500 transition" onClick={() => navigate("/add-ground")}>
+            <button className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-500 transition" onClick={() => { uToken ? navigate("/add-ground") : navigate("/login") }}>
               Join with Us
             </button>
           </div>
