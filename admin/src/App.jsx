@@ -6,10 +6,11 @@ import NavBar from './components/NavBar';
 import AllGrounds from './pages/AllGrounds';
 import BookedGrounds from './pages/BookedGrounds';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminDashboard from "./pages/adminDashboard";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950/60 to-blue-800 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/coach" element={<Coach />} />
           <Route path="/all-grounds" element={<AllGrounds />} />
           <Route path="/booked-grounds" element={<BookedGrounds />} />
+          <Route path="/" element={<AdminDashboard />} />
         </Routes>
       </main>
     </div>

@@ -3,6 +3,8 @@ import { transporter } from "../config/nodemailer.js";
 
 import coachModel from "../models/coachModel.js";
 import userModel from "../models/userModel.js";
+import academyModel from "../models/academyModel.js";
+import groundModel from "../models/groundModel.js";
 
 
 export const approveByAdmin = async (req, res) => {
@@ -208,3 +210,55 @@ export const rejectByCoach = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
+
+export const countBooking = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    const approvedCoaches = await coachModel.find({ isApprove: true });
+    const approvedAcademies = await academyModel.find({ isApprove: true });
+    const approvedGrounds = await groundModel.find({ verified: true });
+    console.log(approvedGrounds.length)
+
+
+
+    let coachesCount = 0;
+    let groundsCount = 0;
+    let academiesCount = 0;
+
+    const coachesAmount = approvedCoaches.length ;
+    const groundsAmount = approvedGrounds.length ; // Sample rate per booking
+    const academiesAmount = approvedAcademies.length; // Sample rate per booking
+
+    // Loop through all users and tally booking stats
+    users.forEach(user => {
+      if (user.coachBooking?.length) {
+        coachesCount += user.coachBooking.length;
+         
+      }
+
+      if (user.groundBookings?.length) {
+        groundsCount += user.groundBookings.length;
+        
+      }
+
+      if (user.academicsBooking?.length) {
+        academiesCount += user.academicsBooking.length;
+        
+      }
+    });
+
+    res.json({
+      coachesCount,
+      groundsCount,
+      academiesCount,
+      coachesAmount,
+      groundsAmount,
+      academiesAmount,
+    });
+
+  } catch (error) {
+    console.error("Error fetching booking stats:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
