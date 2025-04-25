@@ -94,7 +94,7 @@ const GroundDetails = () => {
                   ground.freeTime.map((slot, idx) => (
                     <button
                       key={idx}
-                      onClick={() => handleBooking(slot)}
+                      onClick={() => { uToken ? handleBooking(slot) : navigate("/login") }}
                       className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition text-sm shadow"
                     >
                       {slot}
