@@ -52,7 +52,7 @@ const CoachWaitForApproval = () => {
 
       if (data.success && data.session_url) {
         window.location.replace(data.session_url);
-        toast.success(data.message);
+        // toast.success(data.message);
       } else {
         toast.error(data.message || "Failed to create payment session");
       }

@@ -52,7 +52,7 @@ export const CoachContextProvider = (props) => {
       })
       if(response.success){
         setUserDatas(response.users)
-        toast.success(response.message)
+        // toast.success(response.message)
       }
       else{
         toast.error(response.message)

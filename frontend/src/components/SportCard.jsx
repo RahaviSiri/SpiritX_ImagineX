@@ -1,8 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SportCard = ({ title, players, rules, history, origin, equipment, image, link }) => {
+  const navigate = useNavigate();
+
+  const handleLearnMore = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      navigate(link);
+    }, 500); // Small delay to allow smooth scroll to complete
+  };
+
   return (
     <motion.div
       className="bg-black bg-opacity-50 border border-yellow-400 rounded-xl overflow-hidden shadow-lg text-white hover:border-yellow-300 transition-all"
@@ -19,12 +28,13 @@ const SportCard = ({ title, players, rules, history, origin, equipment, image, l
         <p className="text-sm mb-2"><span className="font-semibold">Rules:</span> {rules}</p>
         <p className="text-sm mb-2"><span className="font-semibold">Equipment:</span> {equipment}</p>
         <p className="text-sm"><span className="font-semibold">Number of Players:</span> {players}</p>
-        
-        <Link to={link}>
-          <button className="mt-4 bg-yellow-400 text-black px-4 py-1.5 rounded hover:bg-yellow-300 transition-colors">
-            Learn More
-          </button>
-        </Link>
+
+        <button
+          onClick={handleLearnMore}
+          className="mt-4 bg-yellow-400 text-black px-4 py-1.5 rounded hover:bg-yellow-300 transition-colors"
+        >
+          Learn More
+        </button>
       </div>
     </motion.div>
   );
