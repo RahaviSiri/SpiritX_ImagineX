@@ -218,7 +218,6 @@ export const countBooking = async (req, res) => {
     const approvedCoaches = await coachModel.find({ isApprove: true });
     const approvedAcademies = await academyModel.find({ isApprove: true });
     const approvedGrounds = await groundModel.find({ verified: true });
-    console.log(approvedGrounds.length)
 
 
 
@@ -262,3 +261,72 @@ export const countBooking = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+
+export const getAdminDashboardData = async (req, res) => {
+  try {
+    // Find the most popular coaches by the number of bookings
+    const popularCoaches = await userModel.aggregate([
+      { $unwind: "$coachBooking" },
+      { $group: { _id: "$coachBooking.coachId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular coaches
+      {
+        $lookup: {
+          from: "coaches", // assuming your collection name is 'coaches'
+          localField: "_id",
+          foreignField: "_id",
+          as: "coach",
+        },
+      },
+      { $unwind: "$coach" },
+      { $project: { _id: 0, coachId: "$coach._id", fullName: "$coach.personalInfo.fullName",profile : "$coach.personalInfo.profile" ,bookings: "$count" } },
+    ]);
+
+    // Find the most popular grounds by the number of bookings
+    const popularGrounds = await userModel.aggregate([
+      { $unwind: "$groundBookings" },
+      { $group: { _id: "$groundBookings.groundId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular grounds
+      {
+        $lookup: {
+          from: "grounds", // assuming your collection name is 'grounds'
+          localField: "_id",
+          foreignField: "_id",
+          as: "ground",
+        },
+      },
+      { $unwind: "$ground" },
+      { $project: { _id: 0, groundId: "$ground._id", name: "$ground.name",image:"$ground.image", bookings: "$count" } },
+    ]);
+
+    // Find the most popular academies by the number of bookings
+    const popularAcademies = await userModel.aggregate([
+      { $unwind: "$academicsBooking" },
+      { $group: { _id: "$academicsBooking.academyId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular academies
+      {
+        $lookup: {
+          from: "academies", // assuming your collection name is 'academies'
+          localField: "_id",
+          foreignField: "_id",
+          as: "academy",
+        },
+      },
+      { $unwind: "$academy" },
+      { $project: { _id: 0, academyId: "$academy._id", name: "$academy.academyBasicDetails.academyName",image:"$acdemy.academyBasicDetails.picture", bookings: "$count" } },
+    ]);
+
+    // Send data to the frontend
+    res.json({success:true,
+      popularCoaches,
+      popularGrounds,
+      popularAcademies,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching dashboard data" });
+  }
+};

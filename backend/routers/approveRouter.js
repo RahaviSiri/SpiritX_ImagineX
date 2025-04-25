@@ -1,11 +1,12 @@
 import express from 'express';
-import { approveByAdmin,  approveByCoach,  countBooking,  rejectByAdmin, rejectByCoach } from '../controllers/approveController.js';
+import { approveByAdmin,  approveByCoach,  countBooking,  getAdminDashboardData,  rejectByAdmin, rejectByCoach } from '../controllers/approveController.js';
 import authCoach from '../middleware/authCoach.js';
 
 const approveRouter = express.Router();
 
 approveRouter.post('/approve', approveByAdmin);
 approveRouter.get('/count-booking', countBooking);
+approveRouter.get('/dashboard', getAdminDashboardData);
 approveRouter.post('/reject', rejectByAdmin);
 approveRouter.get('/approve-by-coach/:userId/:bookingId', approveByCoach)
 approveRouter.get('/reject-by-coach/:userId/:bookingId', rejectByCoach)
