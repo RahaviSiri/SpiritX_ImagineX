@@ -133,9 +133,9 @@ export const addAcademy = async (req, res) => {
 export const getAllAcademies = async (req, res) => {
     try {
       const academies = await academyModel.find();
-      res.status(200).json({ success: true, academies });
+      return res.status(200).json({ success: true,message:"Successfully", academies });
     } catch (err) {
-      res.status(500).json({ message: 'Failed to fetch academies', error: err.message });
+      return res.status(500).json({ success:false,message: 'Failed to fetch academies', error: err.message });
     }
 }
 

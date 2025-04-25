@@ -6,13 +6,16 @@ export const AcademyContext = createContext();
 
 export const AcademyContextProvider = (props) => {
   const backendURL = "http://localhost:3000";
-  const [Academy, setAcademy] = useState([]);
+  const [academies, setAcademies] = useState([]);  // Renamed to plural
 
   const fetchAcademies = async () => {
     try {
-      const { data: response } = await axios.get(`${backendURL}/api/academy/getAcademies`);
+      const { data: response } = await axios.get(`${backendURL}/api/academy/get-all-academies`,{
+        withCredentials:true
+      });
+      console.log(response);
       if (response.success) {
-        setAcademy(response.academies);
+        setAcademies(response.academies); // Updated to plural
       } else {
         toast.error(response.message);
       }
@@ -26,13 +29,14 @@ export const AcademyContextProvider = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(Academy);
-  }, []);
+    
+    console.log(academies);  // Updated to plural
+  }, [academies]);
 
   const value = {
     backendURL,
-    Academy,
-    setAcademy,
+    academies,  // Updated to plural
+    setAcademies,
   };
 
   return (

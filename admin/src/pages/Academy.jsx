@@ -1,33 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AcademyContext } from "../context/AcademyContext.jsx";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const Academy = () => {
-  const { backendURL, Academy, setAcademy } = useContext(AcademyContext);
+  const { backendURL, academies, setAcademies } = useContext(AcademyContext); // Renamed to plural
   const [filterStatus, setFilterStatus] = useState("all");
 
   const handleApprove = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.post(
+      const { data: response } = await axios.post(
         `${backendURL}/api/admin/approve-academy`,
         { academyId: id },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
 
-      if (data.success) {
-        toast.success("Academy approved!");
-        setAcademy((prev) =>
+      if (response.success) {
+        toast.success("Academy approved successfully!");
+        setAcademies((prev) =>
           prev.map((a) => (a._id === id ? { ...a, isApprove: true } : a))
         );
       } else {
-        toast.error(data.message || "Approval failed.");
+        toast.error(response.message || "Approval failed.");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
@@ -37,35 +35,33 @@ const Academy = () => {
   const handleReject = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.post(
+      const { data: response } = await axios.post(
         `${backendURL}/api/admin/reject-academy`,
         { academyId: id },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
 
-      if (data.success) {
-        toast.success("Academy rejected!");
-        setAcademy((prev) =>
+      if (response.success) {
+        toast.success("Academy rejected successfully!");
+        setAcademies((prev) =>
           prev.map((a) => (a._id === id ? { ...a, isReject: true } : a))
         );
       } else {
-        toast.error(data.message || "Rejection failed.");
+        toast.error(response.message || "Rejection failed.");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
   };
 
-  const filteredAcademies = Academy.filter((a) => {
+  const filteredAcademies = academies.filter((academy) => {
     if (filterStatus === "all") return true;
-    if (filterStatus === "pending") return !a.isApprove && !a.isReject;
-    if (filterStatus === "approved") return a.isApprove;
-    if (filterStatus === "rejected") return a.isReject;
+    if (filterStatus === "pending") return !academy.isApprove && !academy.isReject;
+    if (filterStatus === "approved") return academy.isApprove;
+    if (filterStatus === "rejected") return academy.isReject;
     return true;
   });
 
@@ -106,56 +102,64 @@ const Academy = () => {
           <table className="min-w-[1000px] w-full border">
             <thead>
               <tr>
-                <th className="p-2 border text-xs sm:text-sm">Logo</th>
-                <th className="p-2 border text-xs sm:text-sm">Name</th>
+                <th className="p-2 border text-xs sm:text-sm">Image</th>
+                <th className="p-2 border text-xs sm:text-sm">Academy Name</th>
                 <th className="p-2 border text-xs sm:text-sm">District</th>
-                <th className="p-2 border text-xs sm:text-sm">Contact Email</th>
-                <th className="p-2 border text-xs sm:text-sm">Start Date(s)</th>
+                <th className="p-2 border text-xs sm:text-sm">Mode</th>
                 <th className="p-2 border text-xs sm:text-sm">Fee</th>
+                <th className="p-2 border text-xs sm:text-sm">Start Dates</th>
                 <th className="p-2 border text-xs sm:text-sm">Approve / Reject</th>
               </tr>
             </thead>
             <tbody>
               {filteredAcademies.length > 0 ? (
-                filteredAcademies.map((a) => (
-                  <tr key={a._id} className="text-center text-sm">
+                filteredAcademies.map((academy) => (
+                  <tr key={academy._id} className="text-center text-sm">
                     <td className="p-2 border">
-                      <img
-                        src={a.academy.logo}
-                        alt="Logo"
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover mx-auto rounded border"
-                      />
+                      {academy.academyBasicDetails?.academyLogo ? (
+                        <img
+                          src={academy.academyBasicDetails.academyLogo}
+                          alt="Academy"
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover mx-auto rounded shadow"
+                        />
+                      ) : (
+                        <span>No image</span> // Fallback if image is missing
+                      )}
                     </td>
-                    <td className="p-2 border">{a.academy.name}</td>
-                    <td className="p-2 border">{a.address.district}</td>
-                    <td className="p-2 border">{a.contact.email}</td>
+                    <td className="p-2 border">{academy.academyBasicDetails?.academyName}</td>
+                    <td className="p-2 border">{academy.Address?.district}</td>
+                    <td className="p-2 border capitalize">{academy.academyBasicDetails?.mode}</td>
                     <td className="p-2 border">
-                      {a.academy.isFlexible
+                      {academy.academyBasicDetails?.feeAmount === 0
+                        ? "Free"
+                        : `Rs. ${academy.academyBasicDetails?.feeAmount}`}
+                    </td>
+                    <td className="p-2 border">
+                      {academy.academyBasicDetails?.isFlexible
                         ? "Flexible"
-                        : a.academy.startDates?.join(", ")}
+                        : academy.academyBasicDetails?.startDate
+                        ? new Date(academy.academyBasicDetails.startDate).toLocaleDateString()
+                        : "Not Set"}
                     </td>
                     <td className="p-2 border">
-                      {a.academy.isFree ? "Free" : `Rs. ${a.academy.feeAmount}`}
-                    </td>
-                    <td className="p-2 border">
-                      {a.isApprove ? (
+                      {academy.isApprove ? (
                         <span className="text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full">
                           Approved
                         </span>
-                      ) : a.isReject ? (
+                      ) : academy.isReject ? (
                         <span className="text-red-600 font-semibold bg-red-100 px-3 py-1 rounded-full">
                           Rejected
                         </span>
                       ) : (
                         <div className="flex flex-col sm:flex-row justify-center gap-2">
                           <button
-                            onClick={() => handleApprove(a._id)}
+                            onClick={() => handleApprove(academy._id)}
                             className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors text-xs sm:text-sm"
                           >
                             Approve
                           </button>
                           <button
-                            onClick={() => handleReject(a._id)}
+                            onClick={() => handleReject(academy._id)}
                             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors text-xs sm:text-sm"
                           >
                             Reject
