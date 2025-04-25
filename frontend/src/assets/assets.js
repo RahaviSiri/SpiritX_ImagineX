@@ -99,7 +99,7 @@ const assets = {
     Basketball2,
     Basketball3,
     Hockey2,
-    Hockey3
+    Hockey3,
     Logo
 }
 
