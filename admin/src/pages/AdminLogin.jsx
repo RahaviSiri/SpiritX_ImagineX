@@ -20,7 +20,7 @@ const AdminLogin = () => {
 
       if (data.success) {
         toast.success("Welcome Admin!");
-        navigate("/admin/dashboard");
+        navigate("/");
         setEmail("");
         setPassword("");
       } else {
