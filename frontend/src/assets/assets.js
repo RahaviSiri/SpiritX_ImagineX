@@ -26,6 +26,7 @@ import Upload from './UploadIcon.png'
 import AddGround from './AddGround.png'
 import AddCoach from './AddCoach.png'
 import LoginBg from './LoginBg.png'
+import Logo from './Logo.png'
 import Tennis from './tennis.jpg'
 import Tennis1 from './tennis1.png'
 import Tennis2 from './tennis2.jpg'
@@ -69,7 +70,8 @@ const assets = {
     Tennis3,
     Badminton,
     Swimming,
-    ApproveAcademy
+    ApproveAcademy,
+    Logo
 }
 
 export default assets;

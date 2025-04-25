@@ -162,12 +162,12 @@ const CoachDetails = () => {
     <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 relative">
       {/* Yellow glow background */}
       <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
-      
+
       <div className="max-w-4xl mx-auto bg-black/60 backdrop-blur-md shadow-2xl rounded-2xl p-8 space-y-8 z-10 relative">
         <h1 className="text-3xl font-bold text-yellow-400 text-center border-b border-yellow-500 pb-2">
           Filled Details
         </h1>
-  
+
         {/* Profile Image */}
         {profile && (
           <div className="flex justify-center">
@@ -182,17 +182,25 @@ const CoachDetails = () => {
             />
           </div>
         )}
-  
+
         {/* Personal Info */}
         <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
           <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Personal Info
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
-            <p><strong>Full Name:</strong> {fullName}</p>
-            <p><strong>Date of Birth:</strong> {DOB}</p>
-            <p><strong>Gender:</strong> {gender}</p>
-            <p><strong>NIC:</strong> {NIC}</p>
+            <p>
+              <strong>Full Name:</strong> {fullName}
+            </p>
+            <p>
+              <strong>Date of Birth:</strong> {DOB}
+            </p>
+            <p>
+              <strong>Gender:</strong> {gender}
+            </p>
+            <p>
+              <strong>NIC:</strong> {NIC}
+            </p>
           </div>
           {NIC_photo && (
             <div className="mt-2 text-sm">
@@ -214,43 +222,63 @@ const CoachDetails = () => {
             </div>
           )}
         </div>
-  
+
         {/* Contact Details */}
         <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
           <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Contact Details
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
-            <p><strong>Contact No:</strong> {contactNo}</p>
-            <p><strong>Home TP:</strong> {HomeTP}</p>
-            <p><strong>WhatsApp:</strong> {whatsapp}</p>
-            <p><strong>Email:</strong> {email}</p>
+            <p>
+              <strong>Contact No:</strong> {contactNo}
+            </p>
+            <p>
+              <strong>Home TP:</strong> {HomeTP}
+            </p>
+            <p>
+              <strong>WhatsApp:</strong> {whatsapp}
+            </p>
+            <p>
+              <strong>Email:</strong> {email}
+            </p>
           </div>
         </div>
-  
+
         {/* Address */}
         <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
           <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Address
           </h3>
           <div className="text-sm text-gray-200">
-            <p><strong>Address:</strong> {Line1} {Line2}</p>
+            <p>
+              <strong>Address:</strong> {Line1} {Line2}
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
-              <p><strong>City:</strong> {city}</p>
-              <p><strong>District:</strong> {district}</p>
+              <p>
+                <strong>City:</strong> {city}
+              </p>
+              <p>
+                <strong>District:</strong> {district}
+              </p>
             </div>
           </div>
         </div>
-  
+
         {/* Coach Selection Details */}
         <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
           <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Coach Selection Details
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
-            <p><strong>Selection Type:</strong> {selectionType}</p>
-            <p><strong>Expected Salary:</strong> {salary}</p>
-            <p><strong>Sport:</strong> {sport}</p>
+            <p>
+              <strong>Selection Type:</strong> {selectionType}
+            </p>
+            <p>
+              <strong>Expected Salary:</strong> {salary}
+            </p>
+            <p>
+              <strong>Sport:</strong> {sport}
+            </p>
           </div>
           <div className="mt-2 text-sm">
             <p className="font-medium">Qualifications:</p>
@@ -271,7 +299,7 @@ const CoachDetails = () => {
             </div>
           )}
         </div>
-  
+
         {/* Buttons */}
         <div className="flex justify-between items-center pt-4">
           <button
@@ -283,7 +311,10 @@ const CoachDetails = () => {
           </button>
           <button
             type="submit"
-            onClick={handleSubmit}
+            onClick={(e) => {
+              handleSubmit(e);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition"
           >
             Submit
@@ -292,7 +323,6 @@ const CoachDetails = () => {
       </div>
     </div>
   );
-  
 };
 
 export default CoachDetails;

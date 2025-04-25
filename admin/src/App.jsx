@@ -25,9 +25,9 @@ const App = () => {
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Routes>          
-          <Route path="/" element={<AdminDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/coach" element={<Coach />} />
-          <Route path="/login" element={<AdminLogin />} />
+          <Route path="/" element={<AdminLogin />} />
           <Route path="/all-grounds" element={<AllGrounds />} />
           <Route path="/booked-grounds" element={<BookedGrounds />} />
           <Route path="/academy" element={<Academy />} />
