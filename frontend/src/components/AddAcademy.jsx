@@ -3,6 +3,8 @@ import { UploadCloud } from "lucide-react";
 import assets from "../assets/assets.js";
 import { AcademyContext } from "../context/AcademyContext.jsx";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", "Hambantota",
@@ -20,6 +22,7 @@ const fileLabels = {
 const AddAcademy = () => {
   const { addAcademy } = useContext(AcademyContext);
   const navigate = useNavigate();
+  const { id: editingAcademyId } = useParams(); 
 
   const [formData, setFormData] = useState({
     academyName: "",
@@ -44,6 +47,49 @@ const AddAcademy = () => {
     email: "",
     certificate: null,
   });
+
+  useEffect(() => {
+    const fetchAcademy = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/academy/${editingAcademyId}`);
+        const data = res.data;
+  
+        if (data.success) {
+          const academy = data.academy;
+  
+          // Fill form with existing values (remove file blobs — you can't re-populate file inputs)
+          setFormData({
+            academyName: academy.academyName || "",
+            sportType: academy.sportType || "",
+            shortDescription: academy.shortDescription || "",
+            description: academy.description || "",
+            duration: academy.duration || "",
+            instructors: academy.instructors || "",
+            feeAmount: academy.feeAmount || "",
+            mode: academy.mode || "",
+            isFlexible: academy.isFlexible || false,
+            startDate: academy.startDate?.slice(0, 10) || "",
+            Line1: academy.address?.Line1 || "",
+            Line2: academy.address?.Line2 || "",
+            city: academy.address?.city || "",
+            district: academy.address?.district || "",
+            contactNo: academy.contact?.contactNo || "",
+            HomeTP: academy.contact?.HomeTP || "",
+            whatsapp: academy.contact?.whatsapp || "",
+            email: academy.contact?.email || "",
+            academyLogo: null,
+            picture: null,
+            certificate: null,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch academy:", err);
+      }
+    };
+  
+    if (editingAcademyId) fetchAcademy();
+  }, [editingAcademyId]);
+  
 
   const [previews, setPreviews] = useState({});
 
@@ -80,7 +126,19 @@ const AddAcademy = () => {
       form.append(key, value);
     });
   
-    const data = await addAcademy(form);
+    try {
+      let data;
+  
+      if (editingAcademyId) {
+        const res = await axios.put(`http://localhost:3000/api/academy/${editingAcademyId}`, form, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        data = res.data;
+      } else {
+        data = await addAcademy(form); 
+      }
       if (data?.success) {
         setFormData({
           academyName: "",
@@ -108,6 +166,9 @@ const AddAcademy = () => {
         setPreviews({});
         navigate("/coach-wait-for-approval"); // Redirect to verification
       }
+    }catch (error) {
+      console.error("Error during submit:", error);
+    }
   };
 
 
@@ -364,7 +425,7 @@ const AddAcademy = () => {
             type="submit"
             className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
           >
-            Register
+            {editingAcademyId ? "Update Academy" : "Register"}
           </button>
         </form>
       </div>

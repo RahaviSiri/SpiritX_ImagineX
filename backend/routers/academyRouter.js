@@ -16,7 +16,7 @@ academyRouter.post("/add-academy",  upload.fields([
 
 academyRouter.delete("/delete-academy/:id", deleteAcademy);
 
-academyRouter.post("/update-academy/:id", upload.fields([
+academyRouter.put("/update-academy/:id", upload.fields([
     { name: "academyLogo" },
     { name: "picture" },
     { name: "certificate" }

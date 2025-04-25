@@ -1,12 +1,9 @@
 import User from "../models/userModel.js";
 import { v2 as cloudinary } from 'cloudinary';
-import upload from "../middleware/multer.js";
 // import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import mongoose from "mongoose";
 import academyModel from "../models/academyModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -15,7 +12,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const addAcademy = async (req, res) => {
     try {
         const { body, files } = req;
-        // dotenv.config();
     
         if (!body) {
           return res.json({ success: false, message: "Form data is required!" });
@@ -179,7 +175,8 @@ export const updateAcademy = async (req, res) => {
           instructors: body.instructors || existingAcademy.academyBasicDetails.instructors,
           feeAmount: body.feeAmount || existingAcademy.academyBasicDetails.feeAmount,
           mode: body.mode || existingAcademy.academyBasicDetails.mode,
-          isFlexible: body.hasOwnProperty("isFlexible")? body.isFlexible === "true": existingAcademy.academyBasicDetails.isFlexible,
+          isFlexible: typeof body === "object" && body !== null && "isFlexible" in body
+              ? body.isFlexible === "true": existingAcademy.academyBasicDetails.isFlexible,
           startDate: body.startDate ? new Date(body.startDate) : existingAcademy.academyBasicDetails.startDate,
         },
         Address: {
@@ -218,7 +215,7 @@ export const updateAcademy = async (req, res) => {
           const certificateResult = await cloudinary.uploader.upload(files.certificate[0].path, {
             resource_type: "raw"
           });
-          updateData.ownerInfo.certificate = certificateResult.secure_url;
+          updateData.academyBasicDetails.certificate = certificateResult.secure_url;
         }
       }
   
