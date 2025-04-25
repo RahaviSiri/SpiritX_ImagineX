@@ -41,13 +41,13 @@ export const CoachContextProvider = (props) => {
 
   // comment
 
-  const backend_url = "http://localhost:3000";
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
   const [coachData,setCoachData] = useState(null);
   const [userDatas,setUserDatas] = useState(null);
 
   const fetchCoaches = async () => {
     try {
-      const {data:response} = await axios.get(`http://localhost:3000/api/coach/getCoaches`,{
+      const {data:response} = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/coach/getCoaches',{
         withCredentials:true
       })
       if(response.success){

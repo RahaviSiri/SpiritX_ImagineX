@@ -38,7 +38,7 @@ const Client = () => {
       };
       // console.log('hi');
       const { data } = await axios.post(
-        `http://localhost:3000/api/user/book-coach/${id}`,
+        import.meta.env.VITE_BACKEND_URL + `/api/user/book-coach/${id}`,
         payload,
         {
           headers: {

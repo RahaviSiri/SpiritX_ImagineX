@@ -8,7 +8,7 @@ export const GroundContextProvider = (props) => {
     const [grounds,setGrounds] = useState([]);
     const [ground,setGround] = useState(null);
 
-    const backend_url = 'http://localhost:3000';
+    const backend_url = import.meta.env.VITE_BACKEND_URL;
 
     const getAllGrounds = async () => {
         try {

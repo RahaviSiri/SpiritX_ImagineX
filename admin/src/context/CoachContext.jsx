@@ -8,7 +8,7 @@ export const CoachContext = createContext();
 
 export const CoachContextProvider = (probs) => {
 
-    const backendURL = 'http://localhost:3000'
+    const backendURL = import.meta.env.VITE_BACKEND_URL
     const [Coach,setCoach] = useState([]);
     const fetchcoaches = async () => {
         try {

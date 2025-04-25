@@ -9,7 +9,7 @@ export const AcademyContextProvider = (props) => {
     const [academy, setAcademy] = useState(null);
     const [AToken, setAToken] = useState('');
 
-    const backend_url = 'http://localhost:3000';
+    const backend_url = import.meta.env.VITE_BACKEND_URL;
 
     const getAllAcademies = async () => {
         try {

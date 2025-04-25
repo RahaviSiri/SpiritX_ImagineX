@@ -88,7 +88,7 @@ export default function ClubPage() {
   
       const isShortLink = /(goo\.gl|maps\.app\.goo\.gl)/.test(link);
 if (isShortLink) {
-  const response = await axios.post('http://localhost:3000/api/utils', { url: link });
+  const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/utils', { url: link });
   finalLink = response.data.finalUrl;
 }
 

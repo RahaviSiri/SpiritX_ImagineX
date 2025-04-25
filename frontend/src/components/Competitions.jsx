@@ -18,7 +18,7 @@ function App() {
 
   const loadCompetitions = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/competition/getCompetition');
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/competition/getCompetition');
       const data = await response.json();
       setCompetitions(data.competitions);
     } catch (error) {
@@ -33,7 +33,7 @@ function App() {
     formData.append('registrationLink', registrationLink);
 
     try {
-      await fetch('http://localhost:3000/api/competition/registerCompetition', {
+      await fetch(import.meta.env.VITE_BACKEND_URL + '/api/competition/registerCompetition', {
         method: 'POST',
         body: formData,
       });

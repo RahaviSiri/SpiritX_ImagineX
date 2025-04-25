@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`http://localhost:3000/api/admin/check-admin-login`, {
+      const { data } = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/admin/check-admin-login', {
         email,
         password,
       });

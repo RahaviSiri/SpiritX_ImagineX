@@ -51,7 +51,7 @@ const ClientAcademy = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `http://localhost:3000/api/user/book-academy/${id}`,
+        import.meta.env.VITE_BACKEND_URL + `/api/user/book-academy/${id}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

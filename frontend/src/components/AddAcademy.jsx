@@ -52,7 +52,7 @@ const AddAcademy = () => {
   // useEffect(() => {
   //   const fetchAcademy = async () => {
   //     try {
-  //       const res = await axios.get(`http://localhost:3000/api/academy/${editingAcademyId}`);
+  //       const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/academy/${editingAcademyId}`);
   //       const data = res.data;
 
   //       if (data.success) {

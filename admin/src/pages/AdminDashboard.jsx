@@ -28,7 +28,7 @@ const AdminDashboard = () => {
         setIsLoading(true); // Set loading state to true when fetching data
 
         // 1. Fetch popular data
-        const response = await axios.get('http://localhost:3000/api/admin/dashboard');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/admin/dashboard');
         const { data } = response;
         console.log(data);
 
@@ -41,7 +41,7 @@ const AdminDashboard = () => {
         }
 
         // 2. Fetch count data for chart
-        const countResponse = await axios.get('http://localhost:3000/api/admin/count-booking');
+        const countResponse = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/admin/count-booking');
         const countData = countResponse.data;
         setBookingData(countData);
       } catch (error) {

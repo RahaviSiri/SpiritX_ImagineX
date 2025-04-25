@@ -6,7 +6,7 @@ export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [uToken, setUToken] = useState(localStorage.getItem("uToken") || "");
-  const backendURL = "http://localhost:3000";
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const [userData,setUserData] = useState({});
 

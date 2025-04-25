@@ -5,7 +5,7 @@ import axios from "axios";
 export const AcademyContext = createContext();
 
 export const AcademyContextProvider = (props) => {
-  const backendURL = "http://localhost:3000";
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
   const [academies, setAcademies] = useState([]);  // Renamed to plural
 
   const fetchAcademies = async () => {
