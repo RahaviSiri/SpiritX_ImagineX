@@ -2,9 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { CoachContext } from "../context/Coachcontext";
 
 const Navbar = () => {
-  const { uToken, userData, fetchUser } = useContext(UserContext);
+  const { userData, uToken, fetchUser } = useContext(UserContext);
+  const { coachData, fetchCoach } = useContext(CoachContext);
+  const isCoach = !!coachData && Object.keys(coachData).length > 0;
   const [navOpen, setNavOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
@@ -99,6 +102,13 @@ const Navbar = () => {
                 >
                   Contact Us
                 </Link>
+                <Link
+                  to="/booked-items"
+                  className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
+                  onClick={() => setShowMore(false)}
+                >
+                  Your Bookings
+                </Link>
                 {uToken ? (
                   <Link
                     to="/"
@@ -118,7 +128,7 @@ const Navbar = () => {
           {uToken ? (
             <Link to="/profile">
               <img
-                src={`${userData.image}`}
+                src={isCoach ? `${coachData.personalInfo.profile}` : `${userData.image}`}
                 alt="Profile"
                 className="w-9 h-9 rounded-full border-2 border-white hover:scale-105 transition-transform"
               />
@@ -200,6 +210,13 @@ const Navbar = () => {
           >
             Contact Us
           </Link>
+          <Link
+            to="/booked-items"
+            className="block hover:text-yellow-400"
+            onClick={closeNav}
+          >
+            Your Bookings
+          </Link>
           {uToken ? (
             <Link
               to="/profile"
@@ -217,16 +234,18 @@ const Navbar = () => {
               Login
             </Link>
           )}
-          {uToken ? <Link
-            to="/"
-            className="block hover:text-yellow-400"
-            onClick={() => {
-              handleLogout();
-              closeNav();
-            }}
-          >
-            Logout
-          </Link> : null}
+          {uToken ? (
+            <Link
+              to="/"
+              className="block hover:text-yellow-400"
+              onClick={() => {
+                handleLogout();
+                closeNav();
+              }}
+            >
+              Logout
+            </Link>
+          ) : null}
         </div>
       )}
     </nav>

@@ -71,7 +71,7 @@ const Coach = () => {
   });
 
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 overflow-x-auto">
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white px-4 overflow-x-auto">
       {/* Yellow glowing orb */}
       <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
   

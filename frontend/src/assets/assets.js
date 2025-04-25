@@ -32,6 +32,7 @@ import Tennis2 from './tennis2.jpg'
 import Tennis3 from './tennis3.jpg'
 import Badminton from './badminton.jpg'
 import Swimming from './swimming.jpg'
+import ApproveAcademy from './ApproveAcademy.jpg'
 
 const assets = {
     AddGroundBackroundImage,
@@ -67,7 +68,8 @@ const assets = {
     Tennis2,
     Tennis3,
     Badminton,
-    Swimming
+    Swimming,
+    ApproveAcademy
 }
 
 export default assets;

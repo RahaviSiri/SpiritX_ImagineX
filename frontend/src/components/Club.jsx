@@ -82,26 +82,39 @@ export default function ClubPage() {
     setNewClub({ ...newClub, [e.target.name]: e.target.value });
   };
 
-  const extractLatLngFromLink = (link) => {
+  const extractLatLngFromLink = async (link) => {
     try {
-      const match = link.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+      let finalLink = link;
+  
+      const isShortLink = /(goo\.gl|maps\.app\.goo\.gl)/.test(link);
+if (isShortLink) {
+  const response = await axios.post('http://localhost:3000/api/utils', { url: link });
+  finalLink = response.data.finalUrl;
+}
+
+  
+      const match = finalLink.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
       if (match) {
         return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
       }
-      console.warn(
-        "Invalid Google Maps link format. Returning default coordinates."
-      );
-      return { lat: 7.0, lng: 80.0 }; // Default location
+  
+      console.warn("Couldn't extract coordinates, using default.");
+      return { lat: 7.0, lng: 80.0 };
     } catch (err) {
-      console.error("Error extracting coordinates:", err.message);
-      return { lat: 7.0, lng: 80.0 }; // Default fallback coordinates
+      console.error("Error resolving link:", err.message);
+      return { lat: 7.0, lng: 80.0 };
     }
   };
 
+  
+  
+
   const handleAddClubSubmit = async (e) => {
     e.preventDefault();
+    
+    const location = await extractLatLngFromLink(newClub.locationLink);
 
-    const location = extractLatLngFromLink(newClub.locationLink);
+    //const location = extractLatLngFromLink(newClub.locationLink);
     const competitions = newClub.competitions.split(",").map((c) => c.trim());
 
     const formData = new FormData();
@@ -179,7 +192,7 @@ export default function ClubPage() {
 
       <div className="relative z-10 max-w-6xl mx-auto bg-black/60 p-6 sm:p-10 rounded-3xl shadow-xl border border-yellow-400">
         <h1 className="text-xl sm:text-3xl font-extrabold text-center mb-8 text-yellow-400 drop-shadow-lg">
-          🌍 Explore Clubs Near You
+           Explore Clubs Near You
         </h1>
 
         {/* Search */}
@@ -206,7 +219,7 @@ export default function ClubPage() {
               onClick={handleReset}
               className="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-full shadow"
             >
-              ↺ Reset
+              Reset
             </button>
           </div>
         </form>
@@ -285,7 +298,7 @@ export default function ClubPage() {
                 uToken ? setShowAddClubForm(true) : navigate("/login");
               }}
             >
-              <h3 className="text-xl">➕ Add Your Club</h3>
+              <h3 className="text-xl"> Add Your Club</h3>
               <p className="text-sm text-gray-900">
                 Click to share your club with others!
               </p>

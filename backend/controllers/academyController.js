@@ -1,12 +1,9 @@
 import User from "../models/userModel.js";
 import { v2 as cloudinary } from 'cloudinary';
-import upload from "../middleware/multer.js";
 // import moment from 'moment';
 import { transporter } from "../config/nodemailer.js";
 import Stripe from 'stripe'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import mongoose from "mongoose";
 import academyModel from "../models/academyModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -15,7 +12,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const addAcademy = async (req, res) => {
     try {
         const { body, files } = req;
-        // dotenv.config();
     
         if (!body) {
           return res.json({ success: false, message: "Form data is required!" });
@@ -119,11 +115,12 @@ export const addAcademy = async (req, res) => {
           sameSite: "None",
           maxAge: 7 * 24 * 3600 * 1000
         });
-
+        console.log(newAcademy);
         return res.json({
           success: true,
           message: "Academy registration submitted successfully. Awaiting approval!",
-          token
+          token,
+          newAcademy
         });
 
       } catch (error) {
@@ -137,9 +134,9 @@ export const addAcademy = async (req, res) => {
 export const getAllAcademies = async (req, res) => {
     try {
       const academies = await academyModel.find();
-      res.status(200).json({ success: true, academies });
+      return res.status(200).json({ success: true,message:"Successfully", academies });
     } catch (err) {
-      res.status(500).json({ message: 'Failed to fetch academies', error: err.message });
+      return res.status(500).json({ success:false,message: 'Failed to fetch academies', error: err.message });
     }
 }
 
@@ -150,7 +147,8 @@ export const getAcademyById = async (req, res) => {
         const academyId = req.params.id;
         const academy = await academyModel.findById(academyId);
         if (!academy) return res.status(404).json({ success: false, message: "Academy not found" });
-        res.status(200).json({ success: true, academy });
+        return res.status(200).json({ success: true, academy });
+        
     } catch (err) {
       res.status(500).json({ message: 'Failed to fetch academy', error: err.message });
     }
@@ -179,7 +177,8 @@ export const updateAcademy = async (req, res) => {
           instructors: body.instructors || existingAcademy.academyBasicDetails.instructors,
           feeAmount: body.feeAmount || existingAcademy.academyBasicDetails.feeAmount,
           mode: body.mode || existingAcademy.academyBasicDetails.mode,
-          isFlexible: body.hasOwnProperty("isFlexible")? body.isFlexible === "true": existingAcademy.academyBasicDetails.isFlexible,
+          isFlexible: typeof body === "object" && body !== null && "isFlexible" in body
+              ? body.isFlexible === "true": existingAcademy.academyBasicDetails.isFlexible,
           startDate: body.startDate ? new Date(body.startDate) : existingAcademy.academyBasicDetails.startDate,
         },
         Address: {
@@ -218,7 +217,7 @@ export const updateAcademy = async (req, res) => {
           const certificateResult = await cloudinary.uploader.upload(files.certificate[0].path, {
             resource_type: "raw"
           });
-          updateData.ownerInfo.certificate = certificateResult.secure_url;
+          updateData.academyBasicDetails.certificate = certificateResult.secure_url;
         }
       }
   
@@ -247,10 +246,6 @@ export const deleteAcademy = async (req, res) => {
   try {
     const academyId = req.params.id;
     const deletedAcademy = await academyModel.findByIdAndDelete(academyId);
-
-    if (!deletedAcademy) {
-      return res.status(404).json({ success: false, message: "Academy not found" });
-    }
 
     res.status(200).json({ success: true, message: "Academy deleted successfully" });
   } catch (err) {
@@ -335,3 +330,64 @@ export const markAcademyPayment = async (req, res) => {
       res.status(500).json({ success: false, message: err.message });
     }
 };
+
+// Check otp
+export const checkAcademyOTP = async (req, res) => {
+  try {
+    const { email, otp ,id } = req.body;
+    if (!email || !otp) {
+      return res.json({ success: false, message: "Email and OTP are required!" })
+    }
+    const academy = await academyModel.findById(id);
+    if (!academy) {
+      return res.json({ success: false, message: "This email is not registered! Enter the registered email." })
+    }
+    if (otp === '' || academy.otp !== (String)(otp)) {
+      return res.json({ success: false, message: "OTP is invalid! Enter the valid OTP." })
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Academy Advertising Fee',
+              description: 'Advertising payment per month'
+            },
+            unit_amount: 5000, 
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+
+      success_url: `http://localhost:5173/verify?success=true&userId=${academy._id}`,
+      cancel_url: `http://localhost:5173/verify?success=false&userId=${academy._id}`,
+      metadata: {
+        orderType: "registration",
+        userId: academy._id.toString(),
+      },
+    });
+    return res.json({ success: true, message: "Continue your payment processing!", session_url: session.url })
+  } catch (error) {
+    res.json({ success: false, message: error.message })
+  }
+};
+
+export const getAcademyByToken = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyID)
+
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" })
+    }
+
+    return res.json({ success: true, message: "Fetch academy successfully!", academy })
+  } catch (error) {
+    console.log(error)
+    return res.json({ success: false, message: error.message })
+
+  }
+}

@@ -1,17 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { CoachContext } from "../context/Coachcontext";
+import { AcademyContext } from "../context/AcademyContext.jsx";
 import assets from "../assets/assets.js";
-// import { UserContext } from "../context/UserContext.jsx";
 
-const CoachWaitForApproval = () => {
-  const inputRefs = React.useRef([]);
+const AcademyWaitForApproval = () => {
+  const inputRefs = useRef([]);
   const [email, setEmail] = useState("");
-  const { backend_url, coachData, fetchCoach, fetchCoaches } =
-    useContext(CoachContext);
-  // const { userData } = useContext(UserContext);
-
+  const { backend_url, academy, setAcademy } = useContext(AcademyContext);
   const handleLength = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1].focus();
@@ -39,20 +35,21 @@ const CoachWaitForApproval = () => {
     try {
       const OTPArray = inputRefs.current.map((el) => el.value);
       const otp = OTPArray.join("");
-      const id = coachData._id;
-      console.log(id);
-      console.log(otp,email);
 
-      const Ctoken = localStorage.getItem("Ctoken");
-      console.log(Ctoken);
+      const id = academy?._id;
+      const AToken = localStorage.getItem("AToken");
+
       const { data } = await axios.post(
-        `${backend_url}/api/coach/check-otp`,
+        `${backend_url}/api/academy/check-academy-otp`,
         { email, otp, id },
+        {
+          headers: { Authorization: `Bearer ${AToken}` },
+          withCredentials: true,
+        }
       );
 
       if (data.success && data.session_url) {
         window.location.replace(data.session_url);
-        // toast.success(data.message);
       } else {
         toast.error(data.message || "Failed to create payment session");
       }
@@ -60,22 +57,49 @@ const CoachWaitForApproval = () => {
       toast.error(error.message || "An error occurred");
     }
   };
-  return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white flex items-center justify-center px-4 relative">
-      {/* Yellow glow background center effect */}
-      <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+
+  useEffect(() => {
+    const fetchAcademy = async () => {
+      const AToken = localStorage.getItem("AToken");
+      try {
+        const { data } = await axios.get(`${backend_url}/api/academy/get-academy-token`, {
+          headers: { Authorization: `Bearer ${AToken}` },
+          withCredentials: true,
+        });
+        if (data.success) {
+          setAcademy(data.academy); // 👈 update the context
+        }
+      } catch (error) {
+        console.error("Error fetching academy:", error);
+      }
+    };
   
-      <div className="bg-black/60 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full relative z-10 mt-20">
-        <h1 className="text-2xl font-bold text-center mb-4 text-yellow-400 drop-shadow-lg">
+    fetchAcademy();
+  }, []);
+  
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{
+        backgroundImage: `url(${assets.ApproveAcademy})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full font-sans">
+        <h1 className="text-2xl font-bold text-center mb-4 text-white">
           Waiting for Admin Approval
         </h1>
-  
-        {coachData?.isApprove ? (
+        
+        {academy?.isApprove ? (
           <>
-            <p className="text-center text-gray-300 mb-6">
-              If you've been approved, enter the OTP sent to your email to continue.
+            <p className="text-center text-white mb-6">
+              If you've been approved, enter the OTP sent to your email to
+              continue.
             </p>
-  
+
             <form onSubmit={handleSubmit}>
               <input
                 type="email"
@@ -83,9 +107,9 @@ const CoachWaitForApproval = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your registered email"
                 required
-                className="w-full mb-4 px-4 py-2 border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-800 text-white placeholder-gray-400"
+                className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               />
-  
+
               <div className="flex justify-center gap-2 mb-6">
                 {Array(6)
                   .fill(0)
@@ -99,31 +123,30 @@ const CoachWaitForApproval = () => {
                       onInput={(e) => handleLength(e, index)}
                       onKeyDown={(e) => handleLockDown(e, index)}
                       onPaste={handlePaste}
-                      className="w-10 h-12 text-center text-xl border border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-800 text-white"
+                      className="w-10 h-12 text-center text-xl border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                     />
                   ))}
               </div>
-  
+
               <button
                 type="submit"
-                className="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition font-semibold"
+                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
               >
                 Continue
               </button>
             </form>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-4 py-6">
-            <div className="w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm text-gray-300 font-medium">
-              Loading, please wait...
+          <div className="flex flex-col items-center justify-center space-y-2 py-6">
+            <div className="w-10 h-10 border-4 border-white-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-white font-medium">
+              Waiting for approval, please check back soon...
             </p>
           </div>
         )}
       </div>
     </div>
   );
-  
 };
 
-export default CoachWaitForApproval;
+export default AcademyWaitForApproval;
