@@ -9,7 +9,6 @@ const SportsAcademy = () => {
   const { uToken } = useContext(UserContext);
   const { academies, getAllAcademies } = useContext(AcademyContext);
 
-  const [academies, setAcademies] = useState([]);  // State to store fetched academies
   const [loading, setLoading] = useState(true);    // State to handle loading
   const [error, setError] = useState(null);        // State to handle errors
 
