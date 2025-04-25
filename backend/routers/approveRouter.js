@@ -1,6 +1,7 @@
 import express from 'express';
 import { approveByAdmin,  approveByCoach,  rejectByAdmin, rejectByCoach, approveAcademyByAdmin, rejectAcademyByAdmin } from '../controllers/approveController.js';
 import authCoach from '../middleware/authCoach.js';
+import authAcademy from '../middleware/authAcademy.js';
 
 const approveRouter = express.Router();
 

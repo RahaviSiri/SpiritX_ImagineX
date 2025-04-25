@@ -5,6 +5,7 @@ import { AcademyContext } from "../context/AcademyContext.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", "Hambantota",
@@ -20,9 +21,9 @@ const fileLabels = {
 
 
 const AddAcademy = () => {
-  const { addAcademy } = useContext(AcademyContext);
+  const { setAcademy, setAToken, backend_url, academy } = useContext(AcademyContext);
   const navigate = useNavigate();
-  const { id: editingAcademyId } = useParams(); 
+  const { id: editingAcademyId } = useParams();
 
   const [formData, setFormData] = useState({
     academyName: "",
@@ -48,58 +49,58 @@ const AddAcademy = () => {
     certificate: null,
   });
 
-  useEffect(() => {
-    const fetchAcademy = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/api/academy/${editingAcademyId}`);
-        const data = res.data;
-  
-        if (data.success) {
-          const academy = data.academy;
-  
-          // Fill form with existing values (remove file blobs — you can't re-populate file inputs)
-          setFormData({
-            academyName: academy.academyName || "",
-            sportType: academy.sportType || "",
-            shortDescription: academy.shortDescription || "",
-            description: academy.description || "",
-            duration: academy.duration || "",
-            instructors: academy.instructors || "",
-            feeAmount: academy.feeAmount || "",
-            mode: academy.mode || "",
-            isFlexible: academy.isFlexible || false,
-            startDate: academy.startDate?.slice(0, 10) || "",
-            Line1: academy.address?.Line1 || "",
-            Line2: academy.address?.Line2 || "",
-            city: academy.address?.city || "",
-            district: academy.address?.district || "",
-            contactNo: academy.contact?.contactNo || "",
-            HomeTP: academy.contact?.HomeTP || "",
-            whatsapp: academy.contact?.whatsapp || "",
-            email: academy.contact?.email || "",
-            academyLogo: null,
-            picture: null,
-            certificate: null,
-          });
-        }
-      } catch (err) {
-        console.error("Failed to fetch academy:", err);
-      }
-    };
-  
-    if (editingAcademyId) fetchAcademy();
-  }, [editingAcademyId]);
-  
+  // useEffect(() => {
+  //   const fetchAcademy = async () => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:3000/api/academy/${editingAcademyId}`);
+  //       const data = res.data;
+
+  //       if (data.success) {
+  //         const academy = data.academy;
+
+  //         // Fill form with existing values (remove file blobs — you can't re-populate file inputs)
+  //         setFormData({
+  //           academyName: academy.academyName || "",
+  //           sportType: academy.sportType || "",
+  //           shortDescription: academy.shortDescription || "",
+  //           description: academy.description || "",
+  //           duration: academy.duration || "",
+  //           instructors: academy.instructors || "",
+  //           feeAmount: academy.feeAmount || "",
+  //           mode: academy.mode || "",
+  //           isFlexible: academy.isFlexible || false,
+  //           startDate: academy.startDate?.slice(0, 10) || "",
+  //           Line1: academy.address?.Line1 || "",
+  //           Line2: academy.address?.Line2 || "",
+  //           city: academy.address?.city || "",
+  //           district: academy.address?.district || "",
+  //           contactNo: academy.contact?.contactNo || "",
+  //           HomeTP: academy.contact?.HomeTP || "",
+  //           whatsapp: academy.contact?.whatsapp || "",
+  //           email: academy.contact?.email || "",
+  //           academyLogo: null,
+  //           picture: null,
+  //           certificate: null,
+  //         });
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to fetch academy:", err);
+  //     }
+  //   };
+
+  //   if (editingAcademyId) fetchAcademy();
+  // }, [editingAcademyId]);
+
 
   const [previews, setPreviews] = useState({});
 
   const handleChange = (e) => {
     const { name, type, value, files, checked } = e.target;
-  
+
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, [name]: file }));
-  
+
       // Only create preview if it's an image
       if (file && file.type.startsWith("image")) {
         const reader = new FileReader();
@@ -116,8 +117,8 @@ const AddAcademy = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  };  
-  
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,21 +126,18 @@ const AddAcademy = () => {
     Object.entries(formData).forEach(([key, value]) => {
       form.append(key, value);
     });
-  
+
     try {
-      let data;
-  
-      if (editingAcademyId) {
-        const res = await axios.put(`http://localhost:3000/api/academy/${editingAcademyId}`, form, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        data = res.data;
-      } else {
-        data = await addAcademy(form); 
-      }
-      if (data?.success) {
+      const { data } = await axios.post(`${backend_url}/api/academy/add-academy`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
+
+      if (data.success) {
+        localStorage.setItem("AToken", data.token);
+        setAToken(data.token); // Set the token in state
+        setAcademy(data.newAcademy);
+        console.log(data.newAcademy);
         setFormData({
           academyName: "",
           academyLogo: null,
@@ -163,15 +161,19 @@ const AddAcademy = () => {
           email: "",
           certificate: null,
         });
-        setPreviews({});
-        navigate("/coach-wait-for-approval"); // Redirect to verification
+        // setPreviews({});
+        if (!academy || !academy.isApproved) {
+          navigate("/academy-wait-for-approval");
+        }        
+        toast.success(data.message || "Academy registered successfully!");
+      } else {
+        toast.error(data.message || "Failed to register academy");
       }
-    }catch (error) {
-      console.error("Error during submit:", error);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Error submitting academy");
     }
-  };
-
-
+  }
 
   return (
     <div
@@ -279,7 +281,7 @@ const AddAcademy = () => {
               required
               className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
             />
-            
+
             <select
               name="mode"
               value={formData.mode}
@@ -291,7 +293,7 @@ const AddAcademy = () => {
               <option value="Online">Online</option>
               <option value="Physical">Physical</option>
             </select>
-            
+
             <label className="text-white flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -420,6 +422,7 @@ const AddAcademy = () => {
           </div>
 
           <span className="text-white flex items-center space-x-2">* are required fields</span>
+          <span className="text-white flex items-center space-x-2"><strong>You will need to pay a fee for advertising in our website.</strong></span>
 
           <button
             type="submit"
