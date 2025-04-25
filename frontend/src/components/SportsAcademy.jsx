@@ -1,98 +1,97 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";  
+import { AcademyContext } from "../context/AcademyContext";
 
 const SportsAcademy = () => {
   const navigate = useNavigate();
-  
+  const { uToken } = useContext(UserContext);
+  const { academies, getAllAcademies } = useContext(AcademyContext);
+
   const [academies, setAcademies] = useState([]);  // State to store fetched academies
   const [loading, setLoading] = useState(true);    // State to handle loading
   const [error, setError] = useState(null);        // State to handle errors
 
   useEffect(() => {
-    // Function to fetch academies from backend
-    const fetchAcademies = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/academy/get-all-academies");  // Replace with your actual API endpoint
-        setAcademies(response.data.academies);
-      } catch (err) {
-        setError("Failed to load academies");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAcademies();
+    getAllAcademies();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;  // You can replace with a loading spinner or placeholder
-  }
-
-  if (error) {
-    return <div>{error}</div>;  // Display error message if fetching fails
-  }
-
   return (
-    <div className="relative min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Sports Academies</h1>
+    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4">
+      {/* Main content */}
+      <div className="w-full min-h-screen bg-black/60 p-6 rounded-xl shadow-xl">
+        {/* Header */}
+        <h2 className="text-3xl font-bold text-yellow-400 drop-shadow-lg mb-2 text-center">
+          Discover Sports Academies
+        </h2>
+        <p className="text-lg text-center text-gray-300 mb-10">
+          Explore a variety of sports academies and find the best fit for your training needs.
+        </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {academies.map((academy) => (
-          <div
-            key={academy._id}
-            className="bg-white shadow-md rounded-2xl p-4 cursor-pointer hover:shadow-xl transition-all"
-            onClick={() => navigate(`/academies/${academy._id}`)}
-          >
-            {/* Academy Picture */}
-            <img
-              src={academy.academyBasicDetails.picture}
-              alt="Academy"
-              className="w-full h-40 object-cover rounded-xl mb-3"
-            />
-
-            {/* Academy Logo & Name */}
-            <div className="flex items-center gap-3 mb-2">
-              <img
-                src={academy.academyBasicDetails.academyLogo}
-                alt="Logo"
-                className="w-10 h-10 object-cover rounded-full border"
-              />
-              <h2 className="text-xl font-semibold">
-                {academy.academyBasicDetails.academyName}
-              </h2>
+        {/* Academies List */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {academies.length === 0 ? (
+            <div className="text-center col-span-full py-10 text-white">
+              <h2 className="text-xl font-semibold mb-2">No academies found</h2>
+              <p className="text-gray-300">
+                Try adjusting your search criteria or check back later.
+              </p>
             </div>
-
-            <p className="text-gray-600 mb-2">
-              {academy.academyBasicDetails.description}
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>Sport:</strong> {academy.academyBasicDetails.sportType}
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>Mode:</strong> {academy.academyBasicDetails.mode}
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>Location:</strong> {academy.Address.city},{" "}
-              {academy.Address.district}
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>Fee:</strong>{" "}
-              {academy.academyBasicDetails.feeAmount === 0
-                ? "Free"
-                : `Rs. ${academy.academyBasicDetails.feeAmount}`}
-            </p>
-          </div>
-        ))}
+          ) : (
+            academies.map((academy) => {
+              return (
+                <div
+                  key={academy._id}
+                  onClick={() => navigate(`/academy/${academy._id}`)}
+                  className="bg-gray-800 rounded-2xl shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border border-yellow-400"
+                >
+                  <div className="flex flex-col items-center p-6">
+                    <img
+                      src={academy.academyBasicDetails.picture}
+                      alt="Academy"
+                      className="w-full h-40 object-cover rounded-xl mb-3"
+                    />
+                    <img
+                      src={academy.academyBasicDetails.academyLogo}
+                      alt="Academy Logo"
+                      className="w-12 h-12 rounded-full border-4 border-yellow-400 mb-3"
+                    />
+                    <h3 className="text-lg font-bold text-yellow-300">
+                      {academy.academyBasicDetails.academyName}
+                    </h3>
+                    <p className="text-gray-300 text-sm text-center">
+                      {academy.academyBasicDetails.description}
+                    </p>
+                    <div className="mt-2 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">
+                      {academy.academyBasicDetails.sportType}
+                    </div>
+                    <p className="text-gray-300 text-sm mt-2">
+                      <strong>Mode:</strong> {academy.academyBasicDetails.mode}
+                    </p>
+                    <p className="text-gray-300 text-sm mt-2">
+                      <strong>Location:</strong> {academy.Address.city}, {academy.Address.district}
+                    </p>
+                    <p className="text-gray-300 text-sm mt-2">
+                      <strong>Fee:</strong> {academy.academyBasicDetails.feeAmount === 0 ? "Free" : `Rs. ${academy.academyBasicDetails.feeAmount}`}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
-      <button
-        onClick={() => navigate("/add-academy")}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg transition-all"
-      >
-        Apply for Listing
-      </button>
+      {/* Fixed Apply for Listing button at left corner */}
+      <div className="fixed bottom-10 right-4">
+        <button
+          className="bg-yellow-400 text-black font-semibold px-8 py-3 rounded-full hover:bg-yellow-500 transition"
+          onClick={() => { uToken ? navigate("/add-academy") : navigate("/login") }}
+        >
+          Apply for Listing
+        </button>
+      </div>
     </div>
   );
 };

@@ -48,7 +48,7 @@ export const approveByAdmin = async (req, res) => {
           <p>If you have any questions or need assistance, don’t hesitate to reach out. We’re here to help!</p>
           
           <p style="margin-top: 30px;">Warm regards,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -90,7 +90,7 @@ export const rejectByAdmin = async (req, res) => {
           <p>Thank you once again for your interest in being a part of our platform.</p>
     
           <p style="margin-top: 30px;">Sincerely,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -149,7 +149,7 @@ export const approveByCoach = async (req, res) => {
           <p>If you have any questions or need further assistance, feel free to contact us anytime.</p>
     
           <p style="margin-top: 30px;">Thank you and best of luck with your session!<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -193,7 +193,7 @@ export const rejectByCoach = async (req, res) => {
           <p>You can browse our directory and submit a request to another coach at your convenience.</p>
     
           <p style="margin-top: 30px;">Thank you for using our platform,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -213,6 +213,93 @@ export const rejectByCoach = async (req, res) => {
   }
 };
 
+export const approveAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    const otp = Math.floor(Math.random() * 900000 + 100000);
+    academy.otp = otp;
+    academy.isApprove = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contactDetails.email,
+      subject: '🎉 Welcome to the SportsHive Platform – Your Academy Has Been Approved!',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #4CAF50;">Hi ${academy.academyBasicDetails.academyName},</h2>
+
+          <p>🎉 <strong>Great news!</strong> Your academy application has been <strong>approved</strong> by our admin team.</p>
+
+          <p>We're thrilled to welcome you to our platform. You're now one step closer to helping students thrive in sports.</p>
+
+          <p style="font-size: 16px; margin-top: 20px;">
+            <strong>To activate your account, please verify using the OTP below:</strong>
+          </p>
+
+          <div style="font-size: 20px; font-weight: bold; background: #f0f0f0; padding: 15px; border-radius: 8px; display: inline-block; margin: 10px 0;">
+            🔐 OTP: ${otp}
+          </div>
+
+          <p>Enter this code on the verification page to proceed.</p>
+
+          <p>If you have questions or need help, our support team is always here for you.</p>
+
+          <p style="margin-top: 30px;">Warm regards,<br/>
+          <strong>SportsHive Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy approved successfully!", otp });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export const rejectAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    academy.isReject = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contactDetails.email,
+      subject: "Update on Your Academy Application",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+          <h2 style="color: #D32F2F;">Dear ${academy.academyBasicDetails.academyName},</h2>
+
+          <p>Thank you for your interest in joining <strong>SportsHive</strong>.</p>
+
+          <p>After reviewing your application, we regret to inform you that your academy doesn't currently meet our criteria for approval.</p>
+
+          <p>We encourage you to revisit your details, improve wherever needed, and reapply in the future. We’d love to reconsider your application at that time.</p>
+
+          <p>Thank you once again for considering SportsHive as your platform.</p>
+
+          <p style="margin-top: 30px;">Warm regards,<br/>
+          <strong>SportsHive Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy rejected successfully!" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
 
 export const countBooking = async (req, res) => {
   try {

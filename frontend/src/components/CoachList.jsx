@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CoachContext } from "../context/Coachcontext";
 import assets from "../assets/assets.js";
 import { UserCog, Users, Medal } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const calculateAge = (dob) => {
   if (!dob) return "N/A";
@@ -46,6 +47,7 @@ const districts = [
 const CoachList = () => {
   const { userDatas, fetchCoaches } = useContext(CoachContext);
   const navigate = useNavigate();
+  const { uToken } = useContext(UserContext);
 
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
@@ -191,7 +193,7 @@ const CoachList = () => {
           <p className="text-lg mb-2">Do you want to join with us ?</p>
           <button
             className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-500 transition"
-            onClick={() => navigate("/coach-registration")}
+            onClick={() => { uToken ? navigate("/coach-registration") : navigate("/login") } }
           >
             Join with as Coach
           </button>

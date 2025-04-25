@@ -4,13 +4,13 @@ import { CoachContext } from "../context/Coachcontext";
 import axios from "axios";
 import assets from "../assets/assets.js";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { userData, backendURL, fetchUser } = useContext(UserContext);
   const { coachData, fetchCoach } = useContext(CoachContext);
   const isCoach = !!coachData && Object.keys(coachData).length > 0;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [editMode, setEditMode] = useState(false);
   const [editableUser, setEditableUser] = useState({ ...userData });
@@ -104,7 +104,7 @@ const Profile = () => {
 
         if (editableUser.imageFile) {
           formData.append("image", editableUser.imageFile);
-        }        
+        }
 
         try {
           const { data } = await axios.post(
@@ -129,6 +129,7 @@ const Profile = () => {
       setEditMode(false);
     } catch (error) {
       alert("Error saving profile.");
+      console.log(error);
     }
   };
 
@@ -143,6 +144,7 @@ const Profile = () => {
       }
     } catch (error) {
       toast.error("Error deleting coach account.");
+      console.log(error);
     }
   };
   return (
@@ -177,19 +179,23 @@ const Profile = () => {
             )}
           </div>
         </div>
-  
+
         <div className="flex flex-col sm:flex-row gap-8 items-start">
           {/* Profile Image */}
           <div className="relative w-40 h-40 flex-shrink-0">
             <img
               src={
                 isCoach
-                  ? coachData?.personalInfo?.profile || assets.Upload
-                  : userData.image || assets.Upload
+                  ? editableCoach?.personalInfo?.profile ||
+                    coachData?.personalInfo?.profile ||
+                    assets.Upload
+                  : editableUser?.image || userData.image || assets.Upload
               }
               alt="Profile"
               className="w-full h-full rounded-full border-4 border-yellow-400 object-cover"
             />
+
+            {/* File Input for Image Upload in Edit Mode */}
             {editMode && (
               <input
                 type="file"
@@ -203,14 +209,14 @@ const Profile = () => {
                           ...prev,
                           personalInfo: {
                             ...prev.personalInfo,
-                            profile: imageUrl,
-                            profileFile: file,
+                            profile: imageUrl, // Image preview URL
+                            profileFile: file, // Actual file for saving
                           },
                         }))
                       : setEditableUser((prev) => ({
                           ...prev,
-                          image: imageUrl,
-                          imageFile: file,
+                          image: imageUrl, // Image preview URL
+                          imageFile: file, // Actual file for saving
                         }));
                   }
                 }}
@@ -218,7 +224,7 @@ const Profile = () => {
               />
             )}
           </div>
-  
+
           {/* Profile Fields */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
             {(isCoach
@@ -231,10 +237,20 @@ const Profile = () => {
                   { label: "Address Line 2", name: "Address.Line2" },
                   { label: "City", name: "Address.city" },
                   { label: "District", name: "Address.district" },
-                  { label: "Selection Type", name: "coachSelection.selectionType" },
+                  {
+                    label: "Selection Type",
+                    name: "coachSelection.selectionType",
+                  },
                   { label: "Sport", name: "coachSelection.sport" },
-                  { label: "Qualifications", name: "coachSelection.qualifications" },
-                  { label: "Date of Birth", name: "personalInfo.DOB", type: "date" },
+                  {
+                    label: "Qualifications",
+                    name: "coachSelection.qualifications",
+                  },
+                  {
+                    label: "Date of Birth",
+                    name: "personalInfo.DOB",
+                    type: "date",
+                  },
                 ]
               : [
                   { label: "Name", name: "name" },
@@ -245,30 +261,51 @@ const Profile = () => {
             ).map(({ label, name, type, readonly }) => {
               const value = name
                 .split(".")
-                .reduce((obj, key) => (obj ? obj[key] : ""), isCoach ? (editMode ? editableCoach : coachData) : editableUser);
-  
+                .reduce(
+                  (obj, key) => (obj ? obj[key] : ""),
+                  isCoach
+                    ? editMode
+                      ? editableCoach
+                      : coachData
+                    : editableUser
+                );
+
               return (
                 <div key={name} className="flex items-center">
-                  <label className="w-40 text-sm font-semibold text-gray-300">{label}:</label>
+                  <label className="w-40 text-sm font-semibold text-gray-300">
+                    {label}:
+                  </label>
                   {editMode && !readonly ? (
                     <input
                       type={type || "text"}
                       name={name}
-                      value={type === "date" && value ? value.split("T")[0] : value || ""}
-                      onChange={(e) => handleChange(e, isCoach ? "coach" : "user")}
+                      value={
+                        type === "date" && value
+                          ? value.split("T")[0]
+                          : value || ""
+                      }
+                      onChange={(e) =>
+                        handleChange(e, isCoach ? "coach" : "user")
+                      }
                       className="flex-1 p-2 rounded bg-gray-900 border border-gray-700 text-yellow-300"
                     />
                   ) : (
-                    <p className="flex-1 text-gray-300 break-words">{type === "date" && value ? new Date(value).toLocaleDateString() : value}</p>
+                    <p className="flex-1 text-gray-300 break-words">
+                      {type === "date" && value
+                        ? new Date(value).toLocaleDateString()
+                        : value}
+                    </p>
                   )}
                 </div>
               );
             })}
-  
+
             {/* Qualifications Photo */}
             {isCoach && coachData?.coachSelection?.qualifications_photo && (
               <div className="flex items-center col-span-2">
-                <label className="w-40 font-semibold text-yellow-400">Qualifications Photo:</label>
+                <label className="w-40 font-semibold text-yellow-400">
+                  Qualifications Photo:
+                </label>
                 <a
                   href={coachData.coachSelection.qualifications_photo}
                   target="_blank"
@@ -279,12 +316,13 @@ const Profile = () => {
                 </a>
               </div>
             )}
-  
+
             {/* Joined Date for User */}
             {!isCoach && (
               <div className="col-span-2">
                 <p className="text-sm text-gray-400">
-                  <strong>Joined:</strong> {new Date(userData.createdAt).toLocaleDateString()}
+                  <strong>Joined:</strong>{" "}
+                  {new Date(userData.createdAt).toLocaleDateString()}
                 </p>
               </div>
             )}
@@ -293,12 +331,6 @@ const Profile = () => {
       </div>
     </div>
   );
-  
-  
-  
-  
-  
-  
 };
 
 export default Profile;

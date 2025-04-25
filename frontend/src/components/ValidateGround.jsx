@@ -51,7 +51,7 @@ const ValidateGround = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-6"
+      className="min-h-screen flex items-center justify-center px-4 py-10"
       style={{
         backgroundImage: `url(${assets.ValidationBackround})`,
         backgroundSize: "cover",
@@ -59,28 +59,32 @@ const ValidateGround = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="bg-black/40 p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-xl font-bold text-center mb-4 text-white">
-          Are you sure to {action} ground ? 
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-yellow-300/50"></div>
+      <div className="w-full max-w-md bg-black/50 backdrop-blur-md p-8 rounded-xl shadow-2xl shadow-black">
+        <h2 className="text-2xl font-bold text-yellow-400 text-center mb-6">
+          Confirm to {action} Ground
         </h2>
+
         <div className="space-y-4">
           <input
             type="email"
             placeholder="Owner Email"
             value={ownerEmail}
             onChange={(e) => setOwnerEmail(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="text-white w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
           <input
             type="password"
             placeholder="Owner Password"
             value={ownerPassword}
             onChange={(e) => setOwnerPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="text-white w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
+
           <button
             onClick={handleValidation}
-            className="w-full bg-blue-400 text-white py-2 rounded-md hover:bg-blue-500 transition"
+            className="w-full bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 transition"
           >
             {action === "Delete" ? "Confirm Deletion" : "Proceed to Update"}
           </button>

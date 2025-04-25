@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ export const AcademyContext = createContext();
 export const AcademyContextProvider = (props) => {
     const [academies, setAcademies] = useState([]);
     const [academy, setAcademy] = useState(null);
+    const [AToken, setAToken] = useState('');
 
     const backend_url = 'http://localhost:3000';
 
@@ -26,6 +27,7 @@ export const AcademyContextProvider = (props) => {
     const getAcademy = async (id) => {
         try {
             const { data } = await axios.get(`${backend_url}/api/academy/get-academy/${id}`);
+            console.log(data);
             if (data.success) {
                 setAcademy(data.academy);
             } else {
@@ -36,26 +38,36 @@ export const AcademyContextProvider = (props) => {
         }
     }
 
-    const addAcademy = async (formData) => {
-        try {
-            const { data } = await axios.post(`${backend_url}/api/academy/add-academy`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true,
-            });
+    // const fetchAcademy = async () => {
+    //     try {
+    //       const Atoken = localStorage.getItem('Atoken')
+    //       const { data :response} = await axios.get(`${backend_url}/api/academy/get-academy-token`, {
+    //         headers: {
+    //           Authorization: `Bearer ${Atoken}`, // Add space after Bearer
+    //         },
+    //         // withCredentials :true
+    //       });
+    //       console.log(response)
+    //       if (response.success) {
+    //         setAcademy(response.academy);
+    //         console.log(response.academy);
+    //       } else {
+    //         toast.error("Error in fetching user");
+    //       }
+    //     } catch (error) {
+          
+    //       toast.error("An error occurred while fetching user data");
+          
+    //     }
+    //   };
+
     
-            if (data.success) {
-                toast.success(data.message || "Academy registered successfully!");
-                
-                return data;
-            } else {
-                toast.error(data.message || "Failed to register academy");
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error(error.message || "Error submitting academy");
+    useEffect(() => {
+        const storedtoken = localStorage.getItem('Atoken')
+        if(storedtoken){
+            console.log("Hi"); 
         }
-    };
-    
+    },[AToken]) 
 
     const value = {
         backend_url,
@@ -65,7 +77,8 @@ export const AcademyContextProvider = (props) => {
         setAcademies,
         getAllAcademies,
         getAcademy,
-        addAcademy,
+        AToken,
+        setAToken
     }
 
     return (

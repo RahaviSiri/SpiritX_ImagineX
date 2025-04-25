@@ -13,13 +13,13 @@ import {
 const features = [
   {
     title: "Ground Selection",
-    path: "/grounds",
+    path: "/all-ground",
     icon: <FaFutbol className="text-5xl text-yellow-400" />,
     description: "Explore and book sports grounds near you."
   },
   {
     title: "Coach Selection",
-    path: "/coaches",
+    path: "/coach-list",
     icon: <FaChalkboardTeacher className="text-5xl text-green-400" />,
     description: "Connect with skilled coaches for personalized training."
   },
@@ -31,19 +31,19 @@ const features = [
   },
   {
     title: "Find Competitions",
-    path: "/competitions",
+    path: "/CompetitionPage",
     icon: <FaTrophy className="text-5xl text-red-400" />,
     description: "Discover upcoming tournaments and compete."
   },
   {
     title: "Find Clubs",
-    path: "/clubs",
+    path: "/club",
     icon: <FaUsers className="text-5xl text-purple-400" />,
     description: "Meet people with shared sports interests."
   },
   {
     title: "Academy",
-    path: "/academy",
+    path: "/sports-academy",
     icon: <FaGraduationCap className="text-5xl text-pink-400" />,
     description: "Find sports academies for all age groups and levels."
   }
