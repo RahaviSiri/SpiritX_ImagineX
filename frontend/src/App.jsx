@@ -38,7 +38,7 @@ import { useEffect } from "react";
 
 function App() {
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  // const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     AOS.init({

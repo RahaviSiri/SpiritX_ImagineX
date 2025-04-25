@@ -18,21 +18,6 @@ const Navbar = () => {
     fetchUser();
   }, [uToken]);
 
-  const navLinks = [
-    { label: "Home", to: "/" },
-    { label: "Find Ground", to: "/all-ground" },
-    { label: "Find Coach", to: "/coach-list" },
-    { label: "Explore Sports", to: "/sports" },
-    { label: "Competitions", to: "/CompetitionPage" },
-    { label: "Clubs", to: "/club" },
-    { label: "Academy", to: "/sports-academy" },
-  ];
-
-  const moreLinks = [
-    { label: "About Us", to: "/about-us" },
-    { label: "Contact Us", to: "/contact" },
-  ];
-
   return (
     <nav className="w-full fixed top-0 left-0 z-50 bg-black bg-opacity-60 backdrop-blur-md text-white">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-8 py-4">
