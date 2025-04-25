@@ -58,14 +58,17 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 relative">
+    <div
+      className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 relative"
+      style={{ backgroundImage: `url(${assets.LoginBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
+    >
       {/* Yellow glow background effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
   
       {/* Main Container */}
-      <div className="w-full min-h-screen bg-black/60 p-6 rounded-xl shadow-xl flex items-center justify-center relative z-10">
+      <div className="w-full h-screen bg-black/0 p-6 rounded-xl shadow-xl flex items-center justify-center relative z-10">
         {state === "Sign Up" ? (
-          <div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-2xl shadow-2xl">
+          <div className="w-full max-w-md p-8 bg-black bg-opacity-60 rounded-2xl shadow-2xl mt">
             <h2 className="text-3xl font-bold text-yellow-400 text-center mb-4">Create Account</h2>
             <p className="text-lg text-center text-gray-300 mb-8">Grow your Sports Life</p>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -75,7 +78,7 @@ const Login = () => {
                   id="name"
                   type="text"
                   required
-                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  className="bg-transparent border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -86,7 +89,7 @@ const Login = () => {
                   id="email"
                   type="email"
                   required
-                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  className="bg-transparent border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -97,7 +100,7 @@ const Login = () => {
                   id="password"
                   type="password"
                   required
-                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  className="bg-transparent border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -120,7 +123,7 @@ const Login = () => {
             </p>
           </div>
         ) : (
-          <div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-2xl shadow-2xl">
+          <div className="w-full max-w-md p-8 bg-black bg-opacity-60 rounded-2xl shadow-2xl">
             <h2 className="text-3xl font-bold text-yellow-400 text-center mb-4">Login</h2>
             <p className="text-lg text-center text-gray-300 mb-8">Login to get more benefits</p>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -130,7 +133,7 @@ const Login = () => {
                   id="email"
                   type="email"
                   required
-                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  className="bg-transparent border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -141,7 +144,7 @@ const Login = () => {
                   id="password"
                   type="password"
                   required
-                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                  className="bg-transparent border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -176,7 +179,6 @@ const Login = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Login;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { UploadCloud } from "lucide-react";
 import assets from "../assets/assets.js";
 import { AcademyContext } from "../context/AcademyContext.jsx";
@@ -111,7 +111,7 @@ const AddAcademy = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans"
+      className="flex justify-center items-center min-h-screen bg-black px-4 font-sans"
       style={{
         backgroundImage: `url(${assets.AddAcademy})`,
         backgroundSize: "cover",
@@ -119,9 +119,9 @@ const AddAcademy = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="w-full max-w-4xl bg-black/30 p-8 rounded-2xl shadow-xl space-y-6">
+      <div className="w-full mt-20 max-w-4xl bg-black/50 p-8 rounded-2xl shadow-xl space-y-6 border border-yellow-400">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h1 className="text-2xl font-bold text-center mb-4 text-white">Academy Registration</h1>
+          <h1 className="text-4xl font-bold text-center mb-5 text-yellow-400">Academy Registration</h1>
 
           {/* Academy Name */}
           <input
@@ -131,7 +131,7 @@ const AddAcademy = () => {
             value={formData.academyName}
             onChange={handleChange}
             required
-            className="w-full border border-blue-300 p-2 rounded-md outline-none"
+            className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
           />
 
           {/* Academy Logo & Picture */}
@@ -150,7 +150,7 @@ const AddAcademy = () => {
                     )}
                   </div>
                 ) : (
-                  <label className="flex items-center gap-2 hover:underline cursor-pointer text-sm text-white font-medium border border-dashed border-white-400 p-2 rounded-md">
+                  <label className="flex items-center gap-2 hover:underline cursor-pointer text-sm text-white font-medium border border-dashed border-yellow-500 p-2 rounded-md">
                     <UploadCloud size={16} /> Upload {fileLabels[fileKey]}
                     <input type="file" name={fileKey} onChange={handleChange} hidden required />
                   </label>
@@ -167,7 +167,7 @@ const AddAcademy = () => {
               placeholder="Sport Type"
               value={formData.sportType}
               onChange={handleChange}
-              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <textarea
               name="shortDescription"
@@ -175,7 +175,7 @@ const AddAcademy = () => {
               value={formData.shortDescription}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <textarea
               name="description"
@@ -183,7 +183,7 @@ const AddAcademy = () => {
               value={formData.description}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <input
               type="text"
@@ -192,7 +192,7 @@ const AddAcademy = () => {
               value={formData.duration}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="number"
@@ -204,7 +204,7 @@ const AddAcademy = () => {
                 if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
               }}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none appearance-none bg-transparent [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
             <input
               type="text"
@@ -213,7 +213,7 @@ const AddAcademy = () => {
               value={formData.instructors}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             
             <select
@@ -221,7 +221,7 @@ const AddAcademy = () => {
               value={formData.mode}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             >
               <option value="">Select Mode</option>
               <option value="Online">Online</option>
@@ -246,7 +246,7 @@ const AddAcademy = () => {
                   name="startDate"
                   onChange={handleChange}
                   required
-                  className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                  className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
                 />
               </label>
             )}
@@ -261,7 +261,7 @@ const AddAcademy = () => {
               value={formData.Line1}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="text"
@@ -269,7 +269,7 @@ const AddAcademy = () => {
               placeholder="Address Line 2"
               value={formData.Line2}
               onChange={handleChange}
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="text"
@@ -278,14 +278,14 @@ const AddAcademy = () => {
               value={formData.city}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <select
               name="district"
               value={formData.district}
               onChange={handleChange}
               required
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             >
               <option value="">Select District*</option>
               {districts.map((district) => (
@@ -312,7 +312,7 @@ const AddAcademy = () => {
                 value={formData[name]}
                 onChange={handleChange}
                 required={placeholder.includes("*")}
-                className="w-full border border-blue-300 p-2 rounded-md outline-none text-black"
+                className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent text-black"
               />
             ))}
           </div>
@@ -332,7 +332,7 @@ const AddAcademy = () => {
                         setFormData({ ...formData, [fileKey]: null });
                         setPreviews({ ...previews, [fileKey]: null });
                       }}
-                      className="cursor-pointer border border-blue-300 p-2 rounded-md bg-white text-black w-fit"
+                      className="cursor-pointer border border-yellow-500 p-2 rounded-md bg-white text-black w-fit"
                     >
                       {isImage ? (
                         <img
@@ -345,7 +345,7 @@ const AddAcademy = () => {
                       )}
                     </div>
                   ) : (
-                    <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md">
+                    <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-500 p-2 rounded-md">
                       <UploadCloud size={16} /> Upload {fileLabels[fileKey]}
                       <input type="file" name={fileKey} onChange={handleChange} hidden required />
                     </label>
@@ -359,7 +359,7 @@ const AddAcademy = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
+            className="w-full py-3 bg-yellow-600 text-white text-lg font-semibold rounded-xl transition"
           >
             Register
           </button>

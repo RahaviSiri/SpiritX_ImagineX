@@ -20,6 +20,7 @@ import Cricket from "./pages/Sports/Cricket";
 import Football from "./pages/Sports/Football";
 import Volleyball from "./pages/Sports/Volleyball";
 import Netball from "./pages/Sports/Netball";
+import Tennis from "./pages/Sports/Tennis";
 import Verify from "./components/Verify";
 import ResetPasswordSendOTP from "./components/ResetPasswordSendOTP";
 import ResetPassword from "./components/ResetPassword";
@@ -93,6 +94,7 @@ function App() {
           <Route path="/sports/football" element={<Football />} />
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
+          <Route path="/sports/tennis" element={<Tennis />} />
         </Routes>
       </main>
       <Footer />

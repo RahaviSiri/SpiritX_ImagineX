@@ -75,7 +75,7 @@ const CoachRegistration = () => {
 
   useEffect(() => {
     const savedProfile = localStorage.getItem("coachProfile");
-    const savedProfileName = localStorage.getItem("coachProfile_name");
+    //const savedProfileName = localStorage.getItem("coachProfile_name");
     const savedNIC = localStorage.getItem("coachNIC");
     const savedNICName = localStorage.getItem("NIC_name");
     const savedQual = localStorage.getItem("coachQual");
@@ -139,12 +139,17 @@ const CoachRegistration = () => {
   };
   
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4">
+    <div
+      className="relative w-full min-h-screen bg-cover bg-center bg-no-repeat text-white pt-16 px-4"
+      style={{
+        backgroundImage: `url(${assets.AddCoach})`,
+      }}
+    >
       {/* Yellow glow background center effect */}
       <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
   
       {/* Form container */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto bg-black/60 p-8 rounded-2xl shadow-xl">
+      <div className="relative mt-10 z-10 w-full max-w-4xl mx-auto bg-black/50 p-8 rounded-2xl shadow-xl border border-yellow-400">
         <form onSubmit={handleSubmit}>
           <h1 className="text-3xl font-bold text-yellow-400 drop-shadow-lg text-center mb-6">
             Register to Become a Coach
@@ -161,7 +166,7 @@ const CoachRegistration = () => {
                 value={fullName}
                 type="text"
                 placeholder="Full Name*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
   
@@ -200,7 +205,7 @@ const CoachRegistration = () => {
                 value={DOB}
                 type="date"
                 placeholder="Date of Birth*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
   
               <div className="flex items-center gap-4 text-white">
@@ -226,7 +231,7 @@ const CoachRegistration = () => {
                 value={NIC}
                 required
                 placeholder="NIC No*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
   
               {NIC_photo ? (
@@ -288,7 +293,7 @@ const CoachRegistration = () => {
                   onChange={(e) => onChange(e.target.value)}
                   value={value}
                   placeholder={placeholder}
-                  className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                  className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                   required={required}
                 />
               ))}
@@ -306,7 +311,7 @@ const CoachRegistration = () => {
                 onChange={(e) => setLine1(e.target.value)}
                 value={Line1}
                 placeholder="Line 1*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
               <input
@@ -314,21 +319,21 @@ const CoachRegistration = () => {
                 onChange={(e) => setLine2(e.target.value)}
                 value={Line2}
                 placeholder="Line 2"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
               <input
                 type="text"
                 onChange={(e) => setCity(e.target.value)}
                 value={city}
                 placeholder="City*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
               <select
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
                 required
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white"
               >
                 <option value="" disabled>Select District*</option>
                 {districts.map((d) => (
@@ -367,11 +372,11 @@ const CoachRegistration = () => {
                 onChange={(e) => setSalary(e.target.value)}
                 value={salary}
                 placeholder="Expected salary*"
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
               <select
-                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white"
+                className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white"
                 onChange={(e) => setSport(e.target.value)}
                 value={sport}
               >
@@ -389,7 +394,7 @@ const CoachRegistration = () => {
               onChange={(e) => setQualifications(e.target.value)}
               value={qualifications}
               placeholder="Academic Qualifications"
-              className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+              className="bg-transparent border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               rows={4}
             ></textarea>
   

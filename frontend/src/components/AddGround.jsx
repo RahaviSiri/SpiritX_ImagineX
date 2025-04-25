@@ -8,8 +8,7 @@ import { GroundContext } from "../context/GroundContext.jsx";
 
 const AddGround = () => {
   const { id } = useParams();
-  console.log(id);
-  const { getGround, ground } = useContext(GroundContext);
+  const { getGround, ground, backend_url } = useContext(GroundContext);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
@@ -20,14 +19,13 @@ const AddGround = () => {
   const [ownerPassword, setOwnerPassword] = useState("");
   const [groundType, setGroundType] = useState("");
 
-  const { backend_url } = useContext(GroundContext);
   const navigate = useNavigate();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setImage(file);
+  //   setImagePreview(URL.createObjectURL(file));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,36 +128,42 @@ const AddGround = () => {
       setCategory(ground.category || "");
       setAddress(ground.address || "");
       setFreeTime(ground.freeTime || []);
-      // setOwnerEmail(ground.ownerEmail || "");
-      // setOwnerPassword(ground.ownerPassword || "");
       setGroundType(ground.groundType || "");
       setImagePreview(ground.image || null);
     }
   }, [ground]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 font-sans relative pt-20 pb-4 bg-black">
+    <div
+      className="flex justify-center items-center min-h-screen px-4 font-sans relative pt-20 pb-4"
+      style={{
+        backgroundImage: `url(${assets.AddGround})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* Yellow Glow Background Layer */}
       <div className="absolute top-1/2 left-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0" />
-  
-      <div className="relative w-full max-w-3xl bg-gray-900 p-8 rounded-2xl shadow-2xl z-10 text-white space-y-6 border border-gray-700">
+
+      <div className="relative w-full max-w-3xl bg-black/40 backdrop-blur-md p-8 rounded-2xl shadow-2xl z-10 text-white space-y-6 border border-yellow-600">
         <form onSubmit={handleSubmit}>
           <h1 className="text-3xl font-bold text-center text-yellow-400 drop-shadow-lg mb-4">
             Register Your Ground
           </h1>
-  
+
           <div className="space-y-5">
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ground Name*"
-              className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
               required
             />
-  
+
             <select
-              className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none focus:border-yellow-400"
+              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none focus:border-yellow-400"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
@@ -169,7 +173,7 @@ const AddGround = () => {
               <option value="outdoor">Outdoor</option>
               <option value="sports">Sports</option>
             </select>
-  
+
             {imagePreview ? (
               <div
                 onClick={() => {
@@ -185,7 +189,7 @@ const AddGround = () => {
                 />
               </div>
             ) : (
-              <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-gray-600 p-3 rounded-lg bg-gray-800">
+              <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed bg-transparent border-yellow-500 p-3 rounded-lg bg-gray-800">
                 <UploadCloud size={18} /> Upload Ground Image*
                 <input
                   type="file"
@@ -202,16 +206,16 @@ const AddGround = () => {
                 />
               </label>
             )}
-  
+
             <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Address*"
-              className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
               required
             />
-  
+
             <input
               type="text"
               value={freeTime.join(", ")}
@@ -224,10 +228,10 @@ const AddGround = () => {
                 setFreeTime(timeSlots);
               }}
               placeholder="Free Time (e.g., 8:00 AM - 10:00 AM, 2:00 PM - 4:00 PM)*"
-              className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
               required
             />
-  
+
             {!id && (
               <>
                 <input
@@ -235,23 +239,23 @@ const AddGround = () => {
                   value={ownerEmail}
                   onChange={(e) => setOwnerEmail(e.target.value)}
                   placeholder="Owner Email*"
-                  className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+                  className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
                   required
                 />
-  
+
                 <input
                   type="password"
                   value={ownerPassword}
                   onChange={(e) => setOwnerPassword(e.target.value)}
                   placeholder="Owner Password*"
-                  className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+                  className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
                   required
                 />
               </>
             )}
-  
+
             <select
-              className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none focus:border-yellow-400"
+              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none focus:border-yellow-400"
               value={groundType}
               onChange={(e) => setGroundType(e.target.value)}
               required
@@ -264,7 +268,7 @@ const AddGround = () => {
               <option value="Net Ball">Net Ball</option>
             </select>
           </div>
-  
+
           <button
             type="submit"
             className="mt-6 w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black text-lg font-bold rounded-xl transition duration-300"
@@ -275,7 +279,6 @@ const AddGround = () => {
       </div>
     </div>
   );
-  
 };
 
 export default AddGround;
