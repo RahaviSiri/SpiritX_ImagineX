@@ -12,7 +12,9 @@ const Navbar = () => {
   const closeNav = () => setNavOpen(false);
 
   useEffect(() => {
-    fetchUser();
+    if(uToken){
+      fetchUser();
+    }
   },[uToken])
 
   return (

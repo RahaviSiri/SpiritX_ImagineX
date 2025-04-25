@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { toast } from "react-toastify";
+import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [competitions, setCompetitions] = useState([]);
@@ -7,6 +9,8 @@ function App() {
   const [registrationLink, setRegistrationLink] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const { uToken } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadCompetitions();
@@ -75,14 +79,12 @@ function App() {
               onClick={() => setPreviewImage(competition.posterImage)}
               className="w-full h-56 object-cover rounded-2xl mb-4 cursor-pointer"
             />
-            <a
-              href={competition.registrationLink}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => uToken ? window.open(competition.registrationLink, '_blank') : navigate('/login')}
               className="block text-yellow-300 font-semibold text-center hover:underline text-lg"
             >
               Register Here
-            </a>
+            </button>
           </div>
         ))}
       </div>
@@ -90,7 +92,7 @@ function App() {
       {/* Add Competition Button */}
       <div className="mt-12 text-center">
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => { uToken ? setShowForm(true) : navigate('/login'); }}
           className="bg-yellow-400 hover:bg-yellow-500 text-black py-3 px-8 rounded-full font-bold text-lg transition-transform hover:scale-105"
         >
           ➕ Add Competition
