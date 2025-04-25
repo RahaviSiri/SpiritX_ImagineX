@@ -25,7 +25,7 @@ const Verify = () => {
         console.log(response);
         if (response.success) {
           toast.success(response.message);
-          navigate("/coach-list");
+          navigate("/");
         } else {
           toast.error(response.message || "Something went wrong");
         }
