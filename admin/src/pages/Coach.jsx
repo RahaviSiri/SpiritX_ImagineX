@@ -71,28 +71,27 @@ const Coach = () => {
   });
 
   return (
-    <div className="min-h-screen bg-cover bg-center p-4 sm:p-6 overflow-x-hidden">
-      <div className="min-h-screen">
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 overflow-x-auto">
+      {/* Yellow glowing orb */}
+      <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+  
+      {/* Main container */}
+      <div className="relative z-10 w-full min-h-screen bg-black/60 p-6 rounded-xl shadow-xl">
+        {/* Header and Filters */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-yellow-400 drop-shadow-lg">
             Coach Applications
           </h2>
-
+  
           <div className="flex flex-wrap gap-2">
             {["all", "pending", "approved", "rejected"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-lg transition text-sm ${
+                className={`px-4 py-2 rounded-full text-sm border transition ${
                   filterStatus === status
-                    ? status === "all"
-                      ? "bg-blue-600 text-white"
-                      : status === "pending"
-                      ? "bg-yellow-500 text-white"
-                      : status === "approved"
-                      ? "bg-green-600 text-white"
-                      : "bg-red-600 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    ? "bg-yellow-400 text-black font-semibold"
+                    : "bg-gray-800 text-white border-yellow-400 hover:bg-yellow-500 hover:text-black"
                 }`}
               >
                 {status === "all"
@@ -104,71 +103,78 @@ const Coach = () => {
             ))}
           </div>
         </div>
-
+  
+        {/* Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-[1000px] w-full border">
-            <thead>
+          <table className="min-w-[1000px] w-full border border-yellow-400 text-sm rounded-xl overflow-hidden">
+            <thead className="bg-gray-800 text-yellow-300">
               <tr>
-                <th className="p-2 border text-xs sm:text-sm">Profile</th>
-                <th className="p-2 border text-xs sm:text-sm">Full Name</th>
-                <th className="p-2 border text-xs sm:text-sm">NIC Number</th>
-                <th className="p-2 border text-xs sm:text-sm">NIC Image</th>
-                <th className="p-2 border text-xs sm:text-sm">Qualifications</th>
-                <th className="p-2 border text-xs sm:text-sm">Qualifications Evidence</th>
-                <th className="p-2 border text-xs sm:text-sm">Approve / Reject</th>
+                <th className="p-2 border border-yellow-400">Profile</th>
+                <th className="p-2 border border-yellow-400">Full Name</th>
+                <th className="p-2 border border-yellow-400">NIC Number</th>
+                <th className="p-2 border border-yellow-400">NIC Image</th>
+                <th className="p-2 border border-yellow-400">Qualifications</th>
+                <th className="p-2 border border-yellow-400">Evidence</th>
+                <th className="p-2 border border-yellow-400">Approve / Reject</th>
               </tr>
             </thead>
             <tbody>
               {filteredCoaches.length > 0 ? (
                 filteredCoaches.map((coach) => (
-                  <tr key={coach._id} className="text-center text-sm">
-                    <td className="p-2 border">
+                  <tr key={coach._id} className="text-center bg-gray-900 border-t border-yellow-400">
+                    <td className="p-2 border border-yellow-400">
                       <img
                         src={coach.personalInfo.profile}
                         alt="Profile"
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover mx-auto rounded-full border-2 border-blue-200"
+                        className="w-16 h-16 object-cover mx-auto rounded-full border-2 border-yellow-400"
                       />
                     </td>
-                    <td className="p-2 border">{coach.personalInfo.fullName}</td>
-                    <td className="p-2 border">{coach.personalInfo.NIC}</td>
-                    <td className="p-2 border">
+                    <td className="p-2 border border-yellow-400">
+                      {coach.personalInfo.fullName}
+                    </td>
+                    <td className="p-2 border border-yellow-400">
+                      {coach.personalInfo.NIC}
+                    </td>
+                    <td className="p-2 border border-yellow-400">
                       <img
                         src={coach.personalInfo.NIC_photo}
                         alt="NIC"
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover mx-auto rounded shadow"
+                        className="w-16 h-16 object-cover mx-auto rounded border"
                       />
                     </td>
-                    <td className="p-2 border">{coach.coachSelection.qualifications}</td>
-                    <td className="p-2 border">
+                    <td className="p-2 border border-yellow-400">
+                      {coach.coachSelection.qualifications}
+                    </td>
+                    <td className="p-2 border border-yellow-400">
                       <a
                         href={coach.coachSelection.qualifications_photo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-green-400 underline hover:text-green-200 text-xs sm:text-sm"
+                        className="text-yellow-400 underline hover:text-yellow-300"
                       >
                         View Document
                       </a>
                     </td>
-                    <td className="p-2 border">
+                    <td className="p-2 border border-yellow-400">
                       {coach.isApprove ? (
-                        <span className="text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full">
+                        <span className="text-green-400 font-semibold bg-green-900 px-3 py-1 rounded-full">
                           Approved
                         </span>
                       ) : coach.isReject ? (
-                        <span className="text-red-600 font-semibold bg-red-100 px-3 py-1 rounded-full">
+                        <span className="text-red-400 font-semibold bg-red-900 px-3 py-1 rounded-full">
                           Rejected
                         </span>
                       ) : (
                         <div className="flex flex-col sm:flex-row justify-center gap-2">
                           <button
                             onClick={() => handleApprove(coach._id)}
-                            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors text-xs sm:text-sm"
+                            className="bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition-colors"
                           >
                             Approve
                           </button>
                           <button
                             onClick={() => handleReject(coach._id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors text-xs sm:text-sm"
+                            className="bg-red-600 text-white px-3 py-1 rounded-full hover:bg-red-700 transition-colors"
                           >
                             Reject
                           </button>
@@ -179,7 +185,10 @@ const Coach = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500 text-sm">
+                  <td
+                    colSpan="7"
+                    className="p-4 text-center text-gray-400 border-t border-yellow-400"
+                  >
                     No coaches found with the selected filter.
                   </td>
                 </tr>
@@ -190,6 +199,7 @@ const Coach = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Coach;
