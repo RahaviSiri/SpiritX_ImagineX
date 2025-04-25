@@ -19,7 +19,7 @@ import Netball2 from "./netball2.jpg"
 import Netball3 from "./netball3.png"
 import coach1 from './Coach1.jpg'
 import coach2 from './coach2.jpg'
-import coach3 from './coach3.jpg'
+import coach3 from './coach3.png'
 import AboutPage from './AboutPage.jpg'
 import AddAcademy from './AddAcademy.png'
 import Upload from './UploadIcon.png'
