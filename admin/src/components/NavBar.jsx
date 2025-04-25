@@ -30,7 +30,7 @@ const NavBar = () => {
               <Users className="w-5 h-5" />
               <span>Coaches</span>
             </Link>
-            <Link to="/academy" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <Link to="/academy" className="flex items-center space-x-2 text-white hover:text-yellow-400 font-medium transition duration-200">
               <MapPinned className="w-5 h-5" />
               <span>Academies</span>
             </Link>
@@ -76,7 +76,10 @@ const NavBar = () => {
             <Users className="w-5 h-5" />
             <span>Coaches</span>
           </Link>
-          
+          <Link to="/academy" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
+            <MapPinned className="w-5 h-5" />
+            <span>Academies</span>
+          </Link>
         </div>
       )}
     </nav>

@@ -302,8 +302,9 @@ const registerAcademy = async (req, res) => {
       notes,
     };
 
-    user.academicsBooking.push(newBooking);
+    user.academyBooking.push(newBooking);
     await user.save();
+    
 
     const academy = await academyModel.findById(id);
     if (!academy || !academy.contactDetails?.email) {

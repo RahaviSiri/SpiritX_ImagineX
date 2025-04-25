@@ -6,7 +6,7 @@ const BookedItems = () => {
     const { userData, uToken, fetchUser } = useContext(UserContext);
     const groundBookings = userData.groundBookings || [];
     const coachBooking = userData.coachBooking || [];
-    const academicsBooking = userData.academicsBooking || [];
+    const academyBooking = userData.academyBooking || [];
 
     const { getGround, ground } = useContext(GroundContext);
 
@@ -94,7 +94,7 @@ const BookedItems = () => {
             {renderTable(coachBooking, "Coach Bookings", 'Coach')}
 
             {/* Academics Bookings */}
-            {renderTable(academicsBooking, "Academics Bookings", 'Academics')}
+            {renderTable(academyBooking, "Academics Bookings", 'Academics')}
         </div>
     );
 }

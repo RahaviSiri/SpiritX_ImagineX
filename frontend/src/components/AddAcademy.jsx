@@ -186,7 +186,7 @@ const AddAcademy = () => {
       }}
     >
       <div className="w-full mt-20 max-w-4xl bg-black/50 p-8 rounded-2xl shadow-xl space-y-6 border border-yellow-400">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 ">
           <h1 className="text-4xl font-bold text-center mb-5 text-yellow-400">Academy Registration</h1>
 
           {/* Academy Name */}
@@ -197,7 +197,7 @@ const AddAcademy = () => {
             value={formData.academyName}
             onChange={handleChange}
             required
-            className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+            className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
           />
 
           {/* Academy Logo & Picture */}
@@ -233,7 +233,7 @@ const AddAcademy = () => {
               placeholder="Sport Type"
               value={formData.sportType}
               onChange={handleChange}
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <textarea
               name="shortDescription"
@@ -241,7 +241,7 @@ const AddAcademy = () => {
               value={formData.shortDescription}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <textarea
               name="description"
@@ -249,7 +249,7 @@ const AddAcademy = () => {
               value={formData.description}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
             <input
               type="text"
@@ -258,7 +258,7 @@ const AddAcademy = () => {
               value={formData.duration}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="number"
@@ -270,7 +270,7 @@ const AddAcademy = () => {
                 if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
               }}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none appearance-none bg-transparent [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none appearance-none bg-transparent [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
             <input
               type="text"
@@ -279,7 +279,7 @@ const AddAcademy = () => {
               value={formData.instructors}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent col-span-1 md:col-span-2"
             />
 
             <select
@@ -287,7 +287,7 @@ const AddAcademy = () => {
               value={formData.mode}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             >
               <option value="">Select Mode</option>
               <option value="Online">Online</option>
@@ -312,7 +312,7 @@ const AddAcademy = () => {
                   name="startDate"
                   onChange={handleChange}
                   required
-                  className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+                  className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
                 />
               </label>
             )}
@@ -327,7 +327,7 @@ const AddAcademy = () => {
               value={formData.Line1}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="text"
@@ -335,7 +335,7 @@ const AddAcademy = () => {
               placeholder="Address Line 2"
               value={formData.Line2}
               onChange={handleChange}
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <input
               type="text"
@@ -344,14 +344,14 @@ const AddAcademy = () => {
               value={formData.city}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             />
             <select
               name="district"
               value={formData.district}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
+              className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
             >
               <option value="">Select District*</option>
               {districts.map((district) => (
@@ -378,7 +378,7 @@ const AddAcademy = () => {
                 value={formData[name]}
                 onChange={handleChange}
                 required={placeholder.includes("*")}
-                className="w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent text-black"
+                className="text-white w-full border border-yellow-500 p-2 rounded-md outline-none bg-transparent"
               />
             ))}
           </div>
