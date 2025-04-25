@@ -129,6 +129,7 @@ const Profile = () => {
       setEditMode(false);
     } catch (error) {
       alert("Error saving profile.");
+      console.log(error);
     }
   };
 
@@ -143,6 +144,7 @@ const Profile = () => {
       }
     } catch (error) {
       toast.error("Error deleting coach account.");
+      console.log(error);
     }
   };
   return (
