@@ -314,16 +314,14 @@ const registerAcademy = async (req, res) => {
 
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: academy.contactDetails.email,
-      subject: `New Academy Admission Request from ${fullName}`,
+      to: email,
+      subject: `Successful Booking Registration from ${fullName}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2 style="color: #0056b3;">Hello ${
-            academy.academyInfo?.name || "Academy"
-          },</h2>
-
-          <p>You have received a new admission request. Details below:</p>
-
+          <h2 style="color: #0056b3;">Hello ${academy.academyInfo?.name || "Academy"},</h2>
+    
+          <p>Your booking request has been successfully registered! The student wants to join your academy. Please find the details of the booking below:</p>
+    
           <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
             <tr><td style="padding: 8px; font-weight: bold; width: 30%;">Student Name:</td><td style="padding: 8px;">${fullName}</td></tr>
             <tr><td style="padding: 8px; font-weight: bold;">Email:</td><td style="padding: 8px;">${email}</td></tr>
@@ -333,33 +331,22 @@ const registerAcademy = async (req, res) => {
             <tr><td style="padding: 8px; font-weight: bold;">Preferred Start Date:</td><td style="padding: 8px;">${preferredStartDate ? new Date(preferredStartDate).toLocaleDateString() : 'Not specified'}</td></tr>
             <tr><td style="padding: 8px; font-weight: bold;">NIC:</td><td style="padding: 8px;">${NIC}</td></tr>
           </table>
-
+    
           <h3>Additional Notes:</h3>
-          <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;">${
-            notes || "No additional notes provided."
-          }</p>
-
-          <p>Please review and take action:</p>
-
-          <div>
-            <a href="http://localhost:3000/api/admin/approve-by-academy/${user._id}/${newBooking._id}" 
-               style="display:inline-block; padding: 12px 25px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 15px;">
-               Approve & Send OTP
-            </a>
-            
-            <a href="http://localhost:3000/api/admin/reject-by-academy/${user._id}/${newBooking._id}" 
-               style="display:inline-block; padding: 12px 25px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px;">
-               Reject
-            </a>
-          </div>
-
-          <br/>
+          <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;">${notes || "No additional notes provided."}</p>
+    
+          <p>To finalize the registration, please proceed with the payment of the advance fee amount to confirm the student's enrollment. The details for the payment are as follows:</p>
+    
+          <p style="font-weight: bold; color: #0056b3;">Advance Fee: ${academy.academyBasicDetails.feeAmount}</p>
+    
+          <p style="color: #555;">Once the advance is paid, the student will officially be enrolled. Thank you for your cooperation!</p>
+    
           <p style="color: #555;">Best regards,<br/>
-          <strong>Your Academy Platform</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `,
     };
-
+    
     await transporter.sendMail(mailOptions);
 
     res.json({

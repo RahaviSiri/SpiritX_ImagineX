@@ -21,9 +21,9 @@ const ClientAcademy = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // this is academyId
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(f => ({ ...f, [name]: value }));
+    setFormData((f) => ({ ...f, [name]: value }));
   };
 
   const validate = () => {
@@ -34,7 +34,7 @@ const ClientAcademy = () => {
     return errs;
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const v = validate();
     if (Object.keys(v).length) {
@@ -56,7 +56,7 @@ const ClientAcademy = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log("Booking successful", res.data);
-      toast.success("Booking a academy successfully!")
+      toast.success("Booking a academy successfully!");
       navigate("/");
     } catch (err) {
       console.error("Booking failed", err.response || err);
@@ -98,7 +98,8 @@ const ClientAcademy = () => {
                 name={name}
                 value={formData[name]}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                  ${type === "date" ? "bg-white text-black" : ""}`}
               />
               {errors[name] && (
                 <p className="text-sm text-red-600 mt-1">{errors[name]}</p>
@@ -112,7 +113,7 @@ const ClientAcademy = () => {
               name="notes"
               value={formData.notes}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 border  border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={4}
             />
             {errors.notes && (
@@ -123,7 +124,7 @@ const ClientAcademy = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 px-4 rounded-md text-white ${loading ? "bg-gray-400" : "bg-yellow-400 hover:bg-yellow-500"}`}
+            className={`w-full py-2 px-4 rounded-md text-black ${loading ? "bg-gray-400" : "bg-yellow-400 hover:bg-yellow-500"}`}
           >
             {loading ? "Submitting..." : "Submit Booking"}
           </button>
