@@ -19,7 +19,7 @@ import Netball2 from "./netball2.jpg"
 import Netball3 from "./netball3.png"
 import coach1 from './Coach1.jpg'
 import coach2 from './coach2.jpg'
-import coach3 from './coach3.jpg'
+import coach3 from './coach3.png'
 import AboutPage from './AboutPage.jpg'
 import AddAcademy from './AddAcademy.png'
 import Upload from './UploadIcon.png'
@@ -34,6 +34,21 @@ import Tennis3 from './tennis3.jpg'
 import Badminton from './badminton.jpg'
 import Swimming from './swimming.jpg'
 import ApproveAcademy from './ApproveAcademy.jpg'
+import Basketball from './basketball.jpg'
+import Hockey from './hockey.jpg'
+import Badminton1 from './badminton1.png'
+import Swimming1 from './swimming1.png'
+import Basketball1 from './basketball1.png'
+import Hockey1 from './hockey1.png'
+import Badminton2 from './badminton2.jpg'
+import Badminton3 from './badminton3.jpg'
+import Swimming2 from './swimming2.jpg'
+import Swimming3 from './swimming3.jpg'
+import Basketball2 from './basketball2.jpg'
+import Basketball3 from './basketball3.jpg'
+import Hockey2 from './hockey2.jpg'
+import Hockey3 from './hockey3.jpg'
+
 
 const assets = {
     AddGroundBackroundImage,
@@ -71,6 +86,20 @@ const assets = {
     Badminton,
     Swimming,
     ApproveAcademy,
+    Basketball,
+    Hockey,
+    Badminton1,
+    Swimming1,
+    Basketball1,
+    Hockey1,
+    Badminton2,
+    Badminton3,
+    Swimming2,
+    Swimming3,
+    Basketball2,
+    Basketball3,
+    Hockey2,
+    Hockey3
     Logo
 }
 

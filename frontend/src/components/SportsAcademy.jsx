@@ -8,8 +8,7 @@ import { FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 const SportsAcademy = () => {
   const navigate = useNavigate();
   const { uToken } = useContext(UserContext);
-  const { academies, getAllAcademies, setAcademies } =
-    useContext(AcademyContext);
+  const { academies, getAllAcademies, setAcademies } = useContext(AcademyContext);
 
   useEffect(() => {
     getAllAcademies();

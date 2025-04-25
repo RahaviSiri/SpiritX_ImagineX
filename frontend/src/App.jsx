@@ -21,6 +21,10 @@ import Football from "./pages/Sports/Football";
 import Volleyball from "./pages/Sports/Volleyball";
 import Netball from "./pages/Sports/Netball";
 import Tennis from "./pages/Sports/Tennis";
+import Badminton from "./pages/Sports/Badminton";
+import Swimming from "./pages/Sports/Swimming";
+import Basketball from "./pages/Sports/Basketball";
+import Hockey from "./pages/Sports/Hockey";
 import Verify from "./components/Verify";
 import ResetPasswordSendOTP from "./components/ResetPasswordSendOTP";
 import ResetPassword from "./components/ResetPassword";
@@ -99,6 +103,10 @@ function App() {
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
           <Route path="/sports/tennis" element={<Tennis />} />
+          <Route path="/sports/badminton" element={<Badminton />} />
+          <Route path="/sports/swimming" element={<Swimming />} />
+          <Route path="/sports/basketball" element={<Basketball />} />
+          <Route path="/sports/hockey" element={<Hockey />} />
           <Route path="/academy-wait-for-approval" element={<AcademyWaitForApproval />} />
           <Route path="/booked-items" element={<BookedItems />} />
         </Routes>
