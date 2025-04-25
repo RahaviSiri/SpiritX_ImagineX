@@ -11,13 +11,17 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/admin-dashboard" className="flex items-center space-x-2">
             <img src={assets.Logo} alt="Logo" className="h-8 w-auto" />
             <span className="text-2xl font-extrabold text-yellow-400 drop-shadow-sm">SportsHive</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 items-center">
+            <Link to="/admin-dashboard" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 transition duration-200 font-medium">
+              <MapPinned className="w-5 h-5" />
+              <span>Admin Dashboard</span>
+            </Link>
             <Link to="/all-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 transition duration-200 font-medium">
               <MapPinned className="w-5 h-5" />
               <span>All Grounds</span>
@@ -64,6 +68,10 @@ const NavBar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 pt-2 space-y-2 bg-gray-900">
+          <Link to="/admin-dashboard" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
+            <MapPinned className="w-5 h-5" />
+            <span>Admin Dashboard</span>
+          </Link>
           <Link to="/all-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
             <MapPinned className="w-5 h-5" />
             <span>All Grounds</span>
