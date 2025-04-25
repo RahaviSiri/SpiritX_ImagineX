@@ -65,7 +65,7 @@ const CoachWaitForApproval = () => {
       {/* Yellow glow background center effect */}
       <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
   
-      <div className="bg-black/60 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full relative z-10">
+      <div className="bg-black/60 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full relative z-10 mt-20">
         <h1 className="text-2xl font-bold text-center mb-4 text-yellow-400 drop-shadow-lg">
           Waiting for Admin Approval
         </h1>

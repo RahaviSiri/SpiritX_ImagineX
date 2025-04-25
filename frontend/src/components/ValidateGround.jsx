@@ -72,14 +72,14 @@ const ValidateGround = () => {
             placeholder="Owner Email"
             value={ownerEmail}
             onChange={(e) => setOwnerEmail(e.target.value)}
-            className="w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="text-white w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
           <input
             type="password"
             placeholder="Owner Password"
             value={ownerPassword}
             onChange={(e) => setOwnerPassword(e.target.value)}
-            className="w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="text-white w-full px-4 py-2 border bg-transparent border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
 
           <button
