@@ -35,6 +35,7 @@ import { useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import BookedItems from "./pages/BookedItems";
 
 function App() {
   const location = useLocation();
@@ -93,6 +94,7 @@ function App() {
           <Route path="/sports/football" element={<Football />} />
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
+          <Route path="/booked-items" element={<BookedItems />} />
         </Routes>
       </main>
       <Footer />

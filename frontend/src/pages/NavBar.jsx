@@ -102,6 +102,13 @@ const Navbar = () => {
                 >
                   Contact Us
                 </Link>
+                <Link
+                  to="/booked-items"
+                  className="block px-4 py-2 hover:bg-yellow-400 hover:text-black"
+                  onClick={() => setShowMore(false)}
+                >
+                  Your Bookings
+                </Link>
                 {uToken ? (
                   <Link
                     to="/"
@@ -202,6 +209,13 @@ const Navbar = () => {
             onClick={closeNav}
           >
             Contact Us
+          </Link>
+          <Link
+            to="/booked-items"
+            className="block hover:text-yellow-400"
+            onClick={closeNav}
+          >
+            Your Bookings
           </Link>
           {uToken ? (
             <Link
