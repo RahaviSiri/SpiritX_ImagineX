@@ -145,15 +145,14 @@ const Profile = () => {
       toast.error("Error deleting coach account.");
     }
   };
-
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">
+    <div className="min-h-screen bg-gray-900 py-20 text-white p-6">
+      <div className="max-w-5xl mx-auto bg-black bg-opacity-40 backdrop-blur-lg p-8 rounded-xl shadow-lg">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold text-yellow-400">
             {isCoach ? "Coach Profile" : "User Profile"}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-4 sm:mt-0">
             {isCoach && (
               <button
                 onClick={handleDeleteCoach}
@@ -178,195 +177,128 @@ const Profile = () => {
             )}
           </div>
         </div>
-
-        <hr className="my-4" />
-
-        {isCoach ? (
-          <div className="flex gap-6 items-start">
-            <div className="relative">
-              <img
-                src={coachData?.personalInfo?.profile || assets.Upload}
-                alt="Coach"
-                className="w-32 h-32 rounded-full border object-cover"
+  
+        <div className="flex flex-col sm:flex-row gap-8 items-start">
+          {/* Profile Image */}
+          <div className="relative w-40 h-40 flex-shrink-0">
+            <img
+              src={
+                isCoach
+                  ? coachData?.personalInfo?.profile || assets.Upload
+                  : userData.image || assets.Upload
+              }
+              alt="Profile"
+              className="w-full h-full rounded-full border-4 border-yellow-400 object-cover"
+            />
+            {editMode && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const imageUrl = URL.createObjectURL(file);
+                    isCoach
+                      ? setEditableCoach((prev) => ({
+                          ...prev,
+                          personalInfo: {
+                            ...prev.personalInfo,
+                            profile: imageUrl,
+                            profileFile: file,
+                          },
+                        }))
+                      : setEditableUser((prev) => ({
+                          ...prev,
+                          image: imageUrl,
+                          imageFile: file,
+                        }));
+                  }
+                }}
+                className="absolute top-0 left-0 opacity-0 w-full h-full cursor-pointer"
               />
-              {editMode && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      const imageUrl = URL.createObjectURL(file);
-                      setEditableCoach((prev) => ({
-                        ...prev,
-                        personalInfo: {
-                          ...prev.personalInfo,
-                          profile: imageUrl,
-                          profileFile: file,
-                        },
-                      }));
-                    }
-                  }}
-                  className="absolute top-0 left-0 opacity-0 w-full h-full cursor-pointer"
-                />
-              )}
-            </div>
-
-            <div className="w-full space-y-2">
-              {[
-                { label: "Full Name", name: "personalInfo.fullName" },
-                { label: "Gender", name: "personalInfo.gender" },
-                { label: "NIC", name: "personalInfo.NIC" },
-                { label: "Contact Number", name: "contactDetails.contactNo" },
-                { label: "Address Line 1", name: "Address.Line1" },
-                { label: "Address Line 2", name: "Address.Line2" },
-                { label: "City", name: "Address.city" },
-                { label: "District", name: "Address.district" },
-                {
-                  label: "Selection Type",
-                  name: "coachSelection.selectionType",
-                },
-                { label: "Sport", name: "coachSelection.sport" },
-                {
-                  label: "Qualifications",
-                  name: "coachSelection.qualifications",
-                },
-              ].map(({ label, name }) => (
-                <div key={name}>
-                  <label className="font-semibold">{label}:</label>
-                  {editMode ? (
+            )}
+          </div>
+  
+          {/* Profile Fields */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            {(isCoach
+              ? [
+                  { label: "Full Name", name: "personalInfo.fullName" },
+                  { label: "Gender", name: "personalInfo.gender" },
+                  { label: "NIC", name: "personalInfo.NIC" },
+                  { label: "Contact Number", name: "contactDetails.contactNo" },
+                  { label: "Address Line 1", name: "Address.Line1" },
+                  { label: "Address Line 2", name: "Address.Line2" },
+                  { label: "City", name: "Address.city" },
+                  { label: "District", name: "Address.district" },
+                  { label: "Selection Type", name: "coachSelection.selectionType" },
+                  { label: "Sport", name: "coachSelection.sport" },
+                  { label: "Qualifications", name: "coachSelection.qualifications" },
+                  { label: "Date of Birth", name: "personalInfo.DOB", type: "date" },
+                ]
+              : [
+                  { label: "Name", name: "name" },
+                  { label: "Email", name: "email", readonly: true },
+                  { label: "Phone", name: "phone" },
+                  { label: "Address", name: "address" },
+                ]
+            ).map(({ label, name, type, readonly }) => {
+              const value = name
+                .split(".")
+                .reduce((obj, key) => (obj ? obj[key] : ""), isCoach ? (editMode ? editableCoach : coachData) : editableUser);
+  
+              return (
+                <div key={name} className="flex items-center">
+                  <label className="w-40 text-sm font-semibold text-gray-300">{label}:</label>
+                  {editMode && !readonly ? (
                     <input
+                      type={type || "text"}
                       name={name}
-                      value={
-                        name
-                          .split(".")
-                          .reduce((o, k) => (o ? o[k] : ""), editableCoach) ||
-                        ""
-                      }
-                      onChange={(e) => handleChange(e, "coach")}
-                      className="border p-1 w-full"
+                      value={type === "date" && value ? value.split("T")[0] : value || ""}
+                      onChange={(e) => handleChange(e, isCoach ? "coach" : "user")}
+                      className="flex-1 p-2 rounded bg-gray-900 border border-gray-700 text-yellow-300"
                     />
                   ) : (
-                    <p>
-                      {name
-                        .split(".")
-                        .reduce((o, k) => (o ? o[k] : ""), coachData)}
-                    </p>
+                    <p className="flex-1 text-gray-300 break-words">{type === "date" && value ? new Date(value).toLocaleDateString() : value}</p>
                   )}
                 </div>
-              ))}
-
-              <label className="font-semibold">Date of Birth:</label>
-              {editMode ? (
-                <input
-                  type="date"
-                  name="personalInfo.DOB"
-                  value={editableCoach.personalInfo?.DOB?.split("T")[0] || ""}
-                  onChange={(e) => handleChange(e, "coach")}
-                  className="border p-1 w-full"
-                />
-              ) : (
-                <p>
-                  {new Date(coachData?.personalInfo?.DOB).toLocaleDateString()}
+              );
+            })}
+  
+            {/* Qualifications Photo */}
+            {isCoach && coachData?.coachSelection?.qualifications_photo && (
+              <div className="flex items-center col-span-2">
+                <label className="w-40 font-semibold text-yellow-400">Qualifications Photo:</label>
+                <a
+                  href={coachData.coachSelection.qualifications_photo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  View Photo
+                </a>
+              </div>
+            )}
+  
+            {/* Joined Date for User */}
+            {!isCoach && (
+              <div className="col-span-2">
+                <p className="text-sm text-gray-400">
+                  <strong>Joined:</strong> {new Date(userData.createdAt).toLocaleDateString()}
                 </p>
-              )}
-
-              {coachData?.coachSelection?.qualifications_photo && (
-                <div>
-                  <strong>Qualifications Photo:</strong>{" "}
-                  <a
-                    href={coachData.coachSelection.qualifications_photo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    View Photo
-                  </a>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex gap-6 items-center">
-            <div className="relative">
-              <img
-                src={userData.image || assets.Upload}
-                alt="User"
-                className="w-32 h-32 rounded-full border object-cover"
-              />
-              {editMode && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      const imageUrl = URL.createObjectURL(file);
-                      setEditableUser((prev) => ({
-                        ...prev,
-                        image: imageUrl,
-                        imageFile: file, 
-                      }));
-                    }
-                    
-                  }}
-                  className="absolute top-0 left-0 opacity-0 w-full h-full cursor-pointer"
-                />
-              )}
-            </div>
-
-            <div className="w-full space-y-2">
-              <label className="font-semibold">Name:</label>
-              {editMode ? (
-                <input
-                  name="name"
-                  value={editableUser.name}
-                  onChange={handleChange}
-                  className="border p-1 w-full"
-                />
-              ) : (
-                <p>{userData.name}</p>
-              )}
-
-              <label className="font-semibold">Email:</label>
-              <p>{userData.email}</p>
-
-              <label className="font-semibold">Phone:</label>
-              {editMode ? (
-                <input
-                  name="phone"
-                  value={editableUser.phone || ""}
-                  onChange={handleChange}
-                  className="border p-1 w-full"
-                />
-              ) : (
-                <p>{userData.phone}</p>
-              )}
-
-              <label className="font-semibold">Address:</label>
-              {editMode ? (
-                <input
-                  name="address"
-                  value={editableUser.address || ""}
-                  onChange={handleChange}
-                  className="border p-1 w-full"
-                />
-              ) : (
-                <p>{userData.address}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {!isCoach && (
-          <p className="mt-4">
-            <strong>Joined:</strong>{" "}
-            {new Date(userData.createdAt).toLocaleDateString()}
-          </p>
-        )}
+        </div>
       </div>
     </div>
   );
+  
+  
+  
+  
+  
+  
 };
 
 export default Profile;

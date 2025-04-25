@@ -255,7 +255,7 @@ export const checkOTP = async (req, res) => {
               name: 'Coach Registration Fee',
               description: 'One-time registration payment'
             },
-            unit_amount: 5000, // $50.00 in cents
+            unit_amount: 500000, // $50.00 in cents
           },
           quantity: 1,
         },

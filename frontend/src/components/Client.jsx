@@ -76,15 +76,18 @@ const Client = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="max-w-xl w-full bg-black/30 backdrop-blur-md rounded-3xl shadow-xl p-8 font-sans">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
+      <div className="max-w-xl w-full bg-black/40 backdrop-blur-md rounded-3xl shadow-2xl p-8 font-sans text-white relative">
+        {/* Glowing orb */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+  
+        <h1 className="text-2xl font-bold text-yellow-400 mb-6 text-center drop-shadow">
           Book a Coach - Client Details
         </h1>
-
-        <form className="space-y-4" onSubmit={handleSubmit}>
+  
+        <form className="space-y-4 relative z-10" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Full Name
             </label>
             <input
@@ -93,14 +96,14 @@ const Client = () => {
               placeholder="Enter your name"
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
               required
             />
           </div>
-
+  
           {/* Email */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Email Address
             </label>
             <input
@@ -109,14 +112,14 @@ const Client = () => {
               placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
               required
             />
           </div>
-
+  
           {/* Contact Number */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Contact Number
             </label>
             <input
@@ -125,14 +128,14 @@ const Client = () => {
               placeholder="Enter your contact number"
               value={formData.contactNumber}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
               required
             />
           </div>
-
+  
           {/* Address Line 1 */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Address Line 1
             </label>
             <input
@@ -141,14 +144,14 @@ const Client = () => {
               placeholder="Street address"
               value={formData.addressLine1}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
               required
             />
           </div>
-
+  
           {/* Address Line 2 */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Address Line 2 (Optional)
             </label>
             <input
@@ -157,14 +160,14 @@ const Client = () => {
               placeholder="Apartment, suite, etc."
               value={formData.addressLine2}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
             />
           </div>
-
+  
           {/* City & District */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block font-medium text-white mb-1">
+              <label className="block font-medium text-yellow-200 mb-1">
                 City
               </label>
               <input
@@ -173,12 +176,12 @@ const Client = () => {
                 placeholder="City"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+                className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
                 required
               />
             </div>
             <div>
-              <label className="block font-medium text-white mb-1">
+              <label className="block font-medium text-yellow-200 mb-1">
                 District
               </label>
               <input
@@ -187,15 +190,15 @@ const Client = () => {
                 placeholder="District"
                 value={formData.district}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+                className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
                 required
               />
             </div>
           </div>
-
+  
           {/* Preferred Date & Time */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Preferred Date & Time
             </label>
             <input
@@ -203,14 +206,14 @@ const Client = () => {
               type="datetime-local"
               value={formData.preferredDateTime}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
               required
             />
           </div>
-
+  
           {/* Notes */}
           <div>
-            <label className="block font-medium text-white mb-1">
+            <label className="block font-medium text-yellow-200 mb-1">
               Additional Notes (Optional)
             </label>
             <textarea
@@ -219,14 +222,14 @@ const Client = () => {
               placeholder="Mention any preferences or goals"
               value={formData.notes}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              className="w-full p-3 border border-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-black/20 text-white placeholder-gray-400"
             ></textarea>
           </div>
-
+  
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full mt-4 bg-blue-500 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition duration-300"
+            className="w-full mt-4 bg-yellow-400 text-black font-semibold py-3 rounded-xl hover:bg-yellow-300 transition duration-300 shadow-md"
           >
             Submit Booking Request
           </button>
@@ -234,6 +237,7 @@ const Client = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Client;

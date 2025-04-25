@@ -139,24 +139,20 @@ const CoachRegistration = () => {
   };
   
   return (
-    <div
-      className="flex justify-center items-center min-h-screen bg-gray-50 px-4 py-8 font-sans"
-      style={{
-        backgroundImage: `url(${assets.coach2})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="w-full max-w-3xl bg-black/30 p-8 rounded-2xl shadow-xl space-y-6">
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4">
+      {/* Yellow glow background center effect */}
+      <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+  
+      {/* Form container */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto bg-black/60 p-8 rounded-2xl shadow-xl">
         <form onSubmit={handleSubmit}>
-          <h1 className="text-2xl font-bold text-center text-white mb-4">
+          <h1 className="text-3xl font-bold text-yellow-400 drop-shadow-lg text-center mb-6">
             Register to Become a Coach
           </h1>
-
+  
           {/* Personal Info */}
           <div className="space-y-4">
-            <p className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            <p className="text-lg font-semibold text-yellow-400 border-b border-yellow-400 pb-1">
               Personal Info:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -165,27 +161,24 @@ const CoachRegistration = () => {
                 value={fullName}
                 type="text"
                 placeholder="Full Name*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
-              
+  
               {profile ? (
-                <div 
-                  onClick={() => setProfile(null)}
-                  className="cursor-pointer"
-                >
+                <div onClick={() => setProfile(null)} className="cursor-pointer">
                   <img
                     src={
                       profile instanceof window.File
                         ? URL.createObjectURL(profile)
                         : profile
                     }
-                    className="h-32 w-32 object-cover border border-blue-300 rounded-md"
+                    className="h-32 w-32 object-cover border border-yellow-400 rounded-md"
                     alt="Profile Preview"
                   />
                 </div>
               ) : (
-                <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md">
+                <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-400 p-2 rounded-md">
                   <UploadCloud size={16} /> Upload profile photo*
                   <input
                     type="file"
@@ -201,59 +194,50 @@ const CoachRegistration = () => {
                   />
                 </label>
               )}
-
+  
               <input
                 onChange={(e) => setDOB(e.target.value)}
                 value={DOB}
                 type="date"
                 placeholder="Date of Birth*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
-              
+  
               <div className="flex items-center gap-4 text-white">
                 <span className="text-sm">Gender*:</span>
-                <label className="inline-flex items-center space-x-2">
-                  <input
-                    value="Male"
-                    checked={gender === "Male"}
-                    onChange={(e) => setGender(e.target.value)}
-                    type="radio"
-                    name="gender"
-                    className="form-radio text-blue-500"
-                  />
-                  <span>Male</span>
-                </label>
-                <label className="inline-flex items-center space-x-2">
-                  <input
-                    value="Female"
-                    checked={gender === "Female"}
-                    onChange={(e) => setGender(e.target.value)}
-                    type="radio"
-                    name="gender"
-                    className="form-radio text-blue-500"
-                  />
-                  <span>Female</span>
-                </label>
+                {["Male", "Female"].map((g) => (
+                  <label key={g} className="inline-flex items-center space-x-2">
+                    <input
+                      value={g}
+                      checked={gender === g}
+                      onChange={(e) => setGender(e.target.value)}
+                      type="radio"
+                      name="gender"
+                      className="form-radio text-yellow-400"
+                    />
+                    <span>{g}</span>
+                  </label>
+                ))}
               </div>
-
+  
               <input
                 type="text"
                 onChange={(e) => setNIC(e.target.value)}
                 value={NIC}
                 required
                 placeholder="NIC No*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
-              
+  
               {NIC_photo ? (
                 <div
                   onClick={() => setNIC_photo(null)}
-                  className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md"
+                  className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-400 p-2 rounded-md"
                 >
                   <File size={16} /> {NIC_photo_name}
                 </div>
               ) : (
-                <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md">
+                <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-400 p-2 rounded-md">
                   <UploadCloud size={16} /> Upload NIC frontpage*
                   <input
                     required
@@ -270,50 +254,50 @@ const CoachRegistration = () => {
               )}
             </div>
           </div>
-
+  
           {/* Contact Details */}
           <div className="space-y-4 mt-6">
-            <p className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            <p className="text-lg font-semibold text-yellow-400 border-b border-yellow-400 pb-1">
               Contact Details:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="tel"
-                onChange={(e) => setContactNo(e.target.value)}
-                value={contactNo}
-                placeholder="Contact No*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
-                required
-              />
-              <input
-                type="tel"
-                onChange={(e) => setHomeTP(e.target.value)}
-                value={HomeTP}
-                placeholder="Home Telephone No"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
-              />
-              <input
-                type="tel"
-                onChange={(e) => setWhatsapp(e.target.value)}
-                value={whatsapp}
-                placeholder="WhatsApp No*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
-                required
-              />
-              <input
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                placeholder="Email Address*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
-                required
-              />
+              {[{
+                value: contactNo,
+                onChange: setContactNo,
+                placeholder: "Contact No*",
+                required: true
+              }, {
+                value: HomeTP,
+                onChange: setHomeTP,
+                placeholder: "Home Telephone No"
+              }, {
+                value: whatsapp,
+                onChange: setWhatsapp,
+                placeholder: "WhatsApp No*",
+                required: true
+              }, {
+                value: email,
+                onChange: setEmail,
+                placeholder: "Email Address*",
+                type: "email",
+                required: true
+              }].map(({ value, onChange, placeholder, required, type = "tel" }, i) => (
+                <input
+                  key={i}
+                  type={type}
+                  onChange={(e) => onChange(e.target.value)}
+                  value={value}
+                  placeholder={placeholder}
+                  className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
+                  required={required}
+                />
+              ))}
             </div>
           </div>
-
+  
           {/* Address */}
           <div className="space-y-4 mt-6">
-            <p className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            <p className="text-lg font-semibold text-yellow-400 border-b border-yellow-400 pb-1">
               Address:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -322,7 +306,7 @@ const CoachRegistration = () => {
                 onChange={(e) => setLine1(e.target.value)}
                 value={Line1}
                 placeholder="Line 1*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
               <input
@@ -330,72 +314,64 @@ const CoachRegistration = () => {
                 onChange={(e) => setLine2(e.target.value)}
                 value={Line2}
                 placeholder="Line 2"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               />
               <input
                 type="text"
                 onChange={(e) => setCity(e.target.value)}
                 value={city}
                 placeholder="City*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
-              
-              <select 
+              <select
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
                 required
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white"
               >
-                <option value="" disabled>
-                  Select District*
-                </option>
+                <option value="" disabled>Select District*</option>
                 {districts.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
+                  <option key={d} value={d}>{d}</option>
                 ))}
               </select>
             </div>
           </div>
-
+  
           {/* Coach Selection */}
           <div className="space-y-4 mt-6">
-            <p className="text-lg font-semibold text-white border-b border-blue-300 pb-1">
+            <p className="text-lg font-semibold text-yellow-400 border-b border-yellow-400 pb-1">
               Coach Selection Details:
             </p>
-
+  
             <div className="flex flex-wrap gap-4 text-white">
               <span>Select type*:</span>
               {["School", "Academics", "Personal", "Any"].map((type) => (
-                <label
-                  key={type}
-                  className="inline-flex items-center space-x-2"
-                >
+                <label key={type} className="inline-flex items-center space-x-2">
                   <input
                     value={type}
                     checked={selectionType === type}
                     onChange={(e) => setSelectionType(e.target.value)}
                     type="radio"
                     name="type"
-                    className="form-radio text-blue-500"
+                    className="form-radio text-yellow-400"
                   />
                   <span>{type}</span>
                 </label>
               ))}
             </div>
-
+  
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="text"
                 onChange={(e) => setSalary(e.target.value)}
                 value={salary}
                 placeholder="Expected salary*"
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
                 required
               />
               <select
-                className="w-full border border-blue-300 p-2 rounded-md outline-none"
+                className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white"
                 onChange={(e) => setSport(e.target.value)}
                 value={sport}
               >
@@ -408,24 +384,24 @@ const CoachRegistration = () => {
                 <option value="badminton">Badminton</option>
               </select>
             </div>
-
+  
             <textarea
               onChange={(e) => setQualifications(e.target.value)}
               value={qualifications}
               placeholder="Academic Qualifications"
-              className="w-full border border-blue-300 p-2 rounded-md outline-none"
+              className="bg-gray-800 border border-yellow-400 p-2 rounded-md outline-none text-white placeholder-gray-400"
               rows={4}
             ></textarea>
-
+  
             {qualifications_photo ? (
               <div
                 onClick={() => setQualifications_photo(null)}
-                className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md"
+                className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-400 p-2 rounded-md"
               >
                 <File size={16} /> {qualifications_photo_name}
               </div>
             ) : (
-              <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md">
+              <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-400 p-2 rounded-md">
                 <UploadCloud size={16} /> Upload qualifications evidence*
                 <input
                   type="file"
@@ -440,10 +416,10 @@ const CoachRegistration = () => {
               </label>
             )}
           </div>
-
+  
           <button
             type="submit"
-            className="mt-4 w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
+            className="mt-6 w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-black text-lg font-semibold rounded-xl transition"
           >
             Next
           </button>
@@ -451,6 +427,7 @@ const CoachRegistration = () => {
       </div>
     </div>
   );
+  
 };
 
 export default CoachRegistration;
