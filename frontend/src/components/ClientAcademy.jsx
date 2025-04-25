@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const ClientAcademy = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -82,51 +83,52 @@ const ClientAcademy = () => {
   ];
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 border rounded-lg shadow-md bg-white">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        Book a Coaching Session
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {fields.map(({ label, name, type }) => (
-          <div key={name}>
-            <label className="block mb-1 font-medium">{label}</label>
-            <input
-              type={type}
-              name={name}
-              value={formData[name]}
+    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-10">
+      {/* Form Section */}
+      <div className="max-w-lg mx-auto mt-10 p-6 border rounded-lg shadow-md bg-opacity-20 backdrop-blur-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center text-yellow-400">
+          Book a Academy
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {fields.map(({ label, name, type }) => (
+            <div key={name}>
+              <label className="block mb-1 font-medium">{label}</label>
+              <input
+                type={type}
+                name={name}
+                value={formData[name]}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {errors[name] && (
+                <p className="text-sm text-red-600 mt-1">{errors[name]}</p>
+              )}
+            </div>
+          ))}
+
+          <div>
+            <label className="block mb-1 font-medium">Additional Notes</label>
+            <textarea
+              name="notes"
+              value={formData.notes}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={4}
             />
-            {errors[name] && (
-              <p className="text-sm text-red-600 mt-1">{errors[name]}</p>
+            {errors.notes && (
+              <p className="text-sm text-red-600 mt-1">{errors.notes}</p>
             )}
           </div>
-        ))}
 
-        <div>
-          <label className="block mb-1 font-medium">Additional Notes</label>
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
-          />
-          {errors.notes && (
-            <p className="text-sm text-red-600 mt-1">{errors.notes}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-2 px-4 rounded-md text-white ${
-            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-          }`}
-        >
-          {loading ? "Submitting..." : "Submit Booking"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 px-4 rounded-md text-white ${loading ? "bg-gray-400" : "bg-yellow-400 hover:bg-yellow-500"}`}
+          >
+            {loading ? "Submitting..." : "Submit Booking"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
