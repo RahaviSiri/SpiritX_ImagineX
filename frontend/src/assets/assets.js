@@ -21,8 +21,17 @@ import coach1 from './Coach1.jpg'
 import coach2 from './coach2.jpg'
 import coach3 from './coach3.jpg'
 import AboutPage from './AboutPage.jpg'
-import AddAcademy from './AddAcademy.jpg'
+import AddAcademy from './AddAcademy.png'
 import Upload from './UploadIcon.png'
+import AddGround from './AddGround.png'
+import AddCoach from './AddCoach.png'
+import LoginBg from './LoginBg.png'
+import Tennis from './tennis.jpg'
+import Tennis1 from './tennis1.png'
+import Tennis2 from './tennis2.jpg'
+import Tennis3 from './tennis3.jpg'
+import Badminton from './badminton.jpg'
+import Swimming from './swimming.jpg'
 import ApproveAcademy from './ApproveAcademy.jpg'
 
 const assets = {
@@ -51,6 +60,15 @@ const assets = {
     AboutPage,
     AddAcademy,
     Upload,
+    AddGround,
+    AddCoach,
+    LoginBg,
+    Tennis,
+    Tennis1,
+    Tennis2,
+    Tennis3,
+    Badminton,
+    Swimming,
     ApproveAcademy
 }
 

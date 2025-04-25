@@ -14,7 +14,7 @@ const ExploreSports = () => {
           rules="Teams take turns batting and bowling. The batting team scores runs; the bowling team tries to get batters out."
           equipment="Bat, ball, stumps, protective gear"
           players="11 per team"
-          image= {assets.Cricket}
+          image={assets.Cricket}
           link="/sports/cricket"
         />
         <SportCard
@@ -24,7 +24,7 @@ const ExploreSports = () => {
           rules="Players (except the goalie) can’t use their hands. Score by kicking the ball into the goal."
           equipment="Football, cleats, goalposts"
           players="11 per team"
-          image= {assets.Football}
+          image={assets.Football}
           link="/sports/football"
         />
         <SportCard
@@ -34,7 +34,7 @@ const ExploreSports = () => {
           rules="Teams hit the ball over the net in max 3 touches. Score by grounding the ball on the opponent’s side."
           equipment="Volleyball, net, court"
           players="6 per team"
-          image= {assets.Volleyball}
+          image={assets.Volleyball}
           link="/sports/volleyball"
         />
         <SportCard
@@ -44,8 +44,58 @@ const ExploreSports = () => {
           rules="No dribbling. Ball must be passed within 3 seconds. Only certain players can shoot."
           equipment="Netball, ring posts"
           players="7 per team"
-          image= {assets.Netball}
+          image={assets.Netball}
           link="/sports/netball"
+        />
+        <SportCard
+          title="Tennis"
+          origin="Late 19th century, England"
+          history="Tennis began as a game called lawn tennis and has evolved into a major international sport with singles and doubles competitions."
+          rules="Players hit the ball back and forth over the net. The goal is to win points by making the ball land in the opponent's court."
+          equipment="Tennis racket, tennis ball, net"
+          players="1 or 2 per team"
+          image={assets.Tennis}
+          link="/sports/tennis"
+        />
+        <SportCard
+          title="Badminton"
+          origin="Mid-19th century, British India"
+          history="Badminton developed from a game called ‘Poona’ in India and became an Olympic sport in 1992."
+          rules="Players hit the shuttlecock over a net using rackets. The aim is to score points by making the shuttlecock land in the opponent’s side."
+          equipment="Badminton racket, shuttlecock, net"
+          players="1 or 2 per team"
+          image={assets.Badminton}
+          link="/sports/badminton"
+        />
+        <SportCard
+          title="Swimming"
+          origin="Ancient times, various cultures"
+          history="Swimming is one of the oldest forms of exercise. It became a competitive sport in the 19th century."
+          rules="Swimmers race across the pool in various styles like freestyle, backstroke, breaststroke, and butterfly."
+          equipment="Swimsuit, swimming cap, goggles"
+          players="1 per race"
+          image={assets.Swimming}
+          link="/sports/swimming"
+        />
+        <SportCard
+          title="Basketball"
+          origin="1891, USA"
+          history="Invented by Dr. James Naismith, it has become one of the most popular sports globally with leagues like NBA."
+          rules="Teams attempt to score by shooting the ball into the opponent’s hoop. Players can dribble, pass, and shoot."
+          equipment="Basketball, hoop, court"
+          players="5 per team"
+          image={assets.Basketball}
+          link="/sports/basketball"
+        />
+        <SportCard
+          title="Hockey"
+          origin="19th century, UK"
+          history="Field hockey is a fast-paced game that originated in the UK. Ice hockey evolved from it and is popular in countries like Canada and the USA."
+          rules="Teams attempt to score by hitting a ball or puck into the opponent’s goal using a stick."
+          equipment="Hockey stick, ball/puck, goal"
+          players="11 per team (field), 6 per team (ice)"
+          image={assets.Hockey}
+          link="/sports/hockey"
         />
         {/* Add more sports here as needed */}
       </div>
