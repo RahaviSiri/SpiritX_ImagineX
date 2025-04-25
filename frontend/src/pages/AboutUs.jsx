@@ -85,7 +85,7 @@ const AboutUs = () => {
             </p>
             {/* Stats Section */}
             <div className="flex flex-col md:flex-row gap-6 justify-start">
-              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2">
+              <div className="flex flex-col items-center justify-center  rounded-xl border-yellow-500 border-2 shadow-lg p-6">
                 <div className="flex items-center gap-3">
                   <FaUsers className="text-3xl text-yellow-500" />
                   <p className="text-lg text-yellow-500 font-semibold">
@@ -96,7 +96,7 @@ const AboutUs = () => {
               </div>
 
               {/* Registered Ground Count */}
-              <div className="flex flex-col items-center justify-center bg-black/50 rounded-xl shadow-lg p-6 w-full md:w-1/2 ">
+              <div className="flex flex-col items-center justify-center border-yellow-500 border-2 rounded-xl shadow-lg p-6">
                 <div className="flex items-center gap-3">
                   <FaMapMarkerAlt className="text-3xl text-yellow-500" />
                   <p className="text-lg text-yellow-500 font-semibold">
@@ -113,7 +113,7 @@ const AboutUs = () => {
             <img
               src={assets.AboutPage}
               alt="People playing sports"
-              className="rounded-2xl shadow-lg w-full h-96 object-cover"
+              className="shadow-lg w-full h-96 object-cover"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ const AboutUs = () => {
         </div>
 
         {/* FAQ Section */}
-        <div className="bg-black/60 p-8 rounded-2xl shadow-inner mb-16">
+        <div className="p-8 rounded-2xl shadow-inner mb-16">
           <h2 className="text-3xl font-bold text-yellow-500 text-center mb-8 flex items-center justify-center gap-2">
             <FaQuestionCircle className="text-yellow-300" />
             Frequently Asked Questions

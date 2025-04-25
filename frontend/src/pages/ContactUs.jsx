@@ -32,7 +32,7 @@ const ContactUs = () => {
         backgroundImage: `url(${assets.AddGroundBackroundImage})`,
       }}
     >
-      <div className="bg-black bg-opacity-60 backdrop-blur-sm p-10 rounded-3xl shadow-xl w-full max-w-lg">
+      <div className="bg-black bg-opacity-60 backdrop-blur-sm p-10 rounded-3xl shadow-xl w-full max-w-lg mt-20">
         <h2 className="text-3xl font-extrabold text-center text-yellow-400 mb-6">Contact Us</h2>
         <p className="text-center text-white mb-6">
           We'd love to hear from you! Fill out the form below with your question.
