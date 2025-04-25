@@ -26,6 +26,7 @@ import Upload from './UploadIcon.png'
 import AddGround from './AddGround.png'
 import AddCoach from './AddCoach.png'
 import LoginBg from './LoginBg.png'
+import Logo from './Logo.png'
 import Tennis from './tennis.jpg'
 import Tennis1 from './tennis1.png'
 import Tennis2 from './tennis2.jpg'
@@ -99,6 +100,7 @@ const assets = {
     Basketball3,
     Hockey2,
     Hockey3
+    Logo
 }
 
 export default assets;

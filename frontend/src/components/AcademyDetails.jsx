@@ -1,8 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AcademyContext } from "../context/AcademyContext";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
 
 // Format date
@@ -14,7 +12,6 @@ const formatDateWithOrdinal = (dateStr) => {
   const month = date.toLocaleString("default", { month: "long" });
   const year = date.getFullYear();
 
-  // Get ordinal suffix
   const getOrdinal = (n) => {
     const s = ["th", "st", "nd", "rd"];
     const v = n % 100;
@@ -24,20 +21,17 @@ const formatDateWithOrdinal = (dateStr) => {
   return `${day}${getOrdinal(day)} ${month} ${year}`;
 };
 
-
 const AcademyDetails = () => {
   const { id } = useParams();
   const { getAcademy, academy } = useContext(AcademyContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [selectedStartDate, setSelectedStartDate] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getAcademy(id); // fetches and sets academy in context
+        await getAcademy(id);
       } catch (err) {
         setError("Academy not found");
       } finally {
@@ -48,74 +42,109 @@ const AcademyDetails = () => {
     fetchData();
   }, [id, getAcademy]);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-yellow-400">
+        <Loader className="animate-spin w-8 h-8 mr-2" /> Loading academy
+        details...
+      </div>
+    );
+  }
+
   if (error || !academy) {
-    return <p>Error: {error || "Academy not found."}</p>;
+    return (
+      <div className="text-center text-red-500 font-semibold pt-20">
+        Error: {error || "Academy not found."}
+      </div>
+    );
   }
 
   return (
-    <div className="relative min-h-screen bg-gray-100 p-6">
+    <div className="relative min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4">
+      {/* Glow effect */}
+      <div className="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+
       <button
         onClick={() => window.history.back()}
-        className="text-blue-600 mb-4 inline-block"
+        className="text-yellow-400 mb-4 inline-block hover:underline"
       >
         &larr; Back to Academies
       </button>
 
-      <div className="bg-white shadow-md rounded-2xl p-6">
-        {/* Academy Banner Picture */}
+      <div className="bg-black/60 p-6 rounded-2xl shadow-xl relative z-10">
+        {/* Banner */}
         <img
           src={academy.academyBasicDetails.picture}
           alt={academy.academyBasicDetails.academyName}
           className="w-full h-56 object-cover rounded-xl mb-6"
         />
 
-        {/* Academy Logo & Name */}
-        <div className="flex items-center gap-3 mb-4">
+        {/* Logo & Title */}
+        <div className="flex items-center gap-4 mb-4">
           <img
             src={academy.academyBasicDetails.academyLogo}
             alt={academy.academyBasicDetails.academyName}
-            className="w-14 h-14 object-cover rounded-full border"
+            className="w-16 h-16 object-cover rounded-full border-2 border-yellow-400"
           />
-          <h2 className="text-3xl font-semibold">{academy.academyBasicDetails.academyName}</h2>
+          <h2 className="text-3xl font-bold text-yellow-400">
+            {academy.academyBasicDetails.academyName}
+          </h2>
         </div>
 
-        {/* Short Description */}
-        <p className="text-lg text-gray-600 mb-4">
-          {/* <strong>Description: </strong> */}
+        {/* Descriptions */}
+        <p className="text-lg text-gray-300 mb-4">
           {academy.academyBasicDetails.shortDescription}
         </p>
+        <p className="text-gray-400">
+          {academy.academyBasicDetails.description}
+        </p>
 
-        {/* Full Description */}
-        {/* <h3 className="text-xl font-semibold text-gray-800 mb-3">Full Description:</h3> */}
-        <p className="text-gray-700">{academy.academyBasicDetails.description}</p>
-
-        {/* Additional Details */}
-        <div className="mt-6 text-gray-700">
-          <p><strong>Sport Type:</strong> {academy.academyBasicDetails.sportType}</p>
-          <p><strong>Mode:</strong> {academy.academyBasicDetails.mode}</p>
-          <p><strong>Duration:</strong> {academy.academyBasicDetails.duration}</p>
-          <p><strong>Instructors:</strong> {academy.academyBasicDetails.instructors}</p>
+        {/* Additional Info */}
+        <div className="mt-6 grid gap-2 text-gray-300">
           <p>
-            <strong>Start Date:</strong>{" "}
+            <strong className="text-yellow-400">Sport Type:</strong>{" "}
+            {academy.academyBasicDetails.sportType}
+          </p>
+          <p>
+            <strong className="text-yellow-400">Mode:</strong>{" "}
+            {academy.academyBasicDetails.mode}
+          </p>
+          <p>
+            <strong className="text-yellow-400">Duration:</strong>{" "}
+            {academy.academyBasicDetails.duration}
+          </p>
+          <p>
+            <strong className="text-yellow-400">Instructors:</strong>{" "}
+            {academy.academyBasicDetails.instructors}
+          </p>
+          <p>
+            <strong className="text-yellow-400">Start Date:</strong>{" "}
             {academy.academyBasicDetails.startDate
               ? formatDateWithOrdinal(academy.academyBasicDetails.startDate)
               : "According to the user's preference"}
           </p>
-          <p><strong>Fee:</strong> {academy.academyBasicDetails.feeAmount === 0 ? "Free" : `Rs. ${academy.academyBasicDetails.feeAmount}`}</p>
+          <p>
+            <strong className="text-yellow-400">Fee:</strong>{" "}
+            {academy.academyBasicDetails.feeAmount === 0
+              ? "Free"
+              : `Rs. ${academy.academyBasicDetails.feeAmount}`}
+          </p>
         </div>
       </div>
 
-      <div className="mt-6">
+      {/* Apply Button */}
+      <div className="mt-6 text-center relative z-10">
         <button
-          onClick={() => navigate(`/apply/${academy._id}`)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate(`/client-academy/${academy._id}`);
+          }}
+          className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-3 rounded-full shadow-md transition duration-300"
         >
           Apply for Academy
         </button>
       </div>
-
     </div>
-    
   );
 };
 
