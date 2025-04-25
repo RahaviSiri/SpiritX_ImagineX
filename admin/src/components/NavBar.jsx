@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import assets from '../assets/assets';
-import { MapPinned, CalendarCheck, Users } from 'lucide-react'; // Icons
+import { MapPinned, CalendarCheck, Users } from 'lucide-react';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-blue-950 shadow-md sticky top-0 z-50">
+    <nav className="bg-black bg-opacity-80 shadow-md sticky top-0 z-50 backdrop-blur">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={assets.Logo} alt="Logo" className="h-8 w-auto" />
-            <span className="text-2xl font-bold text-white">SportsHive</span>
+            <span className="text-2xl font-extrabold text-yellow-400 drop-shadow-sm">SportsHive</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 items-center">
-            <Link to="/all-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <Link to="/all-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 transition duration-200 font-medium">
               <MapPinned className="w-5 h-5" />
               <span>All Grounds</span>
             </Link>
-            <Link to="/booked-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <Link to="/booked-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 transition duration-200 font-medium">
               <CalendarCheck className="w-5 h-5" />
               <span>Booked Grounds</span>
             </Link>
-            <Link to="/coach" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+            <Link to="/coach" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 transition duration-200 font-medium">
               <Users className="w-5 h-5" />
               <span>Coaches</span>
             </Link>
@@ -40,7 +40,7 @@ const NavBar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-blue-600 focus:outline-none transition"
+              className="text-yellow-400 hover:text-white focus:outline-none transition"
               aria-label="Toggle Menu"
             >
               <svg
@@ -63,19 +63,20 @@ const NavBar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2">
-          <Link to="/all-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+        <div className="md:hidden px-4 pb-4 pt-2 space-y-2 bg-gray-900">
+          <Link to="/all-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
             <MapPinned className="w-5 h-5" />
             <span>All Grounds</span>
           </Link>
-          <Link to="/booked-grounds" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+          <Link to="/booked-grounds" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
             <CalendarCheck className="w-5 h-5" />
             <span>Booked Grounds</span>
           </Link>
-          <Link to="/coach" className="flex items-center space-x-2 text-white hover:text-blue-600 font-medium transition duration-200">
+          <Link to="/coach" className="flex items-center space-x-2 text-gray-200 hover:text-yellow-400 font-medium transition duration-200">
             <Users className="w-5 h-5" />
             <span>Coaches</span>
           </Link>
+          
         </div>
       )}
     </nav>

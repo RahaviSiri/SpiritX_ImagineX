@@ -159,20 +159,15 @@ const CoachDetails = () => {
   }, [qualifications_photo]);
 
   return (
-    <div
-      className="min-h-screen flex justify-center items-center px-4"
-      style={{
-        backgroundImage: `url(${assets.coach2})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="max-w-4xl w-full bg-black/30 backdrop-blur-md shadow-2xl rounded-2xl p-8 space-y-8 m-10 font-sans">
-        <h1 className="text-3xl font-bold  text-center text-gray-100 border-b pb-2">
+    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 relative">
+      {/* Yellow glow background */}
+      <div className="absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+      
+      <div className="max-w-4xl mx-auto bg-black/60 backdrop-blur-md shadow-2xl rounded-2xl p-8 space-y-8 z-10 relative">
+        <h1 className="text-3xl font-bold text-yellow-400 text-center border-b border-yellow-500 pb-2">
           Filled Details
         </h1>
-
+  
         {/* Profile Image */}
         {profile && (
           <div className="flex justify-center">
@@ -183,34 +178,26 @@ const CoachDetails = () => {
                   : profile
               }
               alt="Profile"
-              className="w-32 h-32 rounded-full border-4 border-blue-400 shadow-md object-cover"
+              className="w-32 h-32 rounded-full border-4 border-yellow-400 shadow-md object-cover"
             />
           </div>
         )}
-
+  
         {/* Personal Info */}
-        <div className="border border-gray-300 rounded-lg p-4 space-y-2 bg-white/60">
-          <h3 className="text-xl font-semibold text-gray-900 border-b pb-2">
+        <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
+          <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Personal Info
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800">
-            <p>
-              <strong>Full Name:</strong> {fullName}
-            </p>
-            <p>
-              <strong>Date of Birth:</strong> {DOB}
-            </p>
-            <p>
-              <strong>Gender:</strong> {gender}
-            </p>
-            <p>
-              <strong>NIC:</strong> {NIC}
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
+            <p><strong>Full Name:</strong> {fullName}</p>
+            <p><strong>Date of Birth:</strong> {DOB}</p>
+            <p><strong>Gender:</strong> {gender}</p>
+            <p><strong>NIC:</strong> {NIC}</p>
           </div>
           {NIC_photo && (
             <div className="mt-2 text-sm">
               <p className="font-medium">NIC Photo:</p>
-              <p className="text-blue-600 underline">
+              <p className="text-yellow-400 underline">
                 {NIC_photo instanceof window.File ? (
                   <a
                     href={URL.createObjectURL(NIC_photo)}
@@ -227,67 +214,47 @@ const CoachDetails = () => {
             </div>
           )}
         </div>
-
+  
         {/* Contact Details */}
-        <div className="border border-gray-300 rounded-lg p-4 space-y-2 bg-white/60">
-          <h3 className="text-xl font-semibold text-gray-900 border-b pb-2">
+        <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
+          <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Contact Details
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800">
-            <p>
-              <strong>Contact No:</strong> {contactNo}
-            </p>
-            <p>
-              <strong>Home TP:</strong> {HomeTP}
-            </p>
-            <p>
-              <strong>WhatsApp:</strong> {whatsapp}
-            </p>
-            <p>
-              <strong>Email:</strong> {email}
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
+            <p><strong>Contact No:</strong> {contactNo}</p>
+            <p><strong>Home TP:</strong> {HomeTP}</p>
+            <p><strong>WhatsApp:</strong> {whatsapp}</p>
+            <p><strong>Email:</strong> {email}</p>
           </div>
         </div>
-
+  
         {/* Address */}
-        <div className="border border-gray-300 rounded-lg p-4 space-y-2 bg-white/60">
-          <h3 className="text-xl font-semibold text-gray-900 border-b pb-2">
+        <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
+          <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Address
           </h3>
-          <div className="text-sm text-gray-800">
-            <p>
-              <strong>Address:</strong> {Line1} {Line2}
-            </p>
+          <div className="text-sm text-gray-200">
+            <p><strong>Address:</strong> {Line1} {Line2}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1">
-              <p>
-                <strong>City:</strong> {city}
-              </p>
-              <p>
-                <strong>District:</strong> {district}
-              </p>
+              <p><strong>City:</strong> {city}</p>
+              <p><strong>District:</strong> {district}</p>
             </div>
           </div>
         </div>
-
+  
         {/* Coach Selection Details */}
-        <div className="border border-gray-300 rounded-lg p-4 space-y-2 bg-white/60">
-          <h3 className="text-xl font-semibold text-gray-900 border-b pb-2">
+        <div className="border border-yellow-500 rounded-lg p-4 space-y-2 bg-gray-800">
+          <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">
             Coach Selection Details
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800">
-            <p>
-              <strong>Selection Type:</strong> {selectionType}
-            </p>
-            <p>
-              <strong>Expected Salary:</strong> {salary}
-            </p>
-            <p>
-              <strong>Sport:</strong> {sport}
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-200">
+            <p><strong>Selection Type:</strong> {selectionType}</p>
+            <p><strong>Expected Salary:</strong> {salary}</p>
+            <p><strong>Sport:</strong> {sport}</p>
           </div>
           <div className="mt-2 text-sm">
             <p className="font-medium">Qualifications:</p>
-            <p className="text-gray-600">{qualifications}</p>
+            <p className="text-gray-300">{qualifications}</p>
           </div>
           {qualifications_photo && (
             <div className="mt-2 text-sm">
@@ -297,27 +264,27 @@ const CoachDetails = () => {
                 target="_blank"
                 rel="noreferrer"
                 download
-                className="text-blue-600 underline"
+                className="text-yellow-400 underline"
               >
                 View Document
               </a>
             </div>
           )}
         </div>
-
+  
         {/* Buttons */}
         <div className="flex justify-between items-center pt-4">
           <button
             onClick={() => navigate("/coach-registration")}
             type="button"
-            className="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 transition"
+            className="px-6 py-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-yellow-600 hover:text-black transition"
           >
             Back
           </button>
           <button
             type="submit"
             onClick={handleSubmit}
-            className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition"
           >
             Submit
           </button>
@@ -325,6 +292,7 @@ const CoachDetails = () => {
       </div>
     </div>
   );
+  
 };
 
 export default CoachDetails;

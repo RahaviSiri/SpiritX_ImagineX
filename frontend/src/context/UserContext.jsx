@@ -29,7 +29,7 @@ export const UserContextProvider = ({ children }) => {
           toast.error("Error in fetching user");
         }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       toast.error(error.message)
       
     }

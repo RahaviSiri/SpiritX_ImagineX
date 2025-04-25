@@ -25,7 +25,7 @@ const Home = () => {
             Discover and book sports grounds, find expert coaches, explore different sports, join competitions, and connect with sports communities.
           </p>
           <Link
-            to="/grounds"
+            to="/all-ground"
             className="px-5 py-2 sm:px-6 sm:py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-full transition duration-300"
           >
             Get Started

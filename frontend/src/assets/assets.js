@@ -1,4 +1,4 @@
-import AddGroundBackroundImage from "./AddGroundBackroundImage.jpg"
+import AddGroundBackroundImage from "./AddGroundBackroundImage.png"
 import ValidationBackround from "./ValidationBackround.jpg"
 import Banner from "./banner.png"
 import Netball from "./netball.jpg"
@@ -45,8 +45,6 @@ const assets = {
     Netball1,
     Netball2,
     Netball3,
-    AddGroundBackroundImage,
-    ValidationBackround,
     coach1,
     coach2,
     coach3,

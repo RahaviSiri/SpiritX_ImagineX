@@ -36,10 +36,11 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import AcademyWaitForApproval from "./components/AcademyWaitForApproval";
+import BookedItems from "./pages/BookedItems";
 
 function App() {
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  // const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     AOS.init({
@@ -53,7 +54,7 @@ function App() {
       <ToastContainer />
       <Navbar />
 
-      <main className="flex-1 w-full">
+      <main className="w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/CompetitionPage" element={<CompetitionPage />} />
@@ -95,9 +96,9 @@ function App() {
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
           <Route path="/academy-wait-for-approval" element={<AcademyWaitForApproval />} />
+          <Route path="/booked-items" element={<BookedItems />} />
         </Routes>
       </main>
-
       <Footer />
     </div>
   );

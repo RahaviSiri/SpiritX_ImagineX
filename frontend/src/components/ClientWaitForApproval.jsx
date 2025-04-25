@@ -92,18 +92,18 @@ const ClientWaitForApproval = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="bg-black/30 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full font-sans">
-        <h1 className="text-2xl font-bold text-center mb-4 text-white">
+      <div className="bg-black/50 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-md w-full font-sans">
+        <h1 className="text-2xl font-bold text-center mb-4 text-yellow-400">
           Waiting for Admin Approval
         </h1>
-
+  
         {lastBooking?.isApprove ? (
           <>
             <p className="text-center text-white mb-6">
               If you've been approved, enter the OTP sent to your email to
               continue.
             </p>
-
+  
             <form onSubmit={handleSubmit}>
               <input
                 type="email"
@@ -111,9 +111,9 @@ const ClientWaitForApproval = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your registered email"
                 required
-                className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white/80 text-black"
               />
-
+  
               <div className="flex justify-center gap-2 mb-6">
                 {Array(6)
                   .fill(0)
@@ -127,14 +127,14 @@ const ClientWaitForApproval = () => {
                       onInput={(e) => handleLength(e, index)}
                       onKeyDown={(e) => handleLockDown(e, index)}
                       onPaste={handlePaste}
-                      className="w-10 h-12 text-center text-xl border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                      className="w-10 h-12 text-center text-xl border border-yellow-500 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white/80 text-black"
                     />
                   ))}
               </div>
-
+  
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                className="w-full bg-yellow-500 text-black py-2 rounded-md hover:bg-yellow-600 transition"
               >
                 Continue
               </button>
@@ -151,6 +151,7 @@ const ClientWaitForApproval = () => {
       </div>
     </div>
   );
+  
 };
 
 export default ClientWaitForApproval;

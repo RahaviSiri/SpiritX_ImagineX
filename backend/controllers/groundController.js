@@ -255,23 +255,35 @@ const handleBooking = async (req, res) => {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: ground.ownerEmail,
-      subject: "New Ground Booking Request",
+      subject: "📅 New Ground Booking Request Received!",
       html: `
-        <p>Dear Ground Owner,</p>
-        <p>You have received a new booking request for your ground.</p>
-        <ul>
-          <li><strong>Time Slot:</strong> ${timeSlot}</li>
-          <li><strong>User:</strong> ${user.name}</li>
-        </ul>
-        <p>Thank you!</p>
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #1a73e8;">Hello Ground Owner,</h2>
+    
+          <p>We’re excited to inform you that a new booking request has been made for your ground.</p>
+    
+          <div style="background-color: #f1f1f1; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-bottom: 10px; color: #444;">📌 Booking Details</h3>
+            <ul style="list-style-type: none; padding: 0;">
+              <li><strong>⏰ Time Slot:</strong> ${timeSlot}</li>
+              <li><strong>👤 Booked By:</strong> ${user.name}</li>
+            </ul>
+          </div>
+    
+          <p>If you have any questions or need to follow up, please log in to your dashboard.</p>
+    
+          <p style="margin-top: 30px;">Best regards,<br />
+          <strong>Your Ground Booking Team</strong></p>
+        </div>
       `,
     };
+
     try {
       await transporter.sendMail(mailOptions);
       console.log("Mail sent successfully");
     } catch (err) {
       console.error("Failed to send mail:", err);
-    }    
+    }
     return res.json({ success: true, message: "Booking successful" });
   } catch (error) {
     console.log("Error in booking ground", error);
@@ -282,7 +294,9 @@ const handleBooking = async (req, res) => {
 // Get all booking
 const getAllBookings = async (req, res) => {
   try {
-    const grounds = await groundModel.find().populate("bookings.userId", "name");
+    const grounds = await groundModel
+      .find()
+      .populate("bookings.userId", "name");
 
     const bookings = [];
 
@@ -292,12 +306,12 @@ const getAllBookings = async (req, res) => {
           groundId: ground._id,
           bookingId: booking._id,
           groundName: ground.name,
-          ownerEmail: ground.ownerEmail, 
+          ownerEmail: ground.ownerEmail,
           userId: booking.userId,
           userName: booking.userId?.name || "Unknown User",
           timeSlot: booking.timeSlot,
           status: booking.status,
-          bookedTime : booking.bookedAt
+          bookedTime: booking.bookedAt,
         });
       });
     });
@@ -315,14 +329,18 @@ const cancelBooking = async (req, res) => {
     const { groundId, timeSlot, userId } = req.body;
 
     if (!groundId || !userId || !timeSlot) {
-      return res.status(400).json({ success: false, message: "Missing required fields" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
     }
 
     const ground = await groundModel.findById(groundId);
     const user = await userModel.findById(userId);
 
     if (!ground || !user) {
-      return res.status(404).json({ success: false, message: "Ground or User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground or User not found" });
     }
 
     // Add time slot back to freeTime if not present
@@ -334,11 +352,10 @@ const cancelBooking = async (req, res) => {
     const booking = ground.bookings.find(
       (b) => b.userId.toString() === userId && b.timeSlot === timeSlot
     );
-    
+
     if (booking) {
       booking.status = "cancelled";
     }
-    
 
     // ✅ Also remove the booking from the user's bookings
     user.groundBookings = user.groundBookings.filter(
@@ -353,14 +370,28 @@ const cancelBooking = async (req, res) => {
     // ✅ Fix email sending: Use user.email, not user.userName
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
-      to: user.email, 
-      subject: "Ground Booking Cancellation",
+      to: user.email,
+      subject: "⚠️ Ground Booking Cancellation Notice",
       html: `
-        <p>Dear ${user.name},</p>
-        <p>Your ground booking at ${timeSlot} has been cancelled. You can now choose another time slot.</p>
-        <p>Thank you!</p>
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #e53935;">Dear ${user.name},</h2>
+    
+          <p>We regret to inform you that your booking for the time slot <strong>${timeSlot}</strong> has been cancelled.</p>
+    
+          <div style="background-color: #f1f1f1; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin-bottom: 10px; color: #444;">📅 Booking Cancellation Details</h3>
+            <ul style="list-style-type: none; padding: 0;">
+              <li><strong>⏰ Time Slot Cancelled:</strong> ${timeSlot}</li>
+            </ul>
+          </div>
+    
+          <p>You can now choose another available time slot for your ground booking. If you need assistance, please contact us.</p>
+    
+          <p style="margin-top: 30px;">Thank you for your understanding,<br />
+          <strong>Your Ground Booking Team</strong></p>
+        </div>
       `,
-    };
+    };    
 
     try {
       await transporter.sendMail(mailOptions);
@@ -376,7 +407,6 @@ const cancelBooking = async (req, res) => {
   }
 };
 
-
 // make verify of ground
 const verifyGround = async (req, res) => {
   try {
@@ -384,7 +414,9 @@ const verifyGround = async (req, res) => {
     const ground = await groundModel.findById(id);
 
     if (!ground) {
-      return res.status(404).json({ success: false, message: "Ground not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Ground not found" });
     }
 
     ground.verified = true;
@@ -407,5 +439,5 @@ export {
   handleBooking,
   cancelBooking,
   getAllBookings,
-  verifyGround
+  verifyGround,
 };

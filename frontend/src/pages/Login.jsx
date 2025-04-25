@@ -58,130 +58,125 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen"
-      style={{
-        backgroundImage: `url(${assets.ValidationBackround})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {state === "Sign Up" ? (
-        <div className="w-full max-w-md p-8 bg-black bg-opacity-30 rounded-lg shadow-xl">
-          <p className="text-3xl font-semibold text-center text-white mb-4">Create Account</p>
-          <p className="text-lg text-center text-white mb-6">Grow your Sports Life</p>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
+    <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4 relative">
+      {/* Yellow glow background effect */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] bg-yellow-300 opacity-10 rounded-full blur-3xl pointer-events-none z-0" />
+  
+      {/* Main Container */}
+      <div className="w-full min-h-screen bg-black/60 p-6 rounded-xl shadow-xl flex items-center justify-center relative z-10">
+        {state === "Sign Up" ? (
+          <div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-2xl shadow-2xl">
+            <h2 className="text-3xl font-bold text-yellow-400 text-center mb-4">Create Account</h2>
+            <p className="text-lg text-center text-gray-300 mb-8">Grow your Sports Life</p>
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col gap-2">
-                <label htmlFor="name" className="text-sm font-medium text-white">Name</label>
+                <label htmlFor="name" className="text-sm font-medium text-gray-300">Name</label>
                 <input
                   id="name"
                   type="text"
                   required
-                  className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="text-sm font-medium text-white">Your email</label>
+                <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
                 <input
                   id="email"
                   type="email"
                   required
-                  className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="password" className="text-sm font-medium text-white">Password</label>
+                <label htmlFor="password" className="text-sm font-medium text-gray-300">Password</label>
                 <input
                   id="password"
                   type="password"
                   required
-                  className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 mt-6 rounded-lg font-semibold hover:bg-blue-500 transition duration-300"
-            >
-              Create Account
-            </button>
-          </form>
-          <p className="text-sm text-center text-white mt-4">
-            Already have an account?{" "}
-            <span
-              onClick={() => setState("Login")}
-              className="text-blue-600 cursor-pointer hover:underline"
-            >
-              Login here
-            </span>
-          </p>
-          
-        </div>
-      ) : (
-        <div className="w-full max-w-md p-8 bg-black bg-opacity-30 rounded-lg shadow-xl">
-          <p className="text-3xl font-semibold text-center text-white mb-4">Login</p>
-          <p className="text-lg text-center text-white mb-6">Login to get more benefits</p>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
+              <button
+                type="submit"
+                className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-full hover:bg-yellow-500 transition duration-300 mt-6"
+              >
+                Create Account
+              </button>
+            </form>
+            <p className="text-sm text-center text-gray-400 mt-6">
+              Already have an account?{" "}
+              <span
+                onClick={() => setState("Login")}
+                className="text-yellow-400 cursor-pointer hover:underline"
+              >
+                Login here
+              </span>
+            </p>
+          </div>
+        ) : (
+          <div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-2xl shadow-2xl">
+            <h2 className="text-3xl font-bold text-yellow-400 text-center mb-4">Login</h2>
+            <p className="text-lg text-center text-gray-300 mb-8">Login to get more benefits</p>
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="text-sm font-medium text-white">Enter email</label>
+                <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
                 <input
                   id="email"
                   type="email"
                   required
-                  className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="password" className="text-sm font-medium text-white">Password</label>
+                <label htmlFor="password" className="text-sm font-medium text-gray-300">Password</label>
                 <input
                   id="password"
                   type="password"
                   required
-                  className="border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                  className="bg-gray-900 border border-yellow-400 text-white p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 mt-6 rounded-lg font-semibold hover:bg-blue-500 transition duration-300"
-            >
-              Login
-            </button>
-          </form>
-          <p className="text-sm text-center text-white mt-6">
-            Don't have an account?{" "}
-            <span
-              onClick={() => setState("Sign Up")}
-              className="text-blue-500 cursor-pointer hover:underline "
-            >
-              SignUp here
-            </span>
-          </p>
-          <p className="text-sm text-center text-white mt-4">
-            Forgot Password?{" "}
-            <span
-              onClick={() => navigate('/reset-password-send-otp')}
-              className="text-blue-600 cursor-pointer hover:underline"
-            >
-              Click here
-            </span>
-          </p>
-        </div>
-      )}
+              <button
+                type="submit"
+                className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-full hover:bg-yellow-500 transition duration-300 mt-6"
+              >
+                Login
+              </button>
+            </form>
+            <p className="text-sm text-center text-gray-400 mt-6">
+              Don't have an account?{" "}
+              <span
+                onClick={() => setState("Sign Up")}
+                className="text-yellow-400 cursor-pointer hover:underline"
+              >
+                Sign Up here
+              </span>
+            </p>
+            <p className="text-sm text-center text-gray-400 mt-4">
+              Forgot Password?{" "}
+              <span
+                onClick={() => navigate('/reset-password-send-otp')}
+                className="text-yellow-400 cursor-pointer hover:underline"
+              >
+                Click here
+              </span>
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
+  
 };
 
 export default Login;
