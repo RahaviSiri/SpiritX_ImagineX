@@ -8,7 +8,7 @@ Welcome to **SportsHive**, your one-stop platform for everything sports! From bo
 
 ## 🤝 Contributors  
 👨‍💻 Syntax_404  
-Members - Rahavi Sirithar, Suwasthiga Nagendramoorthy, Parkkavi Sivakaran, Shaamma Sajahan, Arthikha Sooriyakumar
+Members - @RahaviSiri, @Shaamma, @ParkkaviSivakaran72, @suwasthi, @Arthikha
 
 ---
 
