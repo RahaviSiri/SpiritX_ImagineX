@@ -2,33 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import { UploadCloud } from "lucide-react";
 import assets from "../assets/assets.js";
 import { AcademyContext } from "../context/AcademyContext.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const districts = [
-  "Ampara",
-  "Anuradhapura",
-  "Badulla",
-  "Batticaloa",
-  "Colombo",
-  "Galle",
-  "Gampaha",
-  "Hambantota",
-  "Jaffna",
-  "Kalutara",
-  "Kandy",
-  "Kegalle",
-  "Kilinochchi",
-  "Kurunegala",
-  "Mannar",
-  "Matale",
-  "Matara",
-  "Monaragala",
-  "Mullaitivu",
-  "Nuwara Eliya",
-  "Polonnaruwa",
-  "Puttalam",
-  "Ratnapura",
-  "Trincomalee",
-  "Vavuniya",
+  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", "Hambantota",
+  "Jaffna", "Kalutara", "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", "Mannar", "Matale",
+  "Matara", "Monaragala", "Mullaitivu", "Nuwara Eliya", "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
 ];
 
 const fileLabels = {
@@ -37,8 +19,11 @@ const fileLabels = {
   certificate: "Certificate of Validation*",
 };
 
+
 const AddAcademy = () => {
-  const { addAcademy } = useContext(AcademyContext);
+  const { setAcademy, setAToken, backend_url, academy } = useContext(AcademyContext);
+  const navigate = useNavigate();
+  const { id: editingAcademyId } = useParams();
 
   const [formData, setFormData] = useState({
     academyName: "",
@@ -63,6 +48,49 @@ const AddAcademy = () => {
     email: "",
     certificate: null,
   });
+
+  // useEffect(() => {
+  //   const fetchAcademy = async () => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:3000/api/academy/${editingAcademyId}`);
+  //       const data = res.data;
+
+  //       if (data.success) {
+  //         const academy = data.academy;
+
+  //         // Fill form with existing values (remove file blobs — you can't re-populate file inputs)
+  //         setFormData({
+  //           academyName: academy.academyName || "",
+  //           sportType: academy.sportType || "",
+  //           shortDescription: academy.shortDescription || "",
+  //           description: academy.description || "",
+  //           duration: academy.duration || "",
+  //           instructors: academy.instructors || "",
+  //           feeAmount: academy.feeAmount || "",
+  //           mode: academy.mode || "",
+  //           isFlexible: academy.isFlexible || false,
+  //           startDate: academy.startDate?.slice(0, 10) || "",
+  //           Line1: academy.address?.Line1 || "",
+  //           Line2: academy.address?.Line2 || "",
+  //           city: academy.address?.city || "",
+  //           district: academy.address?.district || "",
+  //           contactNo: academy.contact?.contactNo || "",
+  //           HomeTP: academy.contact?.HomeTP || "",
+  //           whatsapp: academy.contact?.whatsapp || "",
+  //           email: academy.contact?.email || "",
+  //           academyLogo: null,
+  //           picture: null,
+  //           certificate: null,
+  //         });
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to fetch academy:", err);
+  //     }
+  //   };
+
+  //   if (editingAcademyId) fetchAcademy();
+  // }, [editingAcademyId]);
+
 
   const [previews, setPreviews] = useState({});
 
@@ -91,6 +119,7 @@ const AddAcademy = () => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -98,42 +127,67 @@ const AddAcademy = () => {
       form.append(key, value);
     });
 
-    const data = await addAcademy(form);
-    if (data?.success) {
-      setFormData({
-        academyName: "",
-        academyLogo: null,
-        picture: null,
-        sportType: "",
-        shortDescription: "",
-        description: "",
-        duration: "",
-        instructors: "",
-        feeAmount: "",
-        mode: "",
-        isFlexible: false,
-        startDate: "",
-        Line1: "",
-        Line2: "",
-        city: "",
-        district: "",
-        contactNo: "",
-        HomeTP: "",
-        whatsapp: "",
-        email: "",
-        certificate: null,
+    try {
+      const { data } = await axios.post(`${backend_url}/api/academy/add-academy`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
-      setPreviews({});
+
+      if (data.success) {
+        localStorage.setItem("AToken", data.token);
+        setAToken(data.token); // Set the token in state
+        setAcademy(data.newAcademy);
+        console.log(data.newAcademy);
+        setFormData({
+          academyName: "",
+          academyLogo: null,
+          picture: null,
+          sportType: "",
+          shortDescription: "",
+          description: "",
+          duration: "",
+          instructors: "",
+          feeAmount: "",
+          mode: "",
+          isFlexible: false,
+          startDate: "",
+          Line1: "",
+          Line2: "",
+          city: "",
+          district: "",
+          contactNo: "",
+          HomeTP: "",
+          whatsapp: "",
+          email: "",
+          certificate: null,
+        });
+        // setPreviews({});
+        if (!academy || !academy.isApproved) {
+          navigate("/academy-wait-for-approval");
+        }        
+        toast.success(data.message || "Academy registered successfully!");
+      } else {
+        toast.error(data.message || "Failed to register academy");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Error submitting academy");
     }
-  };
+  }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900 px-4 font-sans text-white">
-      <div className="w-full max-w-4xl bg-gray-800 p-8 rounded-2xl shadow-xl space-y-6 mt-24 mb-3">
+    <div
+      className="flex justify-center items-center min-h-screen bg-gray-50 px-4 font-sans"
+      style={{
+        backgroundImage: `url(${assets.AddAcademy})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="w-full max-w-4xl bg-black/30 p-8 rounded-2xl shadow-xl space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h1 className="text-2xl font-bold text-center mb-4 text-yellow-400">
-            Academy Registration
-          </h1>
+          <h1 className="text-2xl font-bold text-center mb-4 text-white">Academy Registration</h1>
 
           {/* Academy Name */}
           <input
@@ -143,7 +197,7 @@ const AddAcademy = () => {
             value={formData.academyName}
             onChange={handleChange}
             required
-            className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+            className="w-full border border-blue-300 p-2 rounded-md outline-none"
           />
 
           {/* Academy Logo & Picture */}
@@ -151,33 +205,20 @@ const AddAcademy = () => {
             {["academyLogo", "picture"].map((fileKey) => (
               <div key={fileKey}>
                 {formData[fileKey] ? (
-                  <div
-                    onClick={() => {
-                      setFormData({ ...formData, [fileKey]: null });
-                      setPreviews({ ...previews, [fileKey]: null });
-                    }}
-                    className="cursor-pointer border border-yellow-400 p-2 rounded-md bg-gray-700 w-fit"
-                  >
+                  <div onClick={() => {
+                    setFormData({ ...formData, [fileKey]: null });
+                    setPreviews({ ...previews, [fileKey]: null });
+                  }} className="cursor-pointer border border-blue-300 p-2 rounded-md bg-white w-fit">
                     {previews[fileKey]?.startsWith("data:image") ? (
-                      <img
-                        src={previews[fileKey]}
-                        alt="Preview"
-                        className="h-32 w-32 object-cover rounded-md"
-                      />
+                      <img src={previews[fileKey]} alt="Preview" className="h-32 w-32 object-cover rounded-md" />
                     ) : (
                       <span className="text-sm">{formData[fileKey].name}</span>
                     )}
                   </div>
                 ) : (
-                  <label className="flex items-center gap-2 hover:underline cursor-pointer text-sm text-yellow-300 font-medium border border-dashed border-yellow-500 p-2 rounded-md">
+                  <label className="flex items-center gap-2 hover:underline cursor-pointer text-sm text-white font-medium border border-dashed border-white-400 p-2 rounded-md">
                     <UploadCloud size={16} /> Upload {fileLabels[fileKey]}
-                    <input
-                      type="file"
-                      name={fileKey}
-                      onChange={handleChange}
-                      hidden
-                      required
-                    />
+                    <input type="file" name={fileKey} onChange={handleChange} hidden required />
                   </label>
                 )}
               </div>
@@ -192,7 +233,7 @@ const AddAcademy = () => {
               placeholder="Sport Type"
               value={formData.sportType}
               onChange={handleChange}
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white col-span-1 md:col-span-2"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
             />
             <textarea
               name="shortDescription"
@@ -200,7 +241,7 @@ const AddAcademy = () => {
               value={formData.shortDescription}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white col-span-1 md:col-span-2"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
             />
             <textarea
               name="description"
@@ -208,7 +249,7 @@ const AddAcademy = () => {
               value={formData.description}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white col-span-1 md:col-span-2"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
             />
             <input
               type="text"
@@ -217,7 +258,7 @@ const AddAcademy = () => {
               value={formData.duration}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             />
             <input
               type="number"
@@ -229,7 +270,7 @@ const AddAcademy = () => {
                 if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
               }}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
             <input
               type="text"
@@ -238,7 +279,7 @@ const AddAcademy = () => {
               value={formData.instructors}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white col-span-1 md:col-span-2"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none col-span-1 md:col-span-2"
             />
 
             <select
@@ -246,14 +287,14 @@ const AddAcademy = () => {
               value={formData.mode}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             >
               <option value="">Select Mode</option>
               <option value="Online">Online</option>
               <option value="Physical">Physical</option>
             </select>
 
-            <label className="text-yellow-300 flex items-center space-x-2">
+            <label className="text-white flex items-center space-x-2">
               <input
                 type="checkbox"
                 name="isFlexible"
@@ -265,13 +306,13 @@ const AddAcademy = () => {
 
             {formData.mode && !formData.isFlexible && (
               <label className="w-full">
-                <span className="text-yellow-300">Start Date*</span>
+                <span className="text-white">Start Date*</span>
                 <input
                   type="date"
                   name="startDate"
                   onChange={handleChange}
                   required
-                  className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+                  className="w-full border border-blue-300 p-2 rounded-md outline-none"
                 />
               </label>
             )}
@@ -286,7 +327,7 @@ const AddAcademy = () => {
               value={formData.Line1}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             />
             <input
               type="text"
@@ -294,7 +335,7 @@ const AddAcademy = () => {
               placeholder="Address Line 2"
               value={formData.Line2}
               onChange={handleChange}
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             />
             <input
               type="text"
@@ -303,14 +344,14 @@ const AddAcademy = () => {
               value={formData.city}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             />
             <select
               name="district"
               value={formData.district}
               onChange={handleChange}
               required
-              className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+              className="w-full border border-blue-300 p-2 rounded-md outline-none"
             >
               <option value="">Select District*</option>
               {districts.map((district) => (
@@ -325,11 +366,7 @@ const AddAcademy = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               { name: "contactNo", placeholder: "Contact No.*", type: "text" },
-              {
-                name: "HomeTP",
-                placeholder: "Home Telephone No.",
-                type: "text",
-              },
+              { name: "HomeTP", placeholder: "Home Telephone No.", type: "text" },
               { name: "whatsapp", placeholder: "WhatsApp No.*", type: "text" },
               { name: "email", placeholder: "Email*", type: "email" },
             ].map(({ name, placeholder, type }) => (
@@ -341,7 +378,7 @@ const AddAcademy = () => {
                 value={formData[name]}
                 onChange={handleChange}
                 required={placeholder.includes("*")}
-                className="w-full border border-yellow-400 p-2 rounded-md outline-none bg-gray-900 text-white"
+                className="w-full border border-blue-300 p-2 rounded-md outline-none text-black"
               />
             ))}
           </div>
@@ -361,7 +398,7 @@ const AddAcademy = () => {
                         setFormData({ ...formData, [fileKey]: null });
                         setPreviews({ ...previews, [fileKey]: null });
                       }}
-                      className="cursor-pointer border border-yellow-400 p-2 rounded-md bg-gray-700 text-white w-fit"
+                      className="cursor-pointer border border-blue-300 p-2 rounded-md bg-white text-black w-fit"
                     >
                       {isImage ? (
                         <img
@@ -374,15 +411,9 @@ const AddAcademy = () => {
                       )}
                     </div>
                   ) : (
-                    <label className="flex items-center gap-2 text-yellow-300 hover:underline cursor-pointer text-sm font-medium border border-dashed border-yellow-500 p-2 rounded-md">
+                    <label className="flex items-center gap-2 text-white hover:underline cursor-pointer text-sm font-medium border border-dashed border-white-400 p-2 rounded-md">
                       <UploadCloud size={16} /> Upload {fileLabels[fileKey]}
-                      <input
-                        type="file"
-                        name={fileKey}
-                        onChange={handleChange}
-                        hidden
-                        required
-                      />
+                      <input type="file" name={fileKey} onChange={handleChange} hidden required />
                     </label>
                   )}
                 </div>
@@ -390,15 +421,14 @@ const AddAcademy = () => {
             })}
           </div>
 
-          <span className="text-yellow-200 flex items-center space-x-2">
-            * are required fields
-          </span>
+          <span className="text-white flex items-center space-x-2">* are required fields</span>
+          <span className="text-white flex items-center space-x-2"><strong>You will need to pay a fee for advertising in our website.</strong></span>
 
           <button
             type="submit"
-            className="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-black text-lg font-semibold rounded-xl transition"
+            className="w-full py-3 bg-blue-500 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition"
           >
-            Register
+            {editingAcademyId ? "Update Academy" : "Register"}
           </button>
         </form>
       </div>

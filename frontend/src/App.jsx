@@ -35,6 +35,7 @@ import { useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import AcademyWaitForApproval from "./components/AcademyWaitForApproval";
 import BookedItems from "./pages/BookedItems";
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
           <Route path="/sports/football" element={<Football />} />
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
+          <Route path="/academy-wait-for-approval" element={<AcademyWaitForApproval />} />
           <Route path="/booked-items" element={<BookedItems />} />
         </Routes>
       </main>

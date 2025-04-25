@@ -23,6 +23,7 @@ import coach3 from './coach3.jpg'
 import AboutPage from './AboutPage.jpg'
 import AddAcademy from './AddAcademy.jpg'
 import Upload from './UploadIcon.png'
+import ApproveAcademy from './ApproveAcademy.jpg'
 
 const assets = {
     AddGroundBackroundImage,
@@ -49,7 +50,8 @@ const assets = {
     coach3,
     AboutPage,
     AddAcademy,
-    Upload
+    Upload,
+    ApproveAcademy
 }
 
 export default assets;

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
         isPayment: { type: String, default: "" },
       },
     ],
-    academicsBooking: [
+    academyBooking: [
       {
         academyId: { type: mongoose.Schema.Types.ObjectId, ref: "academy" },
         fullName: { type: String, required: true },
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
         // Set by users for flexible online courses
         preferredStartDate: { type: Date }, 
 
-        NIC: {type: String, required: true },         // URLs to uploaded docs
+        NIC: {type: String, required: true },
         notes: { type: String },
         isApprove: { type: Boolean, default: false },
         rejectionReason: { type: String }, //mail to user

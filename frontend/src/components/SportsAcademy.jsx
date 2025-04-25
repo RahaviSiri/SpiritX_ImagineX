@@ -2,39 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";  
+import { AcademyContext } from "../context/AcademyContext";
 
 const SportsAcademy = () => {
   const navigate = useNavigate();
   const { uToken } = useContext(UserContext);
+  const { academies, getAllAcademies } = useContext(AcademyContext);
 
   const [academies, setAcademies] = useState([]);  // State to store fetched academies
   const [loading, setLoading] = useState(true);    // State to handle loading
   const [error, setError] = useState(null);        // State to handle errors
 
   useEffect(() => {
-    // Function to fetch academies from backend
-    const fetchAcademies = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/academy/get-all-academies");  // Replace with your actual API endpoint
-        setAcademies(response.data.academies);
-      } catch (err) {
-        setError("Failed to load academies");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAcademies();
+    getAllAcademies();
   }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;  // You can replace with a loading spinner or placeholder
-  }
-
-  if (error) {
-    return <div>{error}</div>;  // Display error message if fetching fails
-  }
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white pt-16 px-4">
@@ -62,7 +43,7 @@ const SportsAcademy = () => {
               return (
                 <div
                   key={academy._id}
-                  onClick={() => navigate(`/academies/${academy._id}`)}
+                  onClick={() => navigate(`/academy/${academy._id}`)}
                   className="bg-gray-800 rounded-2xl shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border border-yellow-400"
                 >
                   <div className="flex flex-col items-center p-6">
