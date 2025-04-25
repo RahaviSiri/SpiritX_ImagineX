@@ -52,7 +52,7 @@ function App() {
       <ToastContainer />
       <Navbar />
 
-      <main className="flex-1 w-full">
+      <main className="w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/CompetitionPage" element={<CompetitionPage />} />
@@ -95,7 +95,6 @@ function App() {
           <Route path="/sports/netball" element={<Netball />} />
         </Routes>
       </main>
-
       <Footer />
     </div>
   );
