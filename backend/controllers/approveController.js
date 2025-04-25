@@ -3,6 +3,8 @@ import { transporter } from "../config/nodemailer.js";
 
 import coachModel from "../models/coachModel.js";
 import userModel from "../models/userModel.js";
+import academyModel from "../models/academyModel.js";
+import groundModel from "../models/groundModel.js";
 
 
 export const approveByAdmin = async (req, res) => {
@@ -206,5 +208,125 @@ export const rejectByCoach = async (req, res) => {
   } catch (error) {
     console.error("Reject error:", error);
     return res.json({ success: false, message: error.message });
+  }
+};
+
+
+export const countBooking = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    const approvedCoaches = await coachModel.find({ isApprove: true });
+    const approvedAcademies = await academyModel.find({ isApprove: true });
+    const approvedGrounds = await groundModel.find({ verified: true });
+
+
+
+    let coachesCount = 0;
+    let groundsCount = 0;
+    let academiesCount = 0;
+
+    const coachesAmount = approvedCoaches.length ;
+    const groundsAmount = approvedGrounds.length ; // Sample rate per booking
+    const academiesAmount = approvedAcademies.length; // Sample rate per booking
+
+    // Loop through all users and tally booking stats
+    users.forEach(user => {
+      if (user.coachBooking?.length) {
+        coachesCount += user.coachBooking.length;
+         
+      }
+
+      if (user.groundBookings?.length) {
+        groundsCount += user.groundBookings.length;
+        
+      }
+
+      if (user.academicsBooking?.length) {
+        academiesCount += user.academicsBooking.length;
+        
+      }
+    });
+
+    res.json({
+      coachesCount,
+      groundsCount,
+      academiesCount,
+      coachesAmount,
+      groundsAmount,
+      academiesAmount,
+    });
+
+  } catch (error) {
+    console.error("Error fetching booking stats:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
+export const getAdminDashboardData = async (req, res) => {
+  try {
+    // Find the most popular coaches by the number of bookings
+    const popularCoaches = await userModel.aggregate([
+      { $unwind: "$coachBooking" },
+      { $group: { _id: "$coachBooking.coachId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular coaches
+      {
+        $lookup: {
+          from: "coaches", // assuming your collection name is 'coaches'
+          localField: "_id",
+          foreignField: "_id",
+          as: "coach",
+        },
+      },
+      { $unwind: "$coach" },
+      { $project: { _id: 0, coachId: "$coach._id", fullName: "$coach.personalInfo.fullName",profile : "$coach.personalInfo.profile" ,bookings: "$count" } },
+    ]);
+
+    // Find the most popular grounds by the number of bookings
+    const popularGrounds = await userModel.aggregate([
+      { $unwind: "$groundBookings" },
+      { $group: { _id: "$groundBookings.groundId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular grounds
+      {
+        $lookup: {
+          from: "grounds", // assuming your collection name is 'grounds'
+          localField: "_id",
+          foreignField: "_id",
+          as: "ground",
+        },
+      },
+      { $unwind: "$ground" },
+      { $project: { _id: 0, groundId: "$ground._id", name: "$ground.name",image:"$ground.image", bookings: "$count" } },
+    ]);
+
+    // Find the most popular academies by the number of bookings
+    const popularAcademies = await userModel.aggregate([
+      { $unwind: "$academicsBooking" },
+      { $group: { _id: "$academicsBooking.academyId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular academies
+      {
+        $lookup: {
+          from: "academies", // assuming your collection name is 'academies'
+          localField: "_id",
+          foreignField: "_id",
+          as: "academy",
+        },
+      },
+      { $unwind: "$academy" },
+      { $project: { _id: 0, academyId: "$academy._id", name: "$academy.academyBasicDetails.academyName",image:"$acdemy.academyBasicDetails.picture", bookings: "$count" } },
+    ]);
+
+    // Send data to the frontend
+    res.json({success:true,
+      popularCoaches,
+      popularGrounds,
+      popularAcademies,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching dashboard data" });
   }
 };
