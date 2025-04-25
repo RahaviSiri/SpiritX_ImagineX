@@ -9,6 +9,7 @@ import { GroundContext } from "../context/GroundContext.jsx";
 const AddGround = () => {
   const { id } = useParams();
   const { getGround, ground, backend_url } = useContext(GroundContext);
+  const [freeTimeInput, setFreeTimeInput] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
@@ -215,23 +216,23 @@ const AddGround = () => {
               className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
               required
             />
-
-            <input
-              type="text"
-              value={freeTime.join(", ")}
-              onChange={(e) => {
-                const input = e.target.value;
-                const timeSlots = input
-                  .split(",")
-                  .map((slot) => slot.trim())
-                  .filter((slot) => slot !== "");
-                setFreeTime(timeSlots);
-              }}
-              placeholder="Free Time (e.g., 8:00 AM - 10:00 AM, 2:00 PM - 4:00 PM)*"
-              className="w-full bg-transparent border border-yellow-500 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
-              required
-            />
-
+  
+  <input
+  type="text"
+  value={freeTimeInput}
+  onChange={(e) => setFreeTimeInput(e.target.value)}
+  onBlur={() => {
+    const timeSlots = freeTimeInput
+      .split(",")
+      .map((slot) => slot.trim())
+      .filter((slot) => slot !== "");
+    setFreeTime(timeSlots);
+  }}
+  placeholder="Free Time (e.g., 8:00 AM - 10:00 AM, 2:00 PM - 4:00 PM)*"
+  className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded-lg outline-none placeholder-gray-400 focus:border-yellow-400"
+  required
+/>
+  
             {!id && (
               <>
                 <input

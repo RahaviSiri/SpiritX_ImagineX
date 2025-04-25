@@ -6,6 +6,7 @@ import coachModel from "../models/coachModel.js";
 import mongoose from "mongoose";
 import Stripe from "stripe";
 import { v2 as cloudinary } from "cloudinary";
+import academyModel from "../models/academyModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -256,6 +257,110 @@ const registerCoach = async (req, res) => {
   }
 };
 
+// Register Academy
+const registerAcademy = async (req, res) => {
+  try {
+    const { id } = req.params; // This should be the academyId
+    const userId = req.user._id;
+
+    const {
+      fullName,
+      email,
+      contactNumber,
+      addressLine1,
+      addressLine2,
+      city,
+      district,
+      preferredStartDate,
+      NIC,
+      notes,
+    } = req.body;
+
+    if (!userId || !id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID and Academy ID are required" });
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const newBooking = {
+      _id: new mongoose.Types.ObjectId(),
+      academyId: id,
+      fullName,
+      email,
+      contactNumber,
+      addressLine1,
+      addressLine2,
+      city,
+      district,
+      preferredStartDate,
+      NIC,
+      notes,
+    };
+
+    user.academicsBooking.push(newBooking);
+    await user.save();
+
+    const academy = await academyModel.findById(id);
+    if (!academy || !academy.contactDetails?.email) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Academy or academy email not found" });
+    }
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: email,
+      subject: `Successful Booking Registration from ${fullName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2 style="color: #0056b3;">Hello ${academy.academyInfo?.name || "Academy"},</h2>
+    
+          <p>Your booking request has been successfully registered! The student wants to join your academy. Please find the details of the booking below:</p>
+    
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr><td style="padding: 8px; font-weight: bold; width: 30%;">Student Name:</td><td style="padding: 8px;">${fullName}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Email:</td><td style="padding: 8px;">${email}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Contact:</td><td style="padding: 8px;">${contactNumber}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">City:</td><td style="padding: 8px;">${city}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">District:</td><td style="padding: 8px;">${district}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Preferred Start Date:</td><td style="padding: 8px;">${preferredStartDate ? new Date(preferredStartDate).toLocaleDateString() : 'Not specified'}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">NIC:</td><td style="padding: 8px;">${NIC}</td></tr>
+          </table>
+    
+          <h3>Additional Notes:</h3>
+          <p style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;">${notes || "No additional notes provided."}</p>
+    
+          <p>To finalize the registration, please proceed with the payment of the advance fee amount to confirm the student's enrollment. The details for the payment are as follows:</p>
+    
+          <p style="font-weight: bold; color: #0056b3;">Advance Fee: ${academy.academyBasicDetails.feeAmount}</p>
+    
+          <p style="color: #555;">Once the advance is paid, the student will officially be enrolled. Thank you for your cooperation!</p>
+    
+          <p style="color: #555;">Best regards,<br/>
+          <strong>SportsHive Team</strong></p>
+        </div>
+      `,
+    };
+    
+    await transporter.sendMail(mailOptions);
+
+    res.json({
+      success: true,
+      message: "Academy admission request submitted",
+      booking: newBooking,
+    });
+  } catch (error) {
+    console.error("Register Academy Error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 const checkOTPByUser = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -491,4 +596,5 @@ export {
   resetOtpCheck,
   resetPassword,
   editProfile,
+  registerAcademy
 };

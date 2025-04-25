@@ -36,6 +36,9 @@ import { useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import ClientAcademy from "./components/ClientAcademy";
+import AcademyWaitForApproval from "./components/AcademyWaitForApproval";
+import BookedItems from "./pages/BookedItems";
 
 function App() {
   const location = useLocation();
@@ -73,6 +76,7 @@ function App() {
           <Route path="/coach-profile/:id" element={<CoachProfile />} />
           <Route path="/validate-ground" element={<ValidateGround />} />
           <Route path="/client/:id" element={<Client />} />
+          <Route path="/client-academy/:id" element={<ClientAcademy />} />
           <Route
             path="/client-wait-for-approval"
             element={<ClientWaitForApproval />}
@@ -95,6 +99,8 @@ function App() {
           <Route path="/sports/volleyball" element={<Volleyball />} />
           <Route path="/sports/netball" element={<Netball />} />
           <Route path="/sports/tennis" element={<Tennis />} />
+          <Route path="/academy-wait-for-approval" element={<AcademyWaitForApproval />} />
+          <Route path="/booked-items" element={<BookedItems />} />
         </Routes>
       </main>
       <Footer />

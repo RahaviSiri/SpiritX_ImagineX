@@ -3,7 +3,11 @@ import { transporter } from "../config/nodemailer.js";
 
 import coachModel from "../models/coachModel.js";
 import userModel from "../models/userModel.js";
+import academyModel from "../models/academyModel.js";
+import groundModel from "../models/groundModel.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 export const approveByAdmin = async (req, res) => {
   try {
@@ -44,7 +48,7 @@ export const approveByAdmin = async (req, res) => {
           <p>If you have any questions or need assistance, don’t hesitate to reach out. We’re here to help!</p>
           
           <p style="margin-top: 30px;">Warm regards,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -86,7 +90,7 @@ export const rejectByAdmin = async (req, res) => {
           <p>Thank you once again for your interest in being a part of our platform.</p>
     
           <p style="margin-top: 30px;">Sincerely,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -145,7 +149,7 @@ export const approveByCoach = async (req, res) => {
           <p>If you have any questions or need further assistance, feel free to contact us anytime.</p>
     
           <p style="margin-top: 30px;">Thank you and best of luck with your session!<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -189,7 +193,7 @@ export const rejectByCoach = async (req, res) => {
           <p>You can browse our directory and submit a request to another coach at your convenience.</p>
     
           <p style="margin-top: 30px;">Thank you for using our platform,<br/>
-          <strong>The Coaching Platform Team</strong></p>
+          <strong>SportsHive Team</strong></p>
         </div>
       `
     };
@@ -207,4 +211,224 @@ export const rejectByCoach = async (req, res) => {
     console.error("Reject error:", error);
     return res.json({ success: false, message: error.message });
   }
+};
+
+export const approveAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    const otp = Math.floor(Math.random() * 900000 + 100000);
+    academy.otp = otp;
+    academy.isApprove = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contactDetails.email,
+      subject: '🎉 Welcome to the SportsHive Platform – Your Academy Has Been Approved!',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #4CAF50;">Hi ${academy.academyBasicDetails.academyName},</h2>
+
+          <p>🎉 <strong>Great news!</strong> Your academy application has been <strong>approved</strong> by our admin team.</p>
+
+          <p>We're thrilled to welcome you to our platform. You're now one step closer to helping students thrive in sports.</p>
+
+          <p style="font-size: 16px; margin-top: 20px;">
+            <strong>To activate your account, please verify using the OTP below:</strong>
+          </p>
+
+          <div style="font-size: 20px; font-weight: bold; background: #f0f0f0; padding: 15px; border-radius: 8px; display: inline-block; margin: 10px 0;">
+            🔐 OTP: ${otp}
+          </div>
+
+          <p>Enter this code on the verification page to proceed.</p>
+
+          <p>If you have questions or need help, our support team is always here for you.</p>
+
+          <p style="margin-top: 30px;">Warm regards,<br/>
+          <strong>SportsHive Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy approved successfully!", otp });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export const rejectAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    academy.isReject = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contactDetails.email,
+      subject: "Update on Your Academy Application",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+          <h2 style="color: #D32F2F;">Dear ${academy.academyBasicDetails.academyName},</h2>
+
+          <p>Thank you for your interest in joining <strong>SportsHive</strong>.</p>
+
+          <p>After reviewing your application, we regret to inform you that your academy doesn't currently meet our criteria for approval.</p>
+
+          <p>We encourage you to revisit your details, improve wherever needed, and reapply in the future. We’d love to reconsider your application at that time.</p>
+
+          <p>Thank you once again for considering SportsHive as your platform.</p>
+
+          <p style="margin-top: 30px;">Warm regards,<br/>
+          <strong>SportsHive Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy rejected successfully!" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export const countBooking = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    const approvedCoaches = await coachModel.find({ isApprove: true });
+    const approvedAcademies = await academyModel.find({ isApprove: true });
+    const approvedGrounds = await groundModel.find({ verified: true });
+
+
+
+    let coachesCount = 0;
+    let groundsCount = 0;
+    let academiesCount = 0;
+
+    const coachesAmount = approvedCoaches.length ;
+    const groundsAmount = approvedGrounds.length ; // Sample rate per booking
+    const academiesAmount = approvedAcademies.length; // Sample rate per booking
+
+    // Loop through all users and tally booking stats
+    users.forEach(user => {
+      if (user.coachBooking?.length) {
+        coachesCount += user.coachBooking.length;
+         
+      }
+
+      if (user.groundBookings?.length) {
+        groundsCount += user.groundBookings.length;
+        
+      }
+
+      if (user.academicsBooking?.length) {
+        academiesCount += user.academicsBooking.length;
+        
+      }
+    });
+
+    res.json({
+      coachesCount,
+      groundsCount,
+      academiesCount,
+      coachesAmount,
+      groundsAmount,
+      academiesAmount,
+    });
+
+  } catch (error) {
+    console.error("Error fetching booking stats:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const getAdminDashboardData = async (req, res) => {
+  try {
+    // Find the most popular coaches by the number of bookings
+    const popularCoaches = await userModel.aggregate([
+      { $unwind: "$coachBooking" },
+      { $group: { _id: "$coachBooking.coachId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular coaches
+      {
+        $lookup: {
+          from: "coaches", // assuming your collection name is 'coaches'
+          localField: "_id",
+          foreignField: "_id",
+          as: "coach",
+        },
+      },
+      { $unwind: "$coach" },
+      { $project: { _id: 0, coachId: "$coach._id", fullName: "$coach.personalInfo.fullName",profile : "$coach.personalInfo.profile" ,bookings: "$count" } },
+    ]);
+
+    // Find the most popular grounds by the number of bookings
+    const popularGrounds = await userModel.aggregate([
+      { $unwind: "$groundBookings" },
+      { $group: { _id: "$groundBookings.groundId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular grounds
+      {
+        $lookup: {
+          from: "grounds", // assuming your collection name is 'grounds'
+          localField: "_id",
+          foreignField: "_id",
+          as: "ground",
+        },
+      },
+      { $unwind: "$ground" },
+      { $project: { _id: 0, groundId: "$ground._id", name: "$ground.name",image:"$ground.image", bookings: "$count" } },
+    ]);
+
+    // Find the most popular academies by the number of bookings
+    const popularAcademies = await userModel.aggregate([
+      { $unwind: "$academicsBooking" },
+      { $group: { _id: "$academicsBooking.academyId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }, // Top 5 most popular academies
+      {
+        $lookup: {
+          from: "academies", // assuming your collection name is 'academies'
+          localField: "_id",
+          foreignField: "_id",
+          as: "academy",
+        },
+      },
+      { $unwind: "$academy" },
+      { $project: { _id: 0, academyId: "$academy._id", name: "$academy.academyBasicDetails.academyName",image:"$acdemy.academyBasicDetails.picture", bookings: "$count" } },
+    ]);
+
+    // Send data to the frontend
+    res.json({success:true,
+      popularCoaches,
+      popularGrounds,
+      popularAcademies,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching dashboard data" });
+  }
+};
+
+export const checkAdminLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD; 
+
+  if (email !== adminEmail || password !== adminPassword) {
+    return res.status(401).json({ success: false, message: "Unauthorized: Invalid email or password." });
+  }
+
+  return res.status(200).json({ success: true, message: "Admin authenticated." });
 };

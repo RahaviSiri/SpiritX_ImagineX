@@ -11,6 +11,7 @@ import competition from './routers/competitionRouter.js';
 import clubRouter from './routers/clubRouter.js';
 import contactRouter from './routers/contactRouter.js';
 import academyRouter from './routers/academyRouter.js';
+import utilsRouter from './routers/utilsRouter.js';
 
 
 dotenv.config();
@@ -33,6 +34,8 @@ app.use('/api/contact',contactRouter);
 app.use('/api/competition', competition);
 app.use('/api/clubs', clubRouter);
 app.use('/api/academy', academyRouter);
+app.use('/api/utils', utilsRouter);
+
 
 app.get('/', (req, res) => {
   res.json('API is working');
