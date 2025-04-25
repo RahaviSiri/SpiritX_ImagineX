@@ -20,7 +20,7 @@ const SportCard = ({ title, players, rules, history, origin, equipment, image, l
       transition={{ duration: 0.6 }}
       whileHover={{ scale: 1.03 }}
     >
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
+      <img src={image} alt={title} className="w-full h-48 object-cover p-2 rounded-2xl" />
       <div className="p-6">
         <h2 className="text-2xl font-bold text-yellow-400 mb-3">{title}</h2>
         <p className="text-sm mb-2"><span className="font-semibold">Origin:</span> {origin}</p>
