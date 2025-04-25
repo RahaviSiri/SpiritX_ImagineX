@@ -20,6 +20,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("uToken");
+    navigate("/");
     window.location.reload();
   };
 
