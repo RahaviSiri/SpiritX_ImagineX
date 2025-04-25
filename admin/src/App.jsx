@@ -6,6 +6,7 @@ import NavBar from './components/NavBar';
 import AllGrounds from './pages/AllGrounds';
 import BookedGrounds from './pages/BookedGrounds';
 import 'react-toastify/dist/ReactToastify.css';
+import Academy from "./pages/Academy";
 
 const App = () => {
   return (
@@ -25,6 +26,8 @@ const App = () => {
           <Route path="/coach" element={<Coach />} />
           <Route path="/all-grounds" element={<AllGrounds />} />
           <Route path="/booked-grounds" element={<BookedGrounds />} />
+          <Route path="/academy" element={<Academy />} />
+          
         </Routes>
       </main>
     </div>

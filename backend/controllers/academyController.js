@@ -248,9 +248,9 @@ export const deleteAcademy = async (req, res) => {
     const academyId = req.params.id;
     const deletedAcademy = await academyModel.findByIdAndDelete(academyId);
 
-    if (!deletedAcademy) {
-      return res.status(404).json({ success: false, message: "Academy not found" });
-    }
+    // if (!deletedAcademy) {
+    //   return res.status(404).json({ success: false, message: "Academy not found" });
+    // }
 
     res.status(200).json({ success: true, message: "Academy deleted successfully" });
   } catch (err) {

@@ -3,6 +3,7 @@ import { transporter } from "../config/nodemailer.js";
 
 import coachModel from "../models/coachModel.js";
 import userModel from "../models/userModel.js";
+import academyModel from "../models/academyModel.js";
 
 
 export const approveByAdmin = async (req, res) => {
@@ -208,3 +209,74 @@ export const rejectByCoach = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
+
+// Approval of academies for admin
+export const approveAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    const otp = Math.floor(Math.random() * 900000 + 100000);
+    academy.otp = otp;
+    academy.isApprove = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contact.email,
+      subject: '🎉 Your Academy Has Been Approved!',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #4CAF50;">Hi ${academy.academyName},</h2>
+          <p>🎉 <strong>Great news!</strong> Your academy has been <strong>approved</strong> by our admin team.</p>
+          <p>Please use the OTP below to complete the verification process:</p>
+          <div style="font-size: 20px; font-weight: bold; background: #f0f0f0; padding: 15px; border-radius: 8px;">
+            🔐 OTP: ${otp}
+          </div>
+          <p>Welcome aboard! If you have questions, feel free to reach out anytime.</p>
+          <p style="margin-top: 30px;">Best,<br/><strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy approved successfully", otp });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export const rejectAcademyByAdmin = async (req, res) => {
+  try {
+    const academy = await academyModel.findById(req.body.academyId);
+    if (!academy) {
+      return res.json({ success: false, message: "Academy not found!" });
+    }
+
+    academy.isReject = true;
+    await academy.save();
+
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: academy.contact.email,
+      subject: "Update on Your Academy Application",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #D32F2F;">Dear ${academy.academyName},</h2>
+          <p>Thank you for applying to our platform. After review, we regret to inform you that your academy does not meet our current approval criteria.</p>
+          <p>You are welcome to reapply in the future with updated information. We appreciate your interest and effort!</p>
+          <p style="margin-top: 30px;">Warm regards,<br/><strong>The Coaching Platform Team</strong></p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.json({ success: true, message: "Academy rejected successfully" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+

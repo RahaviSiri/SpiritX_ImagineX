@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { CoachContextProvider } from "./context/CoachContext.jsx";
+import { AcademyContextProvider } from '../../frontend/src/context/AcademyContext.jsx';
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <CoachContextProvider>
-      <App />
+      <AcademyContextProvider>
+        <App />
+      </AcademyContextProvider>
     </CoachContextProvider>
   </BrowserRouter>
 );

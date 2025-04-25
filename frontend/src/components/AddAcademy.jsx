@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UploadCloud } from "lucide-react";
 import assets from "../assets/assets.js";
 import { AcademyContext } from "../context/AcademyContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", "Hambantota",
@@ -18,6 +19,7 @@ const fileLabels = {
 
 const AddAcademy = () => {
   const { addAcademy } = useContext(AcademyContext);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     academyName: "",
@@ -104,6 +106,7 @@ const AddAcademy = () => {
           certificate: null,
         });
         setPreviews({});
+        navigate("/coach-wait-for-approval"); // Redirect to verification
       }
   };
 
