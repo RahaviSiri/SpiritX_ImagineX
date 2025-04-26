@@ -43,7 +43,7 @@ export default function ClubPage() {
     const fetchClubs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/clubs/getClub"
+          "https://syntaxt404-3949433c48b7.herokuapp.com/api/clubs/getClub"
         );
         setClubs(response.data);
         setFilteredClubs(response.data);
@@ -132,7 +132,7 @@ if (isShortLink) {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/clubs/addClub",
+        "https://syntaxt404-3949433c48b7.herokuapp.com/api/clubs/addClub",
         formData,
         {
           headers: {
